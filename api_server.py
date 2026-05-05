@@ -720,11 +720,60 @@ def hold_funds(client_id: str, amount_rub: float, chain_id: str = ""):
 
 @app.get("/portal", response_class=HTMLResponse)
 def serve_portal():
-    """Отдаёт portal.html прямо из браузера."""
+    """Внутренний дашборд платформы — управление всеми партнёрами."""
     p = Path(__file__).parent / "portal.html"
     if p.exists():
         return HTMLResponse(content=p.read_text(encoding="utf-8"))
     return HTMLResponse(content="<h1>portal.html not found</h1>", status_code=404)
+
+
+@app.get("/join", response_class=HTMLResponse)
+def serve_join():
+    """Страница для нового партнёра — только онбординг."""
+    p = Path(__file__).parent / "portal.html"
+    if not p.exists():
+        return HTMLResponse(content="<h1>portal.html not found</h1>", status_code=404)
+    html = p.read_text(encoding="utf-8")
+    # Инжектируем mode=partner через мета-тег
+    html = html.replace(
+        "<title>Logistics Platform · Partner Portal</title>",
+        "<title>Подключиться к Logistics API Platform</title>"
+    )
+    html = html.replace(
+        "const APP_MODE = (() => {",
+        "const _FORCE_PARTNER = true; const APP_MODE = (() => {"
+    )
+    html = html.replace(
+        "if (path.endsWith('/join') || params.get('mode') === 'partner') return 'partner';",
+        "if (_FORCE_PARTNER || path.endsWith('/join') || params.get('mode') === 'partner') return 'partner';"
+    )
+    return HTMLResponse(content=html)
+
+
+@app.get("/", response_class=HTMLResponse)
+def serve_root():
+    """Редирект на /join для новых пользователей."""
+    return HTMLResponse(content="""<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Logistics API Platform</title>
+<style>
+  body{font-family:-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f7f8fa}
+  .card{background:#fff;border:1px solid #e6e8ee;border-radius:12px;padding:40px;text-align:center;max-width:400px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  h1{font-size:22px;margin-bottom:8px;color:#0f172a}
+  p{color:#64748b;margin-bottom:24px;font-size:14px;line-height:1.6}
+  .btn{display:inline-block;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin:4px}
+  .primary{background:#0f172a;color:#fff}
+  .secondary{background:#f1f3f7;color:#334155;border:1px solid #e6e8ee}
+</style>
+</head><body>
+<div class="card">
+  <div style="font-size:32px;margin-bottom:16px">⚡</div>
+  <h1>Logistics API Platform</h1>
+  <p>Подключите ваш логистический API и агент платформы начнёт включать вас в цепочки доставки клиентов.</p>
+  <a href="/join" class="btn primary">Подключить компанию →</a>
+  <a href="/portal" class="btn secondary">Войти в платформу</a>
+</div>
+</body></html>""")
 
 # ── Run ───────────────────────────────────────────────────────────────────────
 
@@ -740,3 +789,4 @@ if __name__ == "__main__":
     print(f"  Portal  : http://localhost:{port}/portal")
     print(f"{'='*55}\n")
     uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+
