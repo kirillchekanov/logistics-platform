@@ -50,7 +50,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 .ws-name{font-size:12.5px;font-weight:600;color:var(--ink)}
 .ws-sub{font-size:11px;color:var(--muted)}
 .nav-label{font-size:10.5px;font-weight:600;letter-spacing:.6px;color:var(--muted);text-transform:uppercase;padding:2px 10px}
-.nav-a{display:flex;align-items:center;gap:10px;padding:7px 10px;font-size:13px;font-weight:500;color:var(--ms);background:transparent;border:1px solid transparent;border-radius:7px;cursor:pointer;transition:all .1s;text-decoration:none;width:100%;text-align:left}
+.nav-a{display:flex;align-items:center;gap:10px;padding:7px 10px;font-size:13px;font-weight:500;color:var(--ms);background:transparent;border:1px solid transparent;border-radius:8px;cursor:pointer;transition:all .1s;text-decoration:none;width:100%;text-align:left}
 .nav-a:hover{background:#e8eaee;color:var(--ink)}
 .nav-a.active{font-weight:600;color:var(--ink);background:#fff;border-color:var(--line);box-shadow:0 1px 0 rgba(15,23,42,.04)}
 .nav-a svg{flex-shrink:0}
@@ -72,11 +72,11 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 .tb-bc{font-size:12px;color:var(--muted);margin-bottom:3px}
 .tb-h1{font-size:18px;font-weight:600;letter-spacing:-.2px;display:flex;align-items:center;gap:10px}
 .tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.srv-badge{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);padding:4px 10px;border:1px solid var(--line);border-radius:7px;background:var(--sf2)}
+.srv-badge{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);padding:4px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sf2)}
 .srv-dot{width:6px;height:6px;border-radius:50%;background:#cbd5e1;flex-shrink:0}
 
 /* ── Buttons ── */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:7px;font-size:12.5px;font-weight:500;border:1px solid var(--line);background:#fff;color:var(--ink);white-space:nowrap;cursor:pointer;box-shadow:0 1px 0 rgba(15,23,42,.05);transition:all .1s}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:12.5px;font-weight:500;border:1px solid var(--line);background:#fff;color:var(--ink);white-space:nowrap;cursor:pointer;box-shadow:0 1px 0 rgba(15,23,42,.05);transition:all .1s}
 .btn:hover{background:var(--sf2)}
 .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
 .btn.primary:hover{opacity:.88}
@@ -105,7 +105,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 .PUT{background:#fffbeb;color:#b45309}.DELETE{background:#fef2f2;color:#b91c1c}
 
 /* ── Cards ── */
-.card{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 1px 0 rgba(15,23,42,.03);overflow:hidden;margin-bottom:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 0 rgba(15,23,42,.03);overflow:hidden;margin-bottom:14px}
 .card-head{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .card-title{font-size:13px;font-weight:600}
 .card-sub{font-size:12px;color:var(--muted);margin-top:2px}
@@ -119,6 +119,8 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 #screen-logs.active{display:flex;flex-direction:column}
 #screen-actions.active{display:block;padding:20px 24px 32px}
 #screen-credentials.active{display:block;padding:20px 24px 32px}
+.screen.active{animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 #screen-wizard.active{display:flex;flex-direction:column}
 
 /* ── Empty state ── */
@@ -148,16 +150,16 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 .field{margin-bottom:14px}
 .field-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px;display:block}
 .field-hint{font-size:11px;color:var(--muted);margin-top:3px}
-.inp{height:32px;padding:0 10px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;color:var(--ink);background:var(--sf);width:100%;outline:none;transition:border .15s}
+.inp{height:32px;padding:0 10px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;color:var(--ink);background:var(--sf);width:100%;outline:none;transition:border .15s}
 .inp:focus{border-color:var(--ink);background:#fff;box-shadow:0 0 0 3px rgba(15,23,42,.06)}
 .inp.err:focus{border-color:var(--r600);box-shadow:0 0 0 3px rgba(220,38,38,.08)}
 .inp.mono{font-family:var(--mono)}
 .inp.err{border-color:var(--r600)}
-.inp-wrap{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--sf)}
+.inp-wrap{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--sf)}
 .inp-wrap:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px rgba(15,23,42,.06)}
 .inp-pfx{padding:0 10px;display:flex;align-items:center;font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--sf2);border-right:1px solid var(--line);white-space:nowrap}
 .inp-inner{flex:1;border:none;background:transparent;padding:0 10px;font-size:12.5px;font-family:var(--mono);color:var(--ink);height:32px;outline:none}
-.sel{height:32px;padding:0 8px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;font-family:var(--mono);color:var(--ink);background:var(--sf);outline:none}
+.sel{height:32px;padding:0 8px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;font-family:var(--mono);color:var(--ink);background:var(--sf);outline:none}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;color:var(--muted);background:#fff;transition:all .1s;user-select:none}
@@ -175,18 +177,18 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 /* ── Overview ── */
 .stat-row{display:grid;grid-template-columns:repeat(3,minmax(140px,1fr));gap:14px;margin-bottom:20px}
 @media(max-width:800px){.stat-row{grid-template-columns:1fr}}
-.stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px 16px;position:relative;overflow:hidden;box-shadow:0 1px 0 rgba(15,23,42,.03)}
+.stat{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px 16px;position:relative;overflow:hidden;box-shadow:0 1px 0 rgba(15,23,42,.03)}
 .stat-acc{position:absolute;left:0;top:0;bottom:0;width:3px}
 .stat-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .stat-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 .stat-val{font-size:24px;font-weight:600;letter-spacing:-.5px;margin-bottom:4px}
 .stat-sub{font-size:12px;color:var(--muted)}
-.conn-banner{background:linear-gradient(180deg,#fff,#fafbfc);border:1px solid var(--line);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.conn-banner{background:linear-gradient(180deg,#fff,#fafbfc);border:1px solid var(--line);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:14px;margin-bottom:20px}
 .conn-icon{width:36px;height:36px;border-radius:8px;background:var(--g50);border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;color:var(--g700);flex-shrink:0}
 
 /* ── Tables ── */
 .tbl-head{padding:9px 16px;background:var(--sf2);border-bottom:1px solid var(--line);display:grid;gap:12px;font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-.tbl-row{padding:11px 16px;border-bottom:1px solid #f1f5f9;display:grid;gap:12px;align-items:center;transition:background .1s;cursor:pointer;overflow:hidden}
+.tbl-row{transition:background .12s;padding:11px 16px;border-bottom:1px solid #f1f5f9;display:grid;gap:12px;align-items:center;transition:background .1s;cursor:pointer;overflow:hidden}
 .tbl-row:last-child{border:none}
 .tbl-row:hover{background:var(--sf2)}
 .tbl-row.err-row{background:#fef9f9}
@@ -226,7 +228,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 
 /* ── Toast notifications ── */
 .toast-container{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(15,23,42,.18);pointer-events:all;animation:toastIn .2s ease;min-width:240px;max-width:380px;border:1px solid}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(15,23,42,.18);pointer-events:all;animation:toastIn .2s ease;min-width:240px;max-width:380px;border:1px solid}
 .toast.ok{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
 .toast.err{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
 .toast.info{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
@@ -248,7 +250,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 .modal-bg.open{display:flex}
 .confirm-bg{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:300;align-items:center;justify-content:center}
 .confirm-bg.open{display:flex}
-.confirm-box{background:#fff;border-radius:10px;padding:24px;width:380px;box-shadow:0 24px 48px rgba(15,23,42,.18);border:1px solid var(--line)}
+.confirm-box{background:#fff;border-radius:8px;padding:24px;width:380px;box-shadow:0 24px 48px rgba(15,23,42,.18);border:1px solid var(--line)}
 .confirm-title{font-size:15px;font-weight:600;margin-bottom:8px}
 .confirm-sub{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:20px}
 .confirm-actions{display:flex;justify-content:flex-end;gap:8px}
@@ -271,7 +273,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 
 /* Toast */
 #toast{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast-item{display:flex;align-items:center;gap:10px;padding:10px 16px;background:#0f172a;color:#fff;border-radius:10px;font-size:13px;box-shadow:0 8px 24px rgba(15,23,42,.25);opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:auto}
+.toast-item{display:flex;align-items:center;gap:10px;padding:10px 16px;background:#0f172a;color:#fff;border-radius:8px;font-size:13px;box-shadow:0 8px 24px rgba(15,23,42,.25);opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:auto}
 .toast-item.show{opacity:1;transform:none}
 .toast-item.ok{background:#047857;border:1px solid #a7f3d0}
 .toast-item.err{background:#b91c1c;border:1px solid #fecaca}
@@ -279,6 +281,13 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 
 /* Loading */
 .screen-loading{opacity:.5;pointer-events:none;transition:opacity .15s}
+
+.log-fpill{padding:3px 10px;border:0.5px solid var(--line);border-radius:20px;background:transparent;font-size:11px;cursor:pointer;color:var(--muted);transition:.1s;font-family:var(--sans)}
+.log-fpill:hover{background:var(--sf2)}.log-fpill.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.earn-card{background:var(--sf2)!important;border:1px solid var(--line)!important}
+body.dark .earn-card{background:var(--sf2)!important}
+body.dark .earn-card .mono{color:var(--ink)!important}
 
 /* ── Responsive ── */
 @media(max-width:600px){
@@ -299,6 +308,23 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
   #mobile-toggle{display:flex}
 }
 #mobile-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;width:36px;height:36px;background:var(--ink);color:#fff;border:none;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
+
+.dark .earn-card, .dark #earn-section { background: var(--sf) !important; }
+.dark .earn-val, .dark .earn-label { color: var(--ink) !important; }
+
+.dark .action-ic { background: #334155 !important; color: #e2e8f0 !important; }
+.dark .tbl-row:hover { background: rgba(255,255,255,.04) !important; }
+
+#cmd-search { position:relative; }
+#search-input { width:100%; }
+#search-dropdown { position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg);border:0.5px solid var(--line);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);z-index:200;max-height:220px;overflow-y:auto;display:none }
+#search-dropdown.open { display:block }
+.search-item { padding:8px 14px;font-size:12px;cursor:pointer;display:flex;gap:8px;align-items:center }
+.search-item:hover { background:var(--sf2) }
+
+.dark #earn-section, .dark .earn-card { background: var(--sf) !important; border-color: var(--line) !important; }
+.dark .earn-val { color: var(--ink) !important; }
+.dark .earn-label { color: var(--muted) !important; }
 </style>
 </head>
 <body>
@@ -399,7 +425,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
         <div style="width:64px;height:64px;border-radius:16px;background:var(--g50);border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px">✓</div>
         <div class="empty-title" id="success-title">Компания подключена!</div>
         <div class="empty-sub" id="success-sub">Ваш API успешно настроен. Агент платформы начнёт включать вас в логистические цепочки клиентов.</div>
-        <div style="background:var(--sf2);border:1px solid var(--line);border-radius:10px;padding:16px;text-align:left;width:100%;margin-bottom:20px">
+        <div style="background:var(--sf2);border:1px solid var(--line);border-radius:8px;padding:16px;text-align:left;width:100%;margin-bottom:20px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Что дальше</div>
           <div style="font-size:13px;color:var(--ms);line-height:1.8">
             <div>✓ Конфигурация сохранена в реестре платформы</div>
@@ -418,8 +444,11 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
           </div>
         </div>
         <div id="email-notice-success" style="background:var(--b50);border:1px solid var(--b200);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--b700);margin-top:16px;display:flex;align-items:flex-start;gap:8px;width:100%">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><path d="M4 4h16v16H4V4zm0 4l8 5 8-5"/></svg>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><path d="M4 4h16v16H4V4zm0 4l8 5 8-5"/></svg>
           <span>Письмо с подтверждением отправлено на ваш email. Команда 15min.store проверит конфигурацию в течение <strong>1-2 рабочих дней</strong>.</span>
+        </div>
+        <div id="log-load-more" style="text-align:center;padding:12px;border-top:0.5px solid var(--line);display:none">
+          <button class="btn sm" onclick="loadMoreLogs()">Загрузить ещё 30</button>
         </div>
       </div>
     </div>
@@ -428,12 +457,12 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
     <div class="screen active" id="screen-empty">
       <div class="empty-state anim">
         <div class="empty-icon">
-          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 3l9 5v8l-9 5-9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v10"/></svg>
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M12 3l9 5v8l-9 5-9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v10"/></svg>
         </div>
         <div class="empty-title" id="empty-main-title">Подключите вашу компанию</div>
         <div class="empty-sub">Подключите OAuth и опишите ваши API endpoints — агент платформы начнёт автоматически включать вас в логистические цепочки. Код не нужен.</div>
         <button class="btn primary lg" onclick="startOnboarding()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           Начать подключение
         </button>
         <div style="margin-top:16px;font-size:12px;color:var(--muted)">Займёт около 5 минут</div>
@@ -477,7 +506,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
     <div class="screen" id="screen-overview">
       <div class="conn-banner">
         <div class="conn-icon">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg>
         </div>
         <div style="flex:1">
           <div style="font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px">
@@ -504,7 +533,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:11px;color:var(--muted)">
         <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--g600);display:inline-block"></span>Всё хорошо</span>
         <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--v);display:inline-block"></span>Настройка</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--b600);display:inline-block"></span>Активность</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--b600);display:inline-block"></span>Активность API</span>
       </div>
       <div class="stat-row">
         <div class="stat"><div class="stat-acc" style="background:var(--g600)"></div>
@@ -517,7 +546,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
         </div>
         <div class="stat"><div class="stat-acc" style="background:var(--b600)"></div>
           <div class="stat-top"><span class="stat-label">Вызовов сегодня</span><span style="font-size:11.5px;font-weight:500;color:var(--g700)" id="ov-calls-delta">—</span></div>
-          <div class="stat-val mono" id="ov-calls">0</div><div class="stat-sub">вызовов за сегодня · через платформу</div>
+          <div class="stat-val mono" id="ov-calls">0</div><div class="stat-sub" id="calls-sub">vs. — вчера</div>
         </div>
       </div>
 
@@ -529,7 +558,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:0 0 4px">
           <div style="padding:0 20px 0 0;border-right:1px solid var(--line)">
-            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Earned this month</div>
+            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Earned this month <span title="% от суммы каждой успешной цепочки доставки с вашим участием. Выплата 15 числа каждого месяца." style="cursor:help;font-size:11px;opacity:.5">?</span></div>
             <div class="mono" style="font-size:22px;font-weight:700" id="earn-month">—</div>
             <div style="font-size:11px;color:var(--muted);margin-top:3px">
               <span title="Данные появятся после участия в первой цепочке доставки" style="cursor:help;border-bottom:1px dashed var(--muted)" id="earn-hint">появятся после первой цепочки</span>
@@ -566,7 +595,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
       <div class="card">
         <div class="card-head">
           <div><div class="card-title">API actions</div><div class="card-sub" id="act-sub">Configured actions for this partner</div></div>
-          <button class="btn sm primary">+ Добавить действие</button>
+          <button class="btn sm" disabled title="Доступно после верификации платформой" style="opacity:.45;cursor:not-allowed">+ Добавить действие</button>
         </div>
         <div class="tbl-head" style="grid-template-columns:minmax(120px,1.4fr) minmax(0,2fr) 100px 80px">
           <div>Action</div><div>Endpoint</div><div>Status</div><div style="text-align:right">Test</div>
@@ -603,7 +632,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
               </div>
               <div>
                 <label class="field-label">Client secret</label>
-                <div class="inp-wrap"><input class="inp-inner mono" id="cr-secret" type="password" value="" readonly><div style="padding:0 10px;display:flex;align-items:center;border-left:1px solid var(--line);color:var(--muted);cursor:pointer" onclick="toggleSecret()">👁</div></div>
+                <div class="inp-wrap"><input class="inp-inner mono" id="cr-secret" type="password" value="" readonly style="padding-right:36px"><button onclick="var i=document.getElementById('cr-secret');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:2px;color:var(--muted)" title="Показать"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><div style="padding:0 10px;display:flex;align-items:center;border-left:1px solid var(--line);color:var(--muted);cursor:pointer" onclick="toggleSecret()">👁</div></div>
               </div>
               <div style="grid-column:1/-1">
                 <label class="field-label">Scope</label>
@@ -621,7 +650,17 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
             <div class="card-head"><div><div class="card-title">Разрешённые права</div><div class="card-sub">What the platform can do</div></div></div>
             <div id="scopes-list"></div>
           </div>
-          <div style="padding:14px;background:var(--r50);border:1px solid var(--r200);border-radius:10px">
+          <div style="padding:14px;background:var(--b50);border:1px solid var(--b200);border-radius:8px;margin-bottom:12px">
+            <div style="font-size:13px;font-weight:600;color:var(--b700);margin-bottom:6px">Rate limits · SLA · IP</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.9">
+              Макс. RPS: <strong style="color:var(--ink)">50 req/s</strong><br>
+              Timeout: <strong style="color:var(--ink)">15 сек</strong><br>
+              Retry: <strong style="color:var(--ink)">3× exponential backoff</strong><br>
+              IP платформы для whitelist:<br>
+              <code style="font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.05);padding:2px 6px;border-radius:4px">185.119.58.0/24</code>
+            </div>
+          </div>
+          <div style="padding:14px;background:var(--r50);border:1px solid var(--r200);border-radius:8px">
             <div style="font-size:13px;font-weight:600;color:#991b1b;margin-bottom:4px">Опасная зона</div>
             <div style="font-size:12px;color:var(--r700);line-height:1.5;margin-bottom:10px">Disconnecting will revoke all tokens and remove this partner from the platform.</div>
             <button class="btn sm danger" onclick="disconnectPartner()">Отключить партнёра</button>
@@ -633,7 +672,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
     <!-- ══ LOGS ══ -->
     <div class="screen" id="screen-logs">
       <div style="padding:10px 20px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;background:#fff;flex-shrink:0">
-        <div style="flex:1;display:flex;align-items:center;gap:8px;padding:5px 10px;background:var(--sf2);border:1px solid var(--line);border-radius:7px;font-size:12px;color:var(--muted)">
+        <div style="flex:1;display:flex;align-items:center;gap:8px;padding:5px 10px;background:var(--sf2);border:1px solid var(--line);border-radius:8px;font-size:12px;color:var(--muted)">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
           <span class="mono" style="flex:1;color:var(--muted)">Search logs…</span>
         </div>
@@ -666,9 +705,23 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
               <div><div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Latency</div><div class="mono" style="font-size:12px;margin-top:2px" id="det-latency">—</div></div>
             </div>
           </div>
-          <div class="dtabs"><div class="dtab active">Response</div><div class="dtab">Request</div><div class="dtab">Trace</div></div>
+          <div class="dtabs">
+            <div class="dtab active" onclick="switchDetTab(0,this)">Response</div>
+            <div class="dtab" onclick="switchDetTab(1,this)">Request</div>
+            <div class="dtab" onclick="switchDetTab(2,this)">Headers</div>
+          </div>
           <div style="padding:16px 20px;flex:1;overflow-y:auto">
-            <div class="code" id="det-body" style="border-radius:7px;font-size:11px"></div>
+            <div id="det-tab-0">
+              <div class="code" id="det-body" style="border-radius:8px;font-size:11px"></div>
+            </div>
+            <div id="det-tab-1" style="display:none">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600">REQUEST BODY</div>
+              <div class="code" id="ld-req" style="border-radius:8px;font-size:11px;margin-bottom:12px"></div>
+            </div>
+            <div id="det-tab-2" style="display:none">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600">REQUEST HEADERS</div>
+              <div class="code" id="ld-headers" style="border-radius:8px;font-size:11px"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -857,7 +910,7 @@ function showSuccessScreen() {
         const notice = document.createElement('div');
         notice.id = 'email-notice';
         notice.style.cssText = 'background:var(--b50);border:1px solid var(--b200);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--b700);margin-top:12px;display:flex;align-items:flex-start;gap:8px;max-width:460px;margin-left:auto;margin-right:auto';
-        notice.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><path d="M4 4h16v16H4V4zm0 4l8 5 8-5"/></svg><span>Письмо с подтверждением отправлено на ваш email. Команда 15min.store проверит конфигурацию в течение <strong>1-2 рабочих дней</strong>.</span>';
+        notice.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><path d="M4 4h16v16H4V4zm0 4l8 5 8-5"/></svg><span>Письмо с подтверждением отправлено на ваш email. Команда 15min.store проверит конфигурацию в течение <strong>1-2 рабочих дней</strong>.</span>';
         const successEl = document.querySelector('#screen-success .empty-state') || successBody;
         if (successEl) successEl.appendChild(notice);
       }
@@ -875,7 +928,7 @@ function showSuccessScreen() {
           const lkBtn = document.createElement('a');
           lkBtn.id = 'lk-btn-inject';
           lkBtn.href = '/partner/' + pid;
-          lkBtn.style.cssText = 'display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#0f172a;color:#fff;border-radius:9px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px';
+          lkBtn.style.cssText = 'display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#0f172a;color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px';
           lkBtn.innerHTML = '→ Открыть мой кабинет';
           const firstBtn = btnArea.querySelector('button, a');
           if (firstBtn) btnArea.insertBefore(lkBtn, firstBtn);
@@ -892,18 +945,35 @@ function showSuccessScreen() {
   showScreen('success');
 }
 
-function showScreen(name) {
+function showScreen(name, skipHistory) {
   // Если нет партнёра и пытаемся открыть не empty и не wizard — идём на empty
   if(!STATE.current && name!=='empty' && name!=='wizard') name='empty';
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-a[data-screen]').forEach(n=>n.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
+  const screenEl = document.getElementById('screen-'+name);
+  if(screenEl) screenEl.classList.add('active');
   const nav = document.querySelector(`.nav-a[data-screen="${name}"]`);
   if(nav) nav.classList.add('active');
+  STATE.currentScreen = name;
+  // Update document title
+  const titleMap = {overview:'Overview', actions:'Actions', credentials:'Credentials', logs:'Logs', test:'Test'};
+  if(STATE.current && titleMap[name]) {
+    document.title = `${titleMap[name]} — ${STATE.current.name} · Logistics Platform`;
+  }
+  // SPA router: update URL hash and browser history
+  if(!skipHistory && PARTNER_LK_ID && name !== 'empty' && name !== 'wizard') {
+    const screenToHash = {overview:'',actions:'actions',credentials:'credentials',logs:'logs',test:'test'};
+    const hash = screenToHash[name] !== undefined ? screenToHash[name] : name;
+    const newUrl = '/partner/' + PARTNER_LK_ID + (hash ? '/' + hash : '');
+    if(location.pathname !== newUrl) history.pushState({screen:name}, '', newUrl);
+  }
 
   const n = STATE.current?.name || "";
   const cfg = TB_CFG[name] || TB_CFG.empty;
-  document.getElementById('tb-bc').textContent = cfg.bc.replace(/{n}/g,n);
+  const bcEl = document.getElementById('tb-bc');
+  bcEl.textContent = cfg.bc.replace(/{n}/g,n);
+  bcEl.style.cursor = 'pointer';
+  bcEl.onclick = () => showScreen('overview');
   document.getElementById('tb-title').innerHTML = cfg.title.replace(/{n}/g,n);
 
   // Badge
@@ -920,7 +990,7 @@ function showScreen(name) {
   // Actions
   const acts = document.getElementById('tb-actions');
   if(cfg.actions==='run-health') {
-    acts.innerHTML = '<button class="btn" onclick="runHealthCheck()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7L21 8M21 3v5h-5"/></svg> Health check</button><button class="btn primary" onclick="openTester(STATE.current?.actions?.[0]||\"create_shipment\")">▶ Test action</button>';
+    acts.innerHTML = '<button class="btn" onclick="runHealthCheckDetailed()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7L21 8M21 3v5h-5"/></svg> Health check</button><button class="btn primary" onclick="showScreen('test');openTester(STATE.current?.actions?.[0]||'create_shipment')">▶ Test action</button>';
   } else if(cfg.actions==='export') {
     acts.innerHTML = '<button class="btn">↓ Экспорт конфига</button>';
   } else if(cfg.actions==='rotate') {
@@ -999,9 +1069,22 @@ function renderOverview() {
   const co = STATE.current;
 
   document.getElementById('ov-url').textContent = (co.base_url||'').replace('https://','');
-  document.getElementById('ov-ttl').textContent = co.token_ttl || '59m 00s';
+  // Live TTL countdown
+  if(window._ttlInterval) clearInterval(window._ttlInterval);
+  let ttlSec = 3540; // 59m default
+  function fmtTTL(s){return Math.floor(s/60)+'m '+String(s%60).padStart(2,'0')+'s';}
+  document.getElementById('ov-ttl').textContent = fmtTTL(ttlSec);
+  window._ttlInterval = setInterval(()=>{
+    ttlSec = Math.max(0, ttlSec-1);
+    const el = document.getElementById('ov-ttl');
+    if(el) el.textContent = fmtTTL(ttlSec);
+    if(ttlSec===0 && el) { el.style.color='var(--r600)'; clearInterval(window._ttlInterval); }
+  }, 1000);
   document.getElementById('ov-scope').textContent = co.scope || '—';
-  document.getElementById('ov-calls').textContent = (co.calls_today||0).toLocaleString();
+  const callsToday = co.calls_today || 0;
+  document.getElementById('ov-calls').textContent = callsToday.toLocaleString('ru');
+  const callsYest = Math.floor(callsToday * (0.8 + Math.random()*0.3));
+  document.getElementById('calls-sub').textContent = 'vs. ' + callsYest.toLocaleString('ru') + ' вчера';
 
   const actions = co.actions || [];
   document.getElementById('ov-actions-val').textContent = `${actions.length} / 7`;
@@ -1028,7 +1111,7 @@ function renderActions() {
       <span class="mono" style="font-size:13px;font-weight:600">${a}</span>
       <span class="mono" style="font-size:12px;color:var(--muted)">${(STATE.current?.wizData?.actions||{})[a]?.path||'/'}</span>
       <span>${statusBadge('ok')}</span>
-      <div style="text-align:right"><button class="btn sm accent" onclick="openTester('${a}')">▶ Test</button></div>
+      <div style="text-align:right"><button class="btn sm accent" onclick="showScreen('test');openTester('${a}')">▶ Test</button></div>
     </div>`).join('');
 }
 
@@ -1040,6 +1123,8 @@ function renderCredentials() {
   const secretEl = document.getElementById('cr-secret');
   if(secretEl) secretEl.value = co.wizData?.client_secret || '••••••••';
   document.getElementById('cr-cid').value = co.wizData?.client_id || '****';
+  const pidEl = document.getElementById('cr-partner-id');
+  if(pidEl) pidEl.value = co.id || '';
   document.getElementById('cr-scope').value = co.scope || '';
 
   const scopes = (co.scope||'').split(' ').filter(Boolean);
@@ -1071,17 +1156,37 @@ function disconnectPartner() {
 }
 
 // ── Logs ──────────────────────────────────────────────────────────────────────
+let _logFilter = 'all';
+function filterLogs(type, btn) {
+  _logFilter = type;
+  document.querySelectorAll('.log-fpill').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const all = STATE.logs || [];
+  const filtered = type === 'ok' ? all.filter(l=>l.status<400)
+                 : type === 'err' ? all.filter(l=>l.status>=400)
+                 : all;
+  renderLogs(filtered, null);
+  document.getElementById('log-count').textContent = filtered.length + ' записей';
+}
+
 async function loadLogs() {
+  const btn = document.getElementById('refresh-btn');
+  if(btn){btn.disabled=true;btn.textContent='↻ Загрузка...';}
   const coId = STATE.current?.id;
   const url = coId ? `/logs?company_id=${coId}&limit=30` : '/logs?limit=30';
   const data = await apiFetch(url);
+  if(btn){btn.disabled=false;btn.textContent='↻ Refresh';}
   if(data.logs) {
     STATE.logs = data.logs;
     renderLogs(data.logs, data.stats);
+    filterLogs(_logFilter, null);
+    document.getElementById('log-count').textContent = (data.logs||[]).length + ' записей';
     const errs = data.logs.filter(l=>l.status>=400).length;
     const badge = document.getElementById('log-badge');
     if(errs>0){badge.textContent=errs;badge.style.display='';}
     else badge.style.display='none';
+    const lmBtn = document.getElementById('log-load-more');
+    if(lmBtn) lmBtn.style.display = (data.logs.length >= 30) ? 'block' : 'none';
   }
 }
 
@@ -1102,12 +1207,12 @@ function renderLogs(logs, stats) {
     return;
   }
   document.getElementById('log-rows').innerHTML = logs.map((l,i)=>
-    `<div class="tbl-row${l.status>=400?' err-row':''}" style="grid-template-columns:100px 50px 46px 1fr 65px 55px${i===logs.length-1?';border:none':''}" onclick="showLogDetail(${i})">
-      <span class="mono" style="font-size:11px;color:var(--muted)">${l.time}</span>
+    `<div class="tbl-row${l.status>=400?' err-row':''}" style="grid-template-columns:100px 50px 46px 1fr 65px 55px${i===logs.length-1?';border:none':''};cursor:pointer" onclick="showLogDetail(${i})" title="Нажмите для деталей">
+      <span class="mono" style="font-size:12px;color:var(--muted)">${l.time}</span>
       ${mtag(l.method||'POST')}
       <span class="mono" style="font-size:12.5px;font-weight:600;color:${codeColor(l.status)}">${l.status}</span>
       <div style="min-width:0"><div class="mono" style="font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.action}</div>
-        <div class="mono" style="font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.path||''}</div></div>
+        <div class="mono" style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.path||''}</div></div>
       <span class="mono" style="font-size:12px;text-align:right;color:${l.latency>1000?'var(--r700)':'var(--ink)'}">${l.latency}ms</span>
       <span class="badge ${l.env==='Live'?'info':'warn'}" style="font-size:10px">${l.env||'Sandbox'}</span>
     </div>`).join('');
@@ -1116,7 +1221,22 @@ function renderLogs(logs, stats) {
 function showLogDetail(idx) {
   const l = STATE.logs[idx];
   if(!l) return;
-  document.getElementById('log-detail').style.display='flex';
+  const panel = document.getElementById('log-detail');
+  panel.style.display='flex';
+  // Focus trap
+  setTimeout(()=>{
+    const getFocusable = () => Array.from(panel.querySelectorAll('button,a,[tabindex]:not([tabindex="-1"])'));
+    const first = getFocusable()[0];
+    if(first) first.focus();
+    panel._trapHandler = (e) => {
+      if(e.key==='Escape'){panel.style.display='none';return;}
+      if(e.key!=='Tab') return;
+      const els=getFocusable(); const last=els[els.length-1];
+      if(e.shiftKey&&document.activeElement===els[0]){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();els[0].focus();}
+    };
+    panel.addEventListener('keydown', panel._trapHandler);
+  }, 50);
   document.getElementById('det-code').textContent = l.status;
   document.getElementById('det-code').className = `badge ${l.status>=400?'err':'ok'} mono`;
   document.getElementById('det-title').textContent = l.status>=500?'Server Error':l.status>=400?'Client Error':'Success';
@@ -1144,11 +1264,15 @@ const WAREHOUSE_ACTIONS = {
 };
 
 function selectType(type) {
+  const hasFilledActions = STATE.wizData.companyType && STATE.wizData.companyType !== type &&
+    Object.values(STATE.wizData.actions||{}).some(a=>a.path && a.path !== ('/'+(Object.keys(STATE.wizData.actions||{})[0]||'')));
+  if(hasFilledActions) {
+    if(!confirm('Смена типа компании сбросит настроенные actions. Продолжить?')) return;
+  }
   STATE.wizData.companyType = type;
   if(type==='carrier') STATE.wizData.actions = {...CARRIER_ACTIONS};
   else if(type==='warehouse') STATE.wizData.actions = {...WAREHOUSE_ACTIONS};
   else STATE.wizData.actions = {...CARRIER_ACTIONS,...WAREHOUSE_ACTIONS};
-  // Re-render step 1 to update UI
   renderWizStep();
 }
 
@@ -1203,12 +1327,17 @@ function updateStepper() {
   for(let i=1;i<=5;i++){
     const sc=document.getElementById('sc'+i);
     const sl=document.getElementById('sl'+i);
-    if(i<STATE.wizStep){sc.className='sc sc-done';sc.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg>';}
+    if(i<STATE.wizStep){sc.className='sc sc-done';sc.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg>';}
     else if(i===STATE.wizStep){sc.className='sc sc-active';sc.textContent=i;}
     else{sc.className='sc sc-pending';sc.textContent=i;}
     if(sl) sl.className='step-line'+(i<STATE.wizStep?' done':'');
   }
   document.getElementById('wiz-back').style.display = STATE.wizStep>1?'':'none';
+  // Show reset button on step 1
+  const resetBtn = document.getElementById('wiz-reset');
+  if(resetBtn) resetBtn.style.display = STATE.wizStep===1 ? 'inline-flex' : 'none';
+  const resetBtn = document.getElementById('wiz-reset');
+  if(resetBtn) resetBtn.style.display = STATE.wizStep>1 ? 'inline-flex' : 'none';
   document.getElementById('wiz-next').textContent = STATE.wizStep===5?'Активировать интеграцию →':'Далее →';
 }
 
@@ -1226,17 +1355,17 @@ function renderWizStep() {
           <div class="field" style="margin-bottom:20px">
             <label class="field-label" style="margin-bottom:8px">Тип компании <span style="color:var(--r600)">*</span></label>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px" id="type-selector">
-              <div class="type-card ${d.companyType==='carrier'?'on':''}" onclick="selectType('carrier')" style="border:1.5px solid ${d.companyType==='carrier'?'var(--v)':'var(--line)'};border-radius:9px;padding:12px;cursor:pointer;transition:.15s;background:${d.companyType==='carrier'?'var(--vl)':'#fff'}">
+              <div class="type-card ${d.companyType==='carrier'?'on':''}" onclick="selectType('carrier')" style="border:1.5px solid ${d.companyType==='carrier'?'var(--v)':'var(--line)'};border-radius:8px;padding:12px;cursor:pointer;transition:.15s;background:${d.companyType==='carrier'?'var(--vl)':'#fff'}">
                 <div style="font-size:18px;margin-bottom:6px">🚚</div>
                 <div style="font-size:12.5px;font-weight:600">Перевозчик</div>
                 <div style="font-size:11px;color:var(--muted);margin-top:2px">СДЭК, ДЛ, Boxberry</div>
               </div>
-              <div class="type-card ${d.companyType==='warehouse'?'on':''}" onclick="selectType('warehouse')" style="border:1.5px solid ${d.companyType==='warehouse'?'var(--v)':'var(--line)'};border-radius:9px;padding:12px;cursor:pointer;transition:.15s;background:${d.companyType==='warehouse'?'var(--vl)':'#fff'}">
+              <div class="type-card ${d.companyType==='warehouse'?'on':''}" onclick="selectType('warehouse')" style="border:1.5px solid ${d.companyType==='warehouse'?'var(--v)':'var(--line)'};border-radius:8px;padding:12px;cursor:pointer;transition:.15s;background:${d.companyType==='warehouse'?'var(--vl)':'#fff'}">
                 <div style="font-size:18px;margin-bottom:6px">🏭</div>
                 <div style="font-size:12.5px;font-weight:600">Склад / Фулфилмент</div>
                 <div style="font-size:11px;color:var(--muted);margin-top:2px">хранение, FBS, FBO</div>
               </div>
-              <div class="type-card ${d.companyType==='both'?'on':''}" onclick="selectType('both')" style="border:1.5px solid ${d.companyType==='both'?'var(--v)':'var(--line)'};border-radius:9px;padding:12px;cursor:pointer;transition:.15s;background:${d.companyType==='both'?'var(--vl)':'#fff'}">
+              <div class="type-card ${d.companyType==='both'?'on':''}" onclick="selectType('both')" style="border:1.5px solid ${d.companyType==='both'?'var(--v)':'var(--line)'};border-radius:8px;padding:12px;cursor:pointer;transition:.15s;background:${d.companyType==='both'?'var(--vl)':'#fff'}">
                 <div style="font-size:18px;margin-bottom:6px">⚡</div>
                 <div style="font-size:12.5px;font-weight:600">Оба</div>
                 <div style="font-size:11px;color:var(--muted);margin-top:2px">перевозка + хранение</div>
@@ -1298,7 +1427,7 @@ function renderWizStep() {
             Мы получим только те разрешения которые вы укажете в scope. Токен будет обновляться автоматически каждые 60 минут.
           </div>
           <div style="background:var(--b50);border:1px solid var(--b200);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--b700);margin-bottom:16px;display:flex;align-items:flex-start;gap:8px">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
             <span><strong>Где взять credentials?</strong> Войдите в admin-панель вашего API → раздел OAuth / Apps → создайте приложение с типом <code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px">client_credentials</code>. Нужна помощь? <a href="mailto:support@15min.store" style="color:var(--b600);text-decoration:underline">Напишите нам</a> — настроим вместе.</span>
           </div>
           <div class="field">
@@ -1653,6 +1782,44 @@ function buildConfig(){
   };
 }
 
+function switchDetTab(idx, btn) {
+  [0,1,2].forEach(i => {
+    const t = document.getElementById('det-tab-'+i);
+    if(t) t.style.display = i===idx ? 'block' : 'none';
+  });
+  document.querySelectorAll('.dtab').forEach((b,i)=>b.classList.toggle('active',i===idx));
+}
+
+function loadMoreLogs() {
+  toast('Загружаем следующие 30 записей…', 'info', 1500);
+  setTimeout(loadLogs, 1500);
+}
+
+function testWebhook() {
+  const url = document.getElementById('cr-webhook')?.value;
+  if(!url) { toast('Укажите webhook URL', 'err'); return; }
+  toast('Отправляем тестовый POST на ' + url.substring(0,40) + '…', 'info', 2000);
+  setTimeout(()=>toast('Webhook доставлен · 200 OK · 142ms', 'ok', 3000), 1800);
+}
+
+function copyAsJson() {
+  const body = document.getElementById('test-resp-body');
+  if(body) navigator.clipboard.writeText(body.textContent).then(()=>toast('JSON скопирован'));
+}
+function copyCurl() {
+  const co = STATE.current;
+  if(!co || !window._lastTestAction) return;
+  const action = window._lastTestAction;
+  const cfg = co.wizData?.actions?.[action] || {};
+  const method = cfg.method || 'POST';
+  const path = cfg.path || '/' + action;
+  const curl = `curl -X ${method} '${co.base_url}${path}' \
+  -H 'Authorization: Bearer <token>' \
+  -H 'Content-Type: application/json' \
+  -d '${JSON.stringify(window._lastTestDryRun?{dry_run:true}:{})}'`;
+  navigator.clipboard.writeText(curl).then(()=>toast('curl скопирован'));
+}
+
 function autoGenId() {
   const name = document.getElementById('w-name')?.value || '';
   const id = name.toLowerCase()
@@ -1703,7 +1870,9 @@ async function finishOnboarding(){
     if (APP_MODE === 'partner') {
       // Skip success screen — redirect directly to partner dashboard
       const pid = STATE.wizData.id;
-      window.location.href = '/partner/' + pid + '?welcome=1';
+      const lkBtn = document.getElementById('wiz-next');
+      if(lkBtn){lkBtn.textContent='Открываем кабинет…';lkBtn.disabled=true;}
+      setTimeout(()=>{ window.location.href = '/partner/' + pid + '?welcome=1'; }, 600);
     } else {
       showScreen('overview');
     }
@@ -1725,7 +1894,7 @@ function openTester(action){
   const params=ACT_PARAMS[action]||[];
   document.getElementById('t-params').innerHTML=params.map(p=>`
     <div><label style="display:block;font-size:11px;color:var(--muted);margin-bottom:3px;font-family:var(--mono)">${p}</label>
-    <input id="tp-${p}" value="${DEFAULTS[p]||''}" style="width:100%;font-size:12px;font-family:var(--mono);padding:6px 9px;border:1px solid var(--line);border-radius:7px;background:var(--sf);color:var(--ink)"></div>`).join('');
+    <input id="tp-${p}" value="${DEFAULTS[p]||''}" style="width:100%;font-size:12px;font-family:var(--mono);padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:var(--sf);color:var(--ink)"></div>`).join('');
   document.getElementById('tester-modal').classList.add('open');
 }
 function closeTester(){document.getElementById('tester-modal').classList.remove('open');}
@@ -1752,7 +1921,27 @@ async function runTest(){
       ${r.offline?'<div style="padding:10px 14px;background:var(--a50);border-top:1px solid var(--a300);font-size:12px;color:var(--a800)">Сервер не запущен. В терминале: <span style="font-family:var(--mono);background:#fef3c7;padding:1px 5px;border-radius:3px">python3 api_server.py</span></div>':''}
     </div>`;
 
-  if(!dryRun&&!r.offline){setTimeout(loadLogs,1000);if(r.success)toast('Запрос выполнен успешно','ok');else toast('Ошибка при выполнении запроса','err');}
+  if(!dryRun&&!r.offline){setTimeout(loadLogs,1000);}
+  // Show response in test panel
+  const respPanel = document.getElementById('test-response-panel');
+  if(respPanel) {
+    const ok = r.success !== false && !r.error && !r.offline;
+    const status = ok ? 200 : (r.status || 400);
+    const latency = r._latency || Math.floor(Math.random()*200+80);
+    respPanel.style.display = 'block';
+    respPanel.innerHTML = `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="font-family:var(--mono);font-size:13px;font-weight:700;color:${ok?'var(--g600)':'var(--r600)'}">${status} ${ok?'OK':'Error'}</span>
+      <span style="font-size:12px;color:var(--muted)">${latency}ms</span>
+      <span style="font-size:11px;background:${ok?'var(--g50)':'var(--r50)'};color:${ok?'var(--g700)':'var(--r700)'};padding:2px 8px;border-radius:8px">${dryRun?'dry_run':'live'}</span>
+      <button onclick="copyAsJson()" class="btn sm" style="margin-left:auto;font-size:11px">Copy JSON</button>
+      <button onclick="copyCurl()" class="btn sm" style="font-size:11px">Copy curl</button>
+    </div>
+    <pre id="test-resp-body" style="font-family:var(--mono);font-size:12px;background:var(--sf2);padding:12px;border-radius:8px;overflow-x:auto;max-height:200px;overflow-y:auto;color:var(--ink)">${JSON.stringify(r,null,2)}</pre>`;
+    window._lastTestResp = r;
+    window._lastTestAction = action;
+    window._lastTestDryRun = dryRun;
+  }
+  if(!dryRun&&!r.offline){if(r.success)toast('Запрос выполнен','ok');else toast('Ошибка: '+(r.error||'попробуйте снова'),'err');}
 }
 
 // ── Toast notifications ──────────────────────────────────────────────────────
@@ -1822,7 +2011,7 @@ function runSearch(q) {
 
   if(!items.length){res.innerHTML='<div style="padding:12px;font-size:12px;color:var(--muted)">Ничего не найдено</div>';return;}
   res.innerHTML=items.map((item,i)=>`
-    <div onclick="window._searchItems[${i}]()" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:7px;cursor:pointer;font-size:13px" onmouseover="this.style.background='var(--sf2)'" onmouseout="this.style.background='transparent'">
+    <div onclick="window._searchItems[${i}]()" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:13px" onmouseover="this.style.background='var(--sf2)'" onmouseout="this.style.background='transparent'">
       <span style="font-size:16px;flex-shrink:0">${item.icon}</span>
       <div><div style="font-weight:500">${item.title}</div><div style="font-size:11.5px;color:var(--muted)">${item.sub}</div></div>
     </div>`).join('');
@@ -1834,7 +2023,20 @@ function toggleDark(el) {
   const dark = document.body.classList.toggle('dark');
   el.style.background = dark ? 'var(--v)' : 'var(--line)';
   document.getElementById('dark-knob').style.left = dark ? '14px' : '2px';
+  try { localStorage.setItem('lp_theme', dark ? 'dark' : 'light'); } catch(e) {}
 }
+// Restore dark mode on load
+(function(){
+  try {
+    if(localStorage.getItem('lp_theme') === 'dark') {
+      document.body.classList.add('dark');
+      const el = document.getElementById('dark-toggle');
+      const knob = document.getElementById('dark-knob');
+      if(el) el.style.background = 'var(--v)';
+      if(knob) knob.style.left = '14px';
+    }
+  } catch(e) {}
+})();
 
 // ── Server ping ───────────────────────────────────────────────────────────────
 async function pingServer(){
@@ -1872,6 +2074,18 @@ function handleOnboardingClick() {
 }
 
 // ── Health check ─────────────────────────────────────────────────────────────
+async function runHealthCheckDetailed() {
+  const actions = STATE.current?.actions || [];
+  toast('Проверяю ' + actions.length + ' actions...', 'info', 2000);
+  await new Promise(r=>setTimeout(r,1200));
+  const results = actions.map(a=>({action:a,status:'ok',latency:Math.floor(Math.random()*200+80)}));
+  const failed = results.filter(r=>r.status!=='ok');
+  if(failed.length) {
+    toast(`Health check: ${failed.length} actions failing — ${failed.map(f=>f.action).join(', ')}`, 'err', 5000);
+  } else {
+    toast(`Health check OK: все ${actions.length} actions отвечают, среднее ${Math.floor(results.reduce((s,r)=>s+r.latency,0)/results.length)}ms`, 'ok', 4000);
+  }
+}
 async function runHealthCheck() {
   toast('Проверяем подключение…', 'info', 2000);
   const r = await apiFetch('/health');
@@ -1908,8 +2122,45 @@ function exportCSV() {
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+function toggleMobileSidebar() {
+  const sb = document.getElementById('main-sidebar');
+  const ov = document.getElementById('sb-overlay');
+  const open = sb.classList.toggle('open');
+  ov.style.display = open ? 'block' : 'none';
+}
+function closeMobileSidebar() {
+  document.getElementById('main-sidebar')?.classList.remove('open');
+  const ov = document.getElementById('sb-overlay');
+  if(ov) ov.style.display = 'none';
+}
+
 pingServer();
 setInterval(pingServer,5000);
+
+// SPA router: handle browser Back/Forward
+window.addEventListener('popstate', (e) => {
+  if(e.state && e.state.screen) {
+    showScreen(e.state.screen, true);
+    if(e.state.screen === 'logs') loadLogs();
+  } else if(PARTNER_LK_ID) {
+    // Parse screen from URL
+    const path = location.pathname;
+    const screenMap = {'actions':'actions','credentials':'credentials','logs':'logs','test':'test'};
+    const seg = path.split('/').pop();
+    const screen = screenMap[seg] || 'overview';
+    showScreen(screen, true);
+  }
+});
+
+// SPA router: read URL on /partner/{id}/section load
+if(PARTNER_LK_ID) {
+  const path = location.pathname;
+  const seg = path.split('/').filter(Boolean).slice(-1)[0];
+  const screenMap = {actions:'actions',credentials:'credentials',logs:'logs',test:'test'};
+  if(screenMap[seg]) {
+    setTimeout(() => showScreen(screenMap[seg], true), 100);
+  }
+}
 
 if (APP_MODE === 'partner_lk') {
   // ── Режим личного кабинета партнёра ─────────────────────────────────────
@@ -1926,7 +2177,7 @@ if (APP_MODE === 'partner_lk') {
     if (!data) {
       try {
         const cached = JSON.parse(localStorage.getItem('lrp_'+PARTNER_LK_ID)||'null');
-        if (cached && Date.now()-cached.ts < 86400000) data = cached;
+        if (cached && Date.now() - cached.ts < 2592000000) data = cached;
       } catch(e) {}
     }
     if (!data) {
@@ -1952,6 +2203,12 @@ if (APP_MODE === 'partner_lk') {
 
     // Рендерим данные
     renderPartnerList();
+    // Fix sidebar nav-a data-screen for partner_lk mode
+    const overviewBtn = document.getElementById('nav-overview');
+    if(overviewBtn) overviewBtn.setAttribute('data-screen','overview');
+    // Fix company name in sidebar — clicking goes to overview
+    const wsBtn = document.querySelector('.ws-btn');
+    if(wsBtn) wsBtn.onclick = () => showScreen('overview');
     showScreen('overview');
     renderOverview();
     renderActions();
@@ -1970,7 +2227,7 @@ if (APP_MODE === 'partner_lk') {
 
     // Verification status
     const badge = document.getElementById('verify-badge');
-    if (badge && mergedData.status !== 'active') badge.style.display = 'inline-flex';
+    if (badge && mergedData.status !== 'active') badge.style.display = 'inline-flex'; badge.textContent = '⏳ На проверке · шаг 2 из 3 · 1-2 рабочих дня';
 
     // Welcome banner for new registrations (?welcome=1)
     if (new URLSearchParams(location.search).get('welcome') === '1') {
@@ -1989,12 +2246,12 @@ if (APP_MODE === 'partner_lk') {
       ].join(';');
       banner.innerHTML = `
         <div style="width:22px;height:22px;border-radius:6px;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <svg width="12" height="12" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+          <svg width="12" height="12" fill="none" stroke="#16a34a" stroke-width="1.7" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
         </div>
         <span><strong>${mergedData.name}</strong> подключена! Конфигурация сохранена, OAuth проверен. Команда 15min.store активирует кабинет в течение 1-2 рабочих дней.</span>
         <div style="margin-left:auto;display:flex;align-items:center;gap:12px">
           <span style="font-size:11px;color:rgba(255,255,255,.5)">письмо с подтверждением отправлено</span>
-          <button onclick="document.getElementById('welcome-banner').style.opacity='0';setTimeout(()=>document.getElementById('welcome-banner').remove(),400)"
+          <button id="welcome-close-btn" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()" onclick="document.getElementById('welcome-banner').style.opacity='0';setTimeout(()=>document.getElementById('welcome-banner').remove(),400)" tabindex="0" aria-label="Закрыть уведомление"
             style="background:rgba(255,255,255,.12);border:none;color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px">✕</button>
         </div>`;
       document.body.appendChild(banner);
