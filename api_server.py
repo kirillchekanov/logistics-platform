@@ -821,6 +821,14 @@ def hold_funds(client_id: str, amount_rub: float, chain_id: str = ""):
             "balance_after": {"available_rub": w["balance_rub"] - w["reserved_rub"]}}
 
 
+@app.get("/partner/{partner_id}", response_class=HTMLResponse)
+def serve_partner_lk(partner_id: str):
+    """Партнёрский личный кабинет."""
+    p = Path(__file__).parent / "partner-lk.html"
+    if p.exists():
+        return HTMLResponse(content=p.read_text(encoding="utf-8"))
+    return HTMLResponse(content="<h1>partner-lk.html not found</h1>", status_code=404)
+
 @app.get("/portal", response_class=HTMLResponse)
 def serve_portal():
     """Внутренний дашборд платформы — управление всеми партнёрами."""
