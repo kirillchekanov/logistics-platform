@@ -1,0 +1,95 @@
+{
+  "id": "pek",
+  "name": "ПЭК",
+  "display_name": "партнёр по доставке крупногабаритных грузов",
+  "status": "active",
+
+  "capabilities": [
+    "pickup_from_client",
+    "intercity_transit",
+    "oversized_cargo",
+    "pallet_delivery",
+    "b2b_delivery",
+    "cargo_terminal"
+  ],
+
+  "coverage": {
+    "cities": [
+      "Москва", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург",
+      "Нижний Новгород", "Самара", "Челябинск", "Ростов-на-Дону",
+      "Уфа", "Красноярск", "Пермь", "Воронеж", "Волгоград",
+      "Краснодар", "Тюмень", "Иркутск", "Хабаровск", "Владивосток"
+    ],
+    "terminals_total": 220,
+    "coverage_type": "major_cities_russia"
+  },
+
+  "constraints": {
+    "max_weight_kg": 3000,
+    "max_per_place_kg": 1500,
+    "max_dimensions_cm": [600, 250, 250],
+    "min_weight_kg": 1,
+    "oversized_threshold_kg": 30,
+    "pallet_support": true,
+    "forbidden_categories": [
+      "опасные грузы без сертификата", "живые животные", "наркотики"
+    ],
+    "temperature_modes": ["ambient"],
+    "packaging_required": true
+  },
+
+  "time_windows": {
+    "order_cutoff": "17:00",
+    "pickup_window": "09:00-17:00",
+    "pickup_lead_hours": 4,
+    "transit_days": {
+      "Москва-СПб": 1,
+      "Москва-Казань": 2,
+      "Москва-Самара": 2,
+      "Москва-Екатеринбург": 2,
+      "Москва-Новосибирск": 4,
+      "Москва-Красноярск": 5,
+      "Москва-Владивосток": 8,
+      "Самара-Москва": 2,
+      "Самара-СПб": 3,
+      "Екатеринбург-Москва": 2
+    },
+    "terminal_window": "08:00-20:00"
+  },
+
+  "handover": {
+    "as_sender": {
+      "required_docs": ["накладная ПЭК", "упаковочный лист", "вес/габариты", "стоимость груза"],
+      "notify_channels": ["email", "phone"],
+      "confirmation_type": "act_of_acceptance"
+    },
+    "as_receiver": {
+      "required_docs": ["накладная ПЭК", "доверенность для юрлиц"],
+      "notify_channels": ["email", "sms"],
+      "confirmation_type": "act_of_delivery"
+    }
+  },
+
+  "pricing": {
+    "base_per_kg_rub": 28,
+    "base_per_km_rub": 0.6,
+    "min_order_rub": 800,
+    "pickup_surcharge_rub": 350,
+    "pallet_surcharge_rub": 200,
+    "oversized_coefficient": 1.4,
+    "api": "https://api.pecom.ru/v1/calculator",
+    "currency": "RUB"
+  },
+
+  "adapter": {
+    "mcp_endpoint": "https://platform.15min.store/adapters/pek",
+    "created_by": "15min.store",
+    "api_source": "pek_api_v1",
+    "tools": [
+      "pek_check_coverage", "pek_get_slots",
+      "pek_calculate_cost", "pek_create_shipment",
+      "pek_track"
+    ],
+    "last_updated": "2026-04-29"
+  }
+}

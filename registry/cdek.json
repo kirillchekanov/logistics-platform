@@ -1,0 +1,103 @@
+{
+  "id": "cdek",
+  "name": "СДЭК",
+  "display_name": "партнёр по магистральной доставке",
+  "status": "active",
+
+  "capabilities": [
+    "pickup_from_client",
+    "intercity_transit",
+    "pvz_delivery",
+    "courier_delivery",
+    "door_to_door"
+  ],
+
+  "coverage": {
+    "cities": [
+      "Москва", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург",
+      "Нижний Новгород", "Самара", "Омск", "Челябинск", "Ростов-на-Дону",
+      "Уфа", "Красноярск", "Пермь", "Воронеж", "Волгоград",
+      "Краснодар", "Тюмень", "Саратов", "Тольятти", "Ижевск",
+      "Барнаул", "Иркутск", "Хабаровск", "Владивосток", "Якутск",
+      "Томск", "Кемерово", "Рязань", "Астрахань", "Пенза"
+    ],
+    "warehouses_total": 4200,
+    "pvz_total": 18000,
+    "coverage_type": "all_russia"
+  },
+
+  "constraints": {
+    "max_weight_kg": 31,
+    "max_dimensions_cm": [120, 80, 80],
+    "max_volume_weight_kg": 50,
+    "min_weight_kg": 0.05,
+    "forbidden_categories": [
+      "опасные грузы класс 1-9", "оружие и боеприпасы",
+      "живые животные", "наркотики", "ювелирные изделия без оценки"
+    ],
+    "temperature_modes": ["ambient"],
+    "insurance_available": true,
+    "max_declared_value_rub": 300000
+  },
+
+  "time_windows": {
+    "order_cutoff": "18:00",
+    "pickup_window": "09:00-18:00",
+    "pickup_lead_hours": 2,
+    "transit_days": {
+      "Москва-Москва": 0,
+      "Москва-СПб": 1,
+      "Москва-Казань": 1,
+      "Москва-Самара": 1,
+      "Москва-Екатеринбург": 2,
+      "Москва-Новосибирск": 3,
+      "Москва-Красноярск": 4,
+      "Москва-Иркутск": 5,
+      "Москва-Владивосток": 6,
+      "Самара-Москва": 1,
+      "Самара-СПб": 2,
+      "Самара-Екатеринбург": 1,
+      "Екатеринбург-Москва": 2,
+      "Новосибирск-Москва": 3
+    },
+    "delivery_window_pvz": "09:00-20:00",
+    "delivery_window_courier": "09:00-22:00"
+  },
+
+  "handover": {
+    "as_sender": {
+      "required_docs": ["накладная СДЭК", "штрихкод СДЭК", "вес и габариты каждого места"],
+      "notify_channels": ["email", "sms", "telegram"],
+      "confirmation_type": "tracking_number"
+    },
+    "as_receiver": {
+      "required_docs": ["накладная СДЭК", "трек-номер"],
+      "notify_channels": ["email", "sms"],
+      "confirmation_type": "scan_at_pvz"
+    }
+  },
+
+  "pricing": {
+    "base_per_kg_rub": 45,
+    "base_per_km_rub": 0.8,
+    "min_order_rub": 300,
+    "pickup_surcharge_rub": 150,
+    "insurance_pct": 0.75,
+    "api": "https://api.cdek.ru/v2/calculator/tariff",
+    "tariff_code_door_to_door": 233,
+    "tariff_code_pvz_to_pvz": 234,
+    "currency": "RUB"
+  },
+
+  "adapter": {
+    "mcp_endpoint": "https://platform.15min.store/adapters/cdek",
+    "created_by": "15min.store",
+    "api_source": "cdek_api_v2",
+    "tools": [
+      "cdek_check_coverage", "cdek_get_slots",
+      "cdek_calculate_cost", "cdek_create_shipment",
+      "cdek_track"
+    ],
+    "last_updated": "2026-04-29"
+  }
+}

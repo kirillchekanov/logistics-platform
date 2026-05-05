@@ -1,0 +1,82 @@
+{
+  "id": "darkstore",
+  "name": "Даркстор у дома",
+  "display_name": "партнёр по хранению и last-mile доставке",
+  "status": "active",
+
+  "capabilities": [
+    "storage",
+    "last_mile_delivery",
+    "fbs_express",
+    "fbi",
+    "crossdock_receive",
+    "marketplace_fulfillment"
+  ],
+
+  "coverage": {
+    "cities": [
+      "Москва", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург",
+      "Нижний Новгород", "Самара", "Омск", "Челябинск", "Ростов-на-Дону",
+      "Уфа", "Красноярск", "Пермь", "Воронеж", "Волгоград",
+      "Краснодар", "Тюмень", "Саратов", "Тольятти", "Ижевск"
+    ],
+    "warehouses_total": 1507,
+    "expandable_cities": "any",
+    "expandable_lead_days": 5
+  },
+
+  "constraints": {
+    "max_weight_kg": 31,
+    "max_dimensions_cm": [120, 80, 80],
+    "min_weight_kg": 0.1,
+    "forbidden_categories": [
+      "опасные грузы", "оружие", "живые животные", "скоропортящиеся без темп. режима"
+    ],
+    "temperature_modes": ["ambient"],
+    "sku_per_shelf_default": 5,
+    "marketplace_support": ["ozon", "wildberries", "yandex_market"]
+  },
+
+  "time_windows": {
+    "order_cutoff": "20:00",
+    "pickup_window": "06:00-22:00",
+    "assembly_minutes": 6,
+    "delivery_minutes_avg": 48,
+    "receiving_window": "06:00-23:00",
+    "transit_days": {}
+  },
+
+  "handover": {
+    "as_sender": {
+      "required_docs": ["накладная отправителя", "штрихкод каждого места", "вес и габариты"],
+      "notify_channels": ["email", "telegram", "webhook"],
+      "confirmation_type": "scan_barcode"
+    },
+    "as_receiver": {
+      "required_docs": ["накладная отправителя", "список мест"],
+      "notify_channels": ["email", "telegram"],
+      "confirmation_type": "scan_on_arrival"
+    }
+  },
+
+  "pricing": {
+    "storage_per_shelf_per_month_rub": 3600,
+    "order_processing_rub": 45,
+    "last_mile_base_rub": 89,
+    "crossdock_base_per_kg_rub": 22,
+    "api": "https://api.15min.store/v1/calculate",
+    "currency": "RUB"
+  },
+
+  "adapter": {
+    "mcp_endpoint": "https://mcp-staging.stocksharing.ru/mcp",
+    "created_by": "15min.store",
+    "api_source": "darkstore_internal_api",
+    "tools": [
+      "check_coverage", "find_warehouse", "calculate_cost",
+      "calculate_fbi_cost", "calculate_crossdock_cost",
+      "estimate_delivery", "create_lead"
+    ],
+    "last_updated": "2026-04-29"
+  }
+}
