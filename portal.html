@@ -1,1425 +1,1732 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <title>Partner Portal · Logistics API Platform</title>
-  <meta name="viewport" content="width=1280" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --ink: #0f172a; --muted-strong: #334155; --muted: #64748b;
-      --line: #e6e8ee; --surface: #f7f8fa; --surface-2: #f1f3f7;
-      --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-    html, body { margin: 0; padding: 0; height: 100%; background: #f7f8fa; }
-    body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: antialiased; }
-    * { box-sizing: border-box; }
-    button { font-family: inherit; }
-  </style>
+<meta charset="utf-8">
+<title>Logistics Platform · Партнёрский портал</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f172a;--ms:#334155;--muted:#64748b;--line:#e6e8ee;
+  --sf:#f7f8fa;--sf2:#f1f3f7;
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+  --v:#5b21b6;--vl:#f5f3ff;--vb:#c4b5fd;
+  --g50:#ecfdf5;--g200:#a7f3d0;--g600:#16a34a;--g700:#047857;
+  --a50:#fffbeb;--a300:#fcd34d;--a700:#b45309;--a800:#92400e;
+  --r50:#fef2f2;--r200:#fecaca;--r600:#dc2626;--r700:#b91c1c;
+  --b50:#eff6ff;--b200:#bfdbfe;--b600:#2563eb;--b700:#1d4ed8;
+  --code:#0b1220;--cfg:#e2e8f0;
+}
+body.dark{
+  --ink:#f1f5f9;--ms:#cbd5e1;--muted:#94a3b8;--line:#1e293b;
+  --sf:#0f172a;--sf2:#1e293b;
+  --vl:#2e1065;--vb:#4c1d95;
+  --g50:#052e16;--g200:#14532d;
+  --a50:#431407;--a300:#78350f;
+  --r50:#450a0a;--r200:#7f1d1d;
+  --b50:#172554;--b200:#1e3a5f;
+  --code:#020617;
+}
+body.dark aside{background:#0f172a;border-right-color:#1e293b}
+body.dark #tb{background:#0f172a;border-bottom-color:#1e293b}
+body.dark .card,.body.dark .stat,.body.dark .conn-banner{background:#0f1629}
+body.dark .nav-a.active{background:#1e293b;border-color:#334155}
+body.dark .env-card,.body.dark .ws-btn{background:#1e293b}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;-webkit-font-smoothing:antialiased}
+body{font-family:var(--sans);color:var(--ink);background:var(--sf);display:flex;height:100vh;overflow:hidden;font-size:13px}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:3px}
+
+/* ── Sidebar ── */
+aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:var(--sf2);display:flex;flex-direction:column;padding:14px 12px;gap:12px;height:100vh;overflow-y:auto;overflow-x:hidden}
+@media(max-width:700px){aside{width:180px;flex:0 0 180px;padding:10px 8px}#main{max-width:calc(100vw - 180px)}}
+.ws-btn{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 0 rgba(15,23,42,.04);cursor:pointer;text-align:left;width:100%}
+.ws-btn:hover{background:#fafafa}
+.ws-av{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#0f172a,#334155);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;flex-shrink:0}
+.ws-name{font-size:12.5px;font-weight:600;color:var(--ink)}
+.ws-sub{font-size:11px;color:var(--muted)}
+.nav-label{font-size:10.5px;font-weight:600;letter-spacing:.6px;color:var(--muted);text-transform:uppercase;padding:2px 10px}
+.nav-a{display:flex;align-items:center;gap:10px;padding:7px 10px;font-size:13px;font-weight:500;color:var(--ms);background:transparent;border:1px solid transparent;border-radius:7px;cursor:pointer;transition:all .1s;text-decoration:none;width:100%;text-align:left}
+.nav-a:hover{background:#e8eaee;color:var(--ink)}
+.nav-a.active{font-weight:600;color:var(--ink);background:#fff;border-color:var(--line);box-shadow:0 1px 0 rgba(15,23,42,.04)}
+.nav-a svg{flex-shrink:0}
+.nav-spacer{flex:1}
+.env-card{padding:10px;background:#fff;border:1px solid var(--line);border-radius:8px}
+.env-seg{display:flex;gap:4px;margin-top:6px}
+.env-btn{flex:1;padding:5px 8px;font-size:11.5px;font-weight:600;background:var(--sf2);color:var(--ink);border:1px solid var(--line);border-radius:5px;cursor:pointer}
+.env-btn.off{background:transparent;color:var(--muted);border-color:transparent;font-weight:500}
+.user-strip{display:flex;align-items:center;gap:9px;padding:6px 4px}
+.user-av{width:26px;height:26px;border-radius:50%;background:#e2e8f0;color:#475569;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+
+/* ── Main ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--sf);max-width:calc(100vw - 232px)}
+#tb{padding:12px 20px;border-bottom:1px solid var(--line);background:#fff;display:flex;align-items:center;gap:10px;flex-shrink:0;min-width:0;overflow:hidden}
+@media(max-width:900px){#tb .search-hide{display:none}}
+.tb-left{flex:1;min-width:0;overflow:hidden}
+.tb-bc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-h1{white-space:nowrap;overflow:hidden}
+.tb-bc{font-size:12px;color:var(--muted);margin-bottom:3px}
+.tb-h1{font-size:18px;font-weight:600;letter-spacing:-.2px;display:flex;align-items:center;gap:10px}
+.tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.srv-badge{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);padding:4px 10px;border:1px solid var(--line);border-radius:7px;background:var(--sf2)}
+.srv-dot{width:6px;height:6px;border-radius:50%;background:#cbd5e1;flex-shrink:0}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:7px;font-size:12.5px;font-weight:500;border:1px solid var(--line);background:#fff;color:var(--ink);white-space:nowrap;cursor:pointer;box-shadow:0 1px 0 rgba(15,23,42,.05);transition:all .1s}
+.btn:hover{background:var(--sf2)}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.primary:hover{opacity:.88}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted);box-shadow:none}
+.btn.ghost:hover{background:var(--sf2);color:var(--ink)}
+.btn.danger{color:var(--r700);border-color:var(--r200)}
+.btn.danger:hover{background:var(--r50)}
+.btn.sm{padding:4px 10px;font-size:12px;height:28px}
+.btn.lg{padding:10px 24px;font-size:14px;font-weight:600}
+.btn.accent{background:var(--v);color:#fff;border-color:var(--v)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;white-space:nowrap}
+.badge.ok{background:var(--g50);color:var(--g700);border:1px solid var(--g200)}
+.badge.warn{background:var(--a50);color:var(--a700);border:1px solid var(--a300)}
+.badge.err{background:var(--r50);color:var(--r700);border:1px solid var(--r200)}
+.badge.info{background:var(--b50);color:var(--b700);border:1px solid var(--b200)}
+.badge.neutral{background:var(--sf2);color:var(--muted);border:1px solid var(--line)}
+.badge.soft-warn{background:var(--a50);color:var(--a700);border:none}
+.bdot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+/* ── Method tags ── */
+.mtag{display:inline-flex;align-items:center;justify-content:center;min-width:44px;padding:2px 6px;border-radius:4px;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.4px}
+.GET{background:#eff6ff;color:#1d4ed8}.POST{background:#ecfdf5;color:#15803d}
+.PUT{background:#fffbeb;color:#b45309}.DELETE{background:#fef2f2;color:#b91c1c}
+
+/* ── Cards ── */
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 1px 0 rgba(15,23,42,.03);overflow:hidden;margin-bottom:14px}
+.card-head{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.card-title{font-size:13px;font-weight:600}
+.card-sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* ── Content ── */
+#content{flex:1;overflow-y:auto;overflow-x:hidden}
+.screen{display:none}
+.screen.active{display:block}
+#screen-empty.active{display:flex;align-items:center;justify-content:center;height:100%}
+#screen-overview.active{display:block;padding:20px 24px 32px}
+#screen-logs.active{display:flex;flex-direction:column}
+#screen-actions.active{display:block;padding:20px 24px 32px}
+#screen-credentials.active{display:block;padding:20px 24px 32px}
+#screen-wizard.active{display:flex;flex-direction:column}
+
+/* ── Empty state ── */
+.empty-state{text-align:center;max-width:400px;padding:40px 20px}
+.empty-icon{width:56px;height:56px;border-radius:12px;background:var(--sf2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--muted)}
+.empty-title{font-size:18px;font-weight:600;margin-bottom:8px}
+.empty-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:24px}
+
+/* ── Stepper ── */
+.stepper{display:flex;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);background:#fff;flex-shrink:0;overflow:hidden}
+.sc{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;transition:all .2s}
+.sc-done{background:var(--ink);color:#fff}
+.sc-active{background:#fff;border:1.5px solid var(--ink);color:var(--ink)}
+.sc-pending{background:var(--sf2);border:1px solid var(--line);color:var(--muted)}
+.step-info{margin-left:6px;min-width:0;overflow:hidden}
+.step-lbl{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step-sub{font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step-line{flex:1;height:1px;background:var(--line);margin:0 8px;min-width:8px;transition:background .2s}
+.step-line.done{background:var(--ink)}
+@media(max-width:900px){.step-info{display:none}.step-line{margin:0 4px}}
+@media(max-width:700px){.step-line{margin:0 2px;min-width:4px}}
+
+/* ── Wizard body ── */
+.wiz-body{flex:1;overflow-y:auto;padding:20px 24px 32px;min-width:0}
+.wiz-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,280px);gap:18px}
+@media(max-width:800px){.wiz-grid{grid-template-columns:1fr}.wiz-grid>div:last-child{display:none}}
+.field{margin-bottom:14px}
+.field-label{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px;display:block}
+.field-hint{font-size:11px;color:var(--muted);margin-top:3px}
+.inp{height:32px;padding:0 10px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;color:var(--ink);background:var(--sf);width:100%;outline:none;transition:border .15s}
+.inp:focus{border-color:var(--ink);background:#fff;box-shadow:0 0 0 3px rgba(15,23,42,.06)}
+.inp.err:focus{border-color:var(--r600);box-shadow:0 0 0 3px rgba(220,38,38,.08)}
+.inp.mono{font-family:var(--mono)}
+.inp.err{border-color:var(--r600)}
+.inp-wrap{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--sf)}
+.inp-wrap:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px rgba(15,23,42,.06)}
+.inp-pfx{padding:0 10px;display:flex;align-items:center;font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--sf2);border-right:1px solid var(--line);white-space:nowrap}
+.inp-inner{flex:1;border:none;background:transparent;padding:0 10px;font-size:12.5px;font-family:var(--mono);color:var(--ink);height:32px;outline:none}
+.sel{height:32px;padding:0 8px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;font-family:var(--mono);color:var(--ink);background:var(--sf);outline:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;color:var(--muted);background:#fff;transition:all .1s;user-select:none}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ── Validation screen ── */
+.val-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.val-item:last-child{border:none}
+.val-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+.val-ok{background:var(--g50);border:1px solid var(--g200)}
+.val-err{background:var(--r50);border:1px solid var(--r200)}
+.val-spin{background:var(--sf2);border:1px solid var(--line);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Overview ── */
+.stat-row{display:grid;grid-template-columns:repeat(3,minmax(140px,1fr));gap:14px;margin-bottom:20px}
+@media(max-width:800px){.stat-row{grid-template-columns:1fr}}
+.stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px 16px;position:relative;overflow:hidden;box-shadow:0 1px 0 rgba(15,23,42,.03)}
+.stat-acc{position:absolute;left:0;top:0;bottom:0;width:3px}
+.stat-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.stat-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.stat-val{font-size:24px;font-weight:600;letter-spacing:-.5px;margin-bottom:4px}
+.stat-sub{font-size:12px;color:var(--muted)}
+.conn-banner{background:linear-gradient(180deg,#fff,#fafbfc);border:1px solid var(--line);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.conn-icon{width:36px;height:36px;border-radius:8px;background:var(--g50);border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;color:var(--g700);flex-shrink:0}
+
+/* ── Tables ── */
+.tbl-head{padding:9px 16px;background:var(--sf2);border-bottom:1px solid var(--line);display:grid;gap:12px;font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.tbl-row{padding:11px 16px;border-bottom:1px solid #f1f5f9;display:grid;gap:12px;align-items:center;transition:background .1s;cursor:pointer;overflow:hidden}
+.tbl-row:last-child{border:none}
+.tbl-row:hover{background:var(--sf2)}
+.tbl-row.err-row{background:#fef9f9}
+.tbl-row.selected{background:var(--r50);border-left:2px solid var(--r600)}
+
+/* ── Code ── */
+.code{background:var(--code);color:var(--cfg);font-family:var(--mono);font-size:11.5px;line-height:1.65;padding:14px;white-space:pre-wrap;word-break:break-all;overflow-x:hidden}
+.sk{color:#93c5fd}.ss{color:#fde68a}.sn{color:#a5b4fc}.sc2{color:#64748b}
+
+/* ── Log layout ── */
+.log-layout{display:flex;flex:1;overflow:hidden;min-height:0}
+.log-tbl{flex:1;overflow-y:auto;min-width:0}
+.log-detail{width:380px;flex-shrink:0;border-left:1px solid var(--line);background:#fff;display:flex;flex-direction:column;overflow-y:auto}
+@media(max-width:900px){.log-detail{width:280px}}
+@media(max-width:700px){.log-detail{display:none!important}}
+.dtabs{display:flex;border-bottom:1px solid var(--line);padding:0 20px;flex-shrink:0}
+.dtab{padding:10px 0;margin-right:20px;font-size:12.5px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent}
+.dtab.active{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
+.t-row{display:grid;grid-template-columns:130px 1fr 60px;gap:10px;align-items:center;margin-bottom:8px}
+.t-track{height:8px;background:var(--sf2);border-radius:999px;overflow:hidden}
+.t-fill{height:100%;border-radius:999px;background:var(--ink)}
+.t-err{background:var(--r600)}
+
+/* ── Tester modal ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 48px rgba(15,23,42,.18)}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.modal-close{background:none;border:none;font-size:22px;color:#94a3b8;line-height:1;cursor:pointer;padding:0}
+
+/* ── Scope toggle ── */
+.toggle{width:28px;height:16px;border-radius:999px;position:relative;cursor:pointer;flex-shrink:0;transition:background .12s}
+.toggle-knob{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:left .12s}
+
+/* ── Info box ── */
+.info-box{padding:10px 14px;background:var(--a50);border:1px solid var(--a300);border-radius:8px;font-size:12px;color:var(--a800);line-height:1.5;display:flex;gap:8px;margin-bottom:14px}
+
+/* ── Toast notifications ── */
+.toast-container{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(15,23,42,.18);pointer-events:all;animation:toastIn .2s ease;min-width:240px;max-width:380px;border:1px solid}
+.toast.ok{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
+.toast.err{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+.toast.info{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.toast.warn{background:#fffbeb;color:#b45309;border-color:#fcd34d}
+.toast-icon{font-size:16px;flex-shrink:0}
+.toast-close{margin-left:auto;background:none;border:none;cursor:pointer;color:inherit;opacity:.6;font-size:16px;padding:0;line-height:1;flex-shrink:0}
+.toast-close:hover{opacity:1}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes toastOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(8px)}}
+
+/* ── Empty state partner list ── */
+.co-empty{padding:8px 10px;font-size:12px;color:var(--muted);font-style:italic}
+
+/* ── Disabled nav items ── */
+.nav-a.locked{opacity:.4;cursor:not-allowed;pointer-events:none}
+
+/* ── Confirmation dialog ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.confirm-bg{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:300;align-items:center;justify-content:center}
+.confirm-bg.open{display:flex}
+.confirm-box{background:#fff;border-radius:10px;padding:24px;width:380px;box-shadow:0 24px 48px rgba(15,23,42,.18);border:1px solid var(--line)}
+.confirm-title{font-size:15px;font-weight:600;margin-bottom:8px}
+.confirm-sub{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:20px}
+.confirm-actions{display:flex;justify-content:flex-end;gap:8px}
+
+
+@media(max-width:900px){
+  .screen{padding:16px 16px 24px!important}
+  #screen-logs{padding:0!important}
+  #screen-wizard{padding:0!important}
+  .conn-banner{flex-wrap:wrap}
+  .conn-banner .conn-stats{display:none}
+}
+@media(max-width:700px){
+  body{font-size:12px}
+  .tbl-head,.tbl-row{gap:8px!important}
+}
+/* ── Animations ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.anim{animation:fadeIn .2s ease}
+
+/* Toast */
+#toast{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast-item{display:flex;align-items:center;gap:10px;padding:10px 16px;background:#0f172a;color:#fff;border-radius:10px;font-size:13px;box-shadow:0 8px 24px rgba(15,23,42,.25);opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:auto}
+.toast-item.show{opacity:1;transform:none}
+.toast-item.ok{background:#047857;border:1px solid #a7f3d0}
+.toast-item.err{background:#b91c1c;border:1px solid #fecaca}
+.toast-item.info{background:#1d4ed8;border:1px solid #bfdbfe}
+
+/* Loading */
+.screen-loading{opacity:.5;pointer-events:none;transition:opacity .15s}
+</style>
 </head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-  <script type="text/babel">
 
-// ── API Layer — соединяет UI с adapter.py ──────────────────────────────────
-// В боевой версии заменить BASE_URL на адрес вашего FastAPI сервера
-const API_BASE = window.API_BASE || null; // null = stub mode
+<!-- ═══ SIDEBAR ═══ -->
+<aside id="sb">
+  <button class="ws-btn" id="ws-btn">
+    <div class="ws-av" id="ws-av">?</div>
+    <div style="flex:1;min-width:0">
+      <div class="ws-name" id="ws-name">Нет подключённых партнёров</div>
+      <div class="ws-sub">Партнёр · Sandbox</div>
+    </div>
+    <svg width="14" height="14" fill="none" stroke="var(--muted)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
 
-const STUB_DATA = {
-  companies: [
-    { id: "darkstore", name: "Даркстор у дома", display_name: "партнёр по last-mile доставке",
-      status: "active", actions: ["create_shipment","book_pickup","track","cancel","calculate_cost","create_reception","get_slots"],
-      calls_today: 1402, uptime: "100%", token_ttl: "46m 12s" },
-    { id: "cdek", name: "СДЭК", display_name: "партнёр по магистральной доставке",
-      status: "active", actions: ["create_shipment","book_pickup","track","cancel","calculate_cost","get_slots"],
-      calls_today: 8210, uptime: "99.8%", token_ttl: "23m 41s" },
-    { id: "pek", name: "ПЭК", display_name: "партнёр по крупногабаритным грузам",
-      status: "configuring", actions: ["create_shipment","track","cancel","calculate_cost"],
-      calls_today: 0, uptime: "—", token_ttl: "—" },
-  ],
-  logs: [
-    { id: "req_001", time: "14:51:22", action: "create_shipment", company: "darkstore", status: 200, latency: 218, ok: true },
-    { id: "req_002", time: "14:51:20", action: "book_pickup",     company: "darkstore", status: 200, latency: 312, ok: true },
-    { id: "req_003", time: "14:39:11", action: "calculate_cost",  company: "cdek",      status: 200, latency: 201, ok: true },
-    { id: "req_004", time: "14:22:05", action: "track",           company: "cdek",      status: 200, latency: 67,  ok: true },
-    { id: "req_005", time: "13:55:33", action: "create_shipment", company: "pek",       status: 422, latency: 54,  ok: false,
-      error: { code: "validation_error", message: "weight_kg must be positive number", field: "weight_kg", received: "5000g",
-               fix: "В шаблоне передавайте weight_kg как число, а не строку. Уберите суффикс 'g'." } },
-    { id: "req_006", time: "13:22:01", action: "token_refresh",   company: "darkstore", status: 200, latency: 312, ok: true },
-  ]
-};
+  <!-- Company list -->
+  <div id="co-list" style="display:flex;flex-direction:column;gap:1px"></div>
 
-const API = {
-  async listCompanies() {
-    if (!API_BASE) return { companies: STUB_DATA.companies };
-    const r = await fetch(`${API_BASE}/companies`);
-    return r.json();
-  },
-  async executeAction(company_id, action, params, dry_run = true) {
-    if (!API_BASE) {
-      await new Promise(r => setTimeout(r, 600));
-      return {
-        dry_run, action, company_id, success: true, stub: true,
-        data: { shipment_id: `STUB-${company_id.toUpperCase()}-${Date.now()}`,
-                tracking_number: `TRK${Math.floor(Math.random()*1000000)}`,
-                status: "created", cost_rub: 1850, delivery_days_min: 1, delivery_days_max: 2 },
-        will_call: dry_run ? { method: "POST", url: `https://api.${company_id}.ru/v2/shipments` } : null,
-        message: dry_run ? "Превью. Вызовите с dry_run=false для реального запроса." : "Выполнено."
-      };
-    }
-    const r = await fetch(`${API_BASE}/execute`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ company_id, action, params, dry_run })
-    });
-    return r.json();
-  },
-  async getActionSchema(company_id, action) {
-    if (!API_BASE) {
-      const schemas = {
-        create_shipment: ["from_city","to_city","weight_g","length_cm","width_cm","height_cm","sender_name","sender_phone","recipient_name","recipient_phone"],
-        book_pickup: ["shipment_id","pickup_date","time_from","time_to","contact_name","contact_phone"],
-        track: ["tracking_number"],
-        calculate_cost: ["from_city","to_city","weight_g","length_cm","width_cm","height_cm"],
-        cancel: ["shipment_id"],
-      };
-      return { company_id, action, required_params: schemas[action] || [], stub: true };
-    }
-    const r = await fetch(`${API_BASE}/schema/${company_id}/${action}`);
-    return r.json();
-  },
-  async getLogs() {
-    if (!API_BASE) return { logs: STUB_DATA.logs };
-    const r = await fetch(`${API_BASE}/logs`);
-    return r.json();
-  },
-  async registerCompany(config, dry_run = true) {
-    if (!API_BASE) {
-      await new Promise(r => setTimeout(r, 800));
-      return { status: dry_run ? "valid" : "registered", dry_run,
-               company_id: config.id, company_name: config.name,
-               actions_count: Object.keys(config.actions || {}).length,
-               message: dry_run ? "Конфиг валиден. Подтвердите для сохранения." : "Компания добавлена." };
-    }
-    const r = await fetch(`${API_BASE}/register`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ config_json: JSON.stringify(config), dry_run })
-    });
-    return r.json();
-  }
-};
-
-window.API = API;
-window.STUB_DATA = STUB_DATA;
-
-/* global React */
-// Shared shell components: sidebar, topbar, primitives.
-
-const PortalIcon = ({ name, size = 16, stroke = 1.6 }) => {
-  const common = {
-    width: size,
-    height: size,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: stroke,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-  };
-  const paths = {
-    home: <><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /></>,
-    wizard: <><path d="M4 6h16" /><path d="M4 12h10" /><path d="M4 18h16" /><circle cx="18" cy="12" r="2" /></>,
-    actions: <><path d="M13 2L3 14h7l-1 8 10-12h-7z" /></>,
-    key: <><circle cx="8" cy="15" r="4" /><path d="M11 12l9-9" /><path d="M16 7l3 3" /></>,
-    logs: <><path d="M4 4h16v6H4z" /><path d="M4 14h16v6H4z" /><circle cx="7" cy="7" r=".5" fill="currentColor" /><circle cx="7" cy="17" r=".5" fill="currentColor" /></>,
-    book: <><path d="M4 4h12a4 4 0 014 4v12H8a4 4 0 01-4-4V4z" /><path d="M4 4v12a4 4 0 014 4" /></>,
-    support: <><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 015 0c0 1.5-2.5 2-2.5 3.5" /><circle cx="12" cy="17" r=".6" fill="currentColor" /></>,
-    chevron: <><path d="M9 6l6 6-6 6" /></>,
-    chevronDown: <><path d="M6 9l6 6 6-6" /></>,
-    check: <><path d="M5 12l5 5 9-11" /></>,
-    plus: <><path d="M12 5v14M5 12h14" /></>,
-    copy: <><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 012-2h10" /></>,
-    eye: <><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></>,
-    eyeOff: <><path d="M3 3l18 18" /><path d="M10.6 6.1A9.7 9.7 0 0112 6c6.5 0 10 6 10 6a16.7 16.7 0 01-3.3 4.1" /><path d="M6.6 6.6A16.6 16.6 0 002 12s3.5 6 10 6c1.4 0 2.7-.3 3.9-.7" /><path d="M9.5 9.5a3 3 0 004.2 4.2" /></>,
-    refresh: <><path d="M21 12a9 9 0 11-3-6.7L21 8" /><path d="M21 3v5h-5" /></>,
-    play: <><path d="M6 4l14 8-14 8z" /></>,
-    search: <><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></>,
-    dot: <><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" /></>,
-    arrow: <><path d="M5 12h14M13 5l7 7-7 7" /></>,
-    download: <><path d="M12 4v12M6 12l6 6 6-6" /><path d="M4 20h16" /></>,
-    filter: <><path d="M4 5h16l-6 8v6l-4-2v-4z" /></>,
-    grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
-    settings: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3h.1a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8v.1a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z" /></>,
-    bell: <><path d="M6 8a6 6 0 1112 0c0 7 3 7 3 9H3c0-2 3-2 3-9z" /><path d="M10 21a2 2 0 004 0" /></>,
-    warn: <><path d="M12 4l10 17H2z" /><path d="M12 10v5" /><circle cx="12" cy="18" r=".6" fill="currentColor" /></>,
-    info: <><circle cx="12" cy="12" r="9" /><path d="M12 11v6" /><circle cx="12" cy="8" r=".6" fill="currentColor" /></>,
-    cube: <><path d="M12 3l9 5v8l-9 5-9-5V8z" /><path d="M3 8l9 5 9-5" /><path d="M12 13v10" /></>,
-    lightning: <><path d="M13 2L4 14h7l-1 8 10-12h-7z" /></>,
-    lock: <><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 018 0v4" /></>,
-    map: <><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2z" /><path d="M9 4v16M15 6v16" /></>,
-    truck: <><rect x="2" y="7" width="12" height="9" rx="1" /><path d="M14 10h4l3 3v3h-7" /><circle cx="6" cy="18" r="2" /><circle cx="17" cy="18" r="2" /></>,
-    pin: <><path d="M12 22s7-7 7-12a7 7 0 10-14 0c0 5 7 12 7 12z" /><circle cx="12" cy="10" r="2.5" /></>,
-    user: <><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-7 8-7s8 3 8 7" /></>,
-    minus: <><path d="M5 12h14" /></>,
-    x: <><path d="M6 6l12 12M18 6L6 18" /></>,
-  };
-  return <svg {...common}>{paths[name] || null}</svg>;
-};
-
-const StatusDot = ({ tone = "ok" }) => {
-  const map = {
-    ok: "#16a34a",
-    warn: "#d97706",
-    err: "#dc2626",
-    idle: "#94a3b8",
-    info: "#2563eb",
-  };
-  return (
-    <span
-      style={{
-        display: "inline-block",
-        width: 8,
-        height: 8,
-        borderRadius: 999,
-        background: map[tone] || map.idle,
-        boxShadow: `0 0 0 3px ${(map[tone] || map.idle)}22`,
-      }}
-    />
-  );
-};
-
-const Badge = ({ tone = "neutral", children, dot = false, mono = false, soft = false }) => {
-  const tones = {
-    neutral: { bg: "#f1f5f9", fg: "#475569", border: "#e2e8f0" },
-    ok: { bg: "#ecfdf5", fg: "#047857", border: "#a7f3d0" },
-    warn: { bg: "#fffbeb", fg: "#b45309", border: "#fcd34d" },
-    err: { bg: "#fef2f2", fg: "#b91c1c", border: "#fecaca" },
-    info: { bg: "#eff6ff", fg: "#1d4ed8", border: "#bfdbfe" },
-    accent: { bg: "#f5f3ff", fg: "#5b21b6", border: "#ddd6fe" },
-    inverse: { bg: "#0f172a", fg: "#f8fafc", border: "#0f172a" },
-  };
-  const t = tones[tone] || tones.neutral;
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 6,
-        padding: soft ? "2px 8px" : "3px 9px",
-        fontSize: 11.5,
-        fontWeight: 500,
-        lineHeight: 1.4,
-        color: t.fg,
-        background: t.bg,
-        border: soft ? "none" : `1px solid ${t.border}`,
-        borderRadius: 6,
-        fontFamily: mono ? "var(--mono)" : "inherit",
-        letterSpacing: mono ? 0 : 0.1,
-      }}
-    >
-      {dot && <StatusDot tone={tone === "neutral" ? "idle" : tone} />}
-      {children}
-    </span>
-  );
-};
-
-const Btn = ({ kind = "secondary", size = "md", icon, iconRight, children, style, full }) => {
-  const sizes = {
-    sm: { pad: "5px 10px", fs: 12.5, h: 28 },
-    md: { pad: "7px 12px", fs: 13, h: 32 },
-    lg: { pad: "9px 16px", fs: 13.5, h: 36 },
-  };
-  const kinds = {
-    primary: { bg: "#0f172a", fg: "#f8fafc", border: "#0f172a", shadow: "0 1px 0 #00000010, inset 0 1px 0 #ffffff14" },
-    secondary: { bg: "#fff", fg: "#0f172a", border: "#e2e8f0", shadow: "0 1px 0 #0f172a08" },
-    ghost: { bg: "transparent", fg: "#475569", border: "transparent", shadow: "none" },
-    danger: { bg: "#fff", fg: "#b91c1c", border: "#fecaca", shadow: "0 1px 0 #0f172a08" },
-    accent: { bg: "#5b21b6", fg: "#f5f3ff", border: "#5b21b6", shadow: "0 1px 0 #00000010, inset 0 1px 0 #ffffff14" },
-  };
-  const s = sizes[size];
-  const k = kinds[kind];
-  return (
-    <button
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: full ? "center" : "flex-start",
-        gap: 6,
-        padding: s.pad,
-        height: s.h,
-        fontSize: s.fs,
-        fontWeight: 500,
-        color: k.fg,
-        background: k.bg,
-        border: `1px solid ${k.border}`,
-        borderRadius: 7,
-        boxShadow: k.shadow,
-        cursor: "pointer",
-        width: full ? "100%" : "auto",
-        ...style,
-      }}
-    >
-      {icon && <PortalIcon name={icon} size={14} />}
-      {children}
-      {iconRight && <PortalIcon name={iconRight} size={14} />}
+  <div style="display:flex;flex-direction:column;gap:1px">
+    <div class="nav-label">Партнёрский портал</div>
+    <button class="nav-a active" data-screen="empty" id="nav-overview">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+      Overview
     </button>
-  );
-};
+    <button class="nav-a" data-screen="wizard" id="nav-onboarding" onclick="handleOnboardingClick()">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h16"/><circle cx="18" cy="12" r="2"/></svg>
+      Onboarding
+    </button>
+    <button class="nav-a" data-screen="actions" id="nav-actions" title="Сначала подключите партнёра">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
+      Actions
+    </button>
+    <button class="nav-a" data-screen="credentials" id="nav-credentials" title="Сначала подключите партнёра">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg>
+      Credentials
+    </button>
+    <button class="nav-a" data-screen="logs" id="nav-logs" title="Сначала подключите партнёра">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6"/><rect x="4" y="14" width="16" height="6"/><circle cx="7" cy="7" r=".5" fill="currentColor"/><circle cx="7" cy="17" r=".5" fill="currentColor"/></svg>
+      Logs
+      <span class="badge soft-warn" id="log-badge" style="margin-left:auto;display:none;font-size:11px;padding:1px 7px">0</span>
+    </button>
+  </div>
 
-const Sidebar = ({ active = "overview" }) => {
-  const items = [
-    { id: "overview", icon: "home", label: "Overview" },
-    { id: "wizard", icon: "wizard", label: "Onboarding" },
-    { id: "actions", icon: "lightning", label: "Actions" },
-    { id: "credentials", icon: "key", label: "Credentials" },
-    { id: "logs", icon: "logs", label: "Logs" },
-  ];
-  const secondary = [
-    { id: "docs", icon: "book", label: "API reference" },
-    { id: "support", icon: "support", label: "Support" },
-  ];
-  return (
-    <aside
-      style={{
-        width: 232,
-        flex: "0 0 232px",
-        borderRight: "1px solid var(--line)",
-        background: "var(--surface-2)",
-        display: "flex",
-        flexDirection: "column",
-        padding: "14px 12px",
-        gap: 14,
-      }}
-    >
-      {/* Workspace switcher */}
-      <button
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          padding: "8px 10px",
-          background: "#fff",
-          border: "1px solid var(--line)",
-          borderRadius: 8,
-          boxShadow: "0 1px 0 #0f172a06",
-          cursor: "pointer",
-          textAlign: "left",
-        }}
-      >
-        <div
-          style={{
-            width: 26,
-            height: 26,
-            borderRadius: 6,
-            background: "linear-gradient(135deg, #0f172a, #334155)",
-            color: "#fff",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "var(--mono)",
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: 0.5,
-          }}
-        >
-          NE
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink)" }}>
-            Northwind Express
-          </div>
-          <div style={{ fontSize: 11, color: "var(--muted)" }}>
-            Partner · Sandbox
-          </div>
-        </div>
-        <PortalIcon name="chevronDown" size={14} />
-      </button>
+  <div style="display:flex;flex-direction:column;gap:1px">
+    <div class="nav-label">Ресурсы</div>
+    <button class="nav-a"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M4 4h12a4 4 0 014 4v12H8a4 4 0 01-4-4V4z"/><path d="M4 4v12a4 4 0 004 4"/></svg>Документация API</button>
+    <button class="nav-a"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 015 0c0 1.5-2.5 2-2.5 3.5"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>Поддержка</button>
+  </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <div
-          style={{
-            fontSize: 10.5,
-            fontWeight: 600,
-            letterSpacing: 0.6,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            padding: "6px 10px 4px",
-          }}
-        >
-          Partner portal
-        </div>
-        {items.map((it) => {
-          const isActive = it.id === active;
-          return (
-            <a
-              key={it.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "7px 10px",
-                fontSize: 13,
-                fontWeight: isActive ? 600 : 500,
-                color: isActive ? "var(--ink)" : "var(--muted-strong)",
-                background: isActive ? "#fff" : "transparent",
-                border: `1px solid ${isActive ? "var(--line)" : "transparent"}`,
-                boxShadow: isActive ? "0 1px 0 #0f172a06" : "none",
-                borderRadius: 7,
-                cursor: "pointer",
-                textDecoration: "none",
-              }}
-            >
-              <PortalIcon name={it.icon} size={15} stroke={isActive ? 1.8 : 1.6} />
-              <span>{it.label}</span>
-              {it.id === "logs" && (
-                <span style={{ marginLeft: "auto" }}>
-                  <Badge tone="warn" soft>3</Badge>
-                </span>
-              )}
-            </a>
-          );
-        })}
-      </div>
+  <div class="nav-spacer"></div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 1, marginTop: 4 }}>
-        <div
-          style={{
-            fontSize: 10.5,
-            fontWeight: 600,
-            letterSpacing: 0.6,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            padding: "6px 10px 4px",
-          }}
-        >
-          Resources
-        </div>
-        {secondary.map((it) => (
-          <a
-            key={it.id}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "7px 10px",
-              fontSize: 13,
-              color: "var(--muted-strong)",
-              borderRadius: 7,
-              cursor: "pointer",
-              textDecoration: "none",
-            }}
-          >
-            <PortalIcon name={it.icon} size={15} />
-            <span>{it.label}</span>
-          </a>
-        ))}
-      </div>
-
-      <div style={{ flex: 1 }} />
-
-      {/* Environment switch */}
-      <div
-        style={{
-          padding: 10,
-          background: "#fff",
-          border: "1px solid var(--line)",
-          borderRadius: 8,
-          fontSize: 12,
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-          <span style={{ color: "var(--muted)", fontSize: 11 }}>Environment</span>
-          <Badge tone="warn" soft dot>sandbox</Badge>
-        </div>
-        <div style={{ display: "flex", gap: 4 }}>
-          <button
-            style={{
-              flex: 1,
-              padding: "5px 8px",
-              fontSize: 11.5,
-              fontWeight: 600,
-              background: "var(--surface-2)",
-              color: "var(--ink)",
-              border: "1px solid var(--line)",
-              borderRadius: 5,
-              cursor: "pointer",
-            }}
-          >
-            Sandbox
-          </button>
-          <button
-            style={{
-              flex: 1,
-              padding: "5px 8px",
-              fontSize: 11.5,
-              fontWeight: 500,
-              background: "transparent",
-              color: "var(--muted)",
-              border: "1px solid transparent",
-              borderRadius: 5,
-              cursor: "pointer",
-            }}
-          >
-            Live
-          </button>
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 9,
-          padding: "6px 4px",
-        }}
-      >
-        <div
-          style={{
-            width: 26,
-            height: 26,
-            borderRadius: 999,
-            background: "#e2e8f0",
-            color: "#475569",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 11,
-            fontWeight: 600,
-          }}
-        >
-          MK
-        </div>
-        <div style={{ flex: 1, minWidth: 0, lineHeight: 1.25 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--ink)" }}>Marek Kovács</div>
-          <div style={{ fontSize: 11, color: "var(--muted)" }}>Integration lead</div>
-        </div>
-        <PortalIcon name="settings" size={14} />
-      </div>
-    </aside>
-  );
-};
-
-const Topbar = ({ title, breadcrumbs = [], actions = null, sub }) => (
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      gap: 18,
-      padding: "16px 28px 14px",
-      borderBottom: "1px solid var(--line)",
-      background: "#fff",
-    }}
-  >
-    <div style={{ flex: 1, minWidth: 0 }}>
-      {breadcrumbs.length > 0 && (
-        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>
-          {breadcrumbs.map((c, i) => (
-            <React.Fragment key={i}>
-              <span style={{ color: i === breadcrumbs.length - 1 ? "var(--ink)" : "var(--muted)" }}>{c}</span>
-              {i < breadcrumbs.length - 1 && <PortalIcon name="chevron" size={11} />}
-            </React.Fragment>
-          ))}
-        </div>
-      )}
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <h1 style={{ fontSize: 18, fontWeight: 600, color: "var(--ink)", letterSpacing: -0.2, margin: 0 }}>{title}</h1>
-        {sub}
-      </div>
+  <div class="env-card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="color:var(--muted);font-size:11px">Environment</span>
+      <span class="badge soft-warn" style="font-size:11px;padding:2px 8px"><span class="bdot" style="background:#d97706"></span>sandbox</span>
     </div>
-    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          padding: "5px 10px",
-          background: "var(--surface-2)",
-          border: "1px solid var(--line)",
-          borderRadius: 7,
-          color: "var(--muted)",
-          fontSize: 12,
-          width: 220,
-        }}
-      >
-        <PortalIcon name="search" size={13} />
-        <span style={{ flex: 1 }}>Search actions, logs…</span>
-        <span style={{ fontFamily: "var(--mono)", fontSize: 10.5, color: "var(--muted)", padding: "1px 5px", border: "1px solid var(--line)", borderRadius: 3, background: "#fff" }}>⌘K</span>
-      </div>
-      {actions}
+    <div class="env-seg">
+      <button class="env-btn">Sandbox</button>
+      <button class="env-btn off">Live</button>
     </div>
   </div>
-);
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 2px">
+    <span style="font-size:11px;color:var(--muted)">Тёмная тема</span>
+    <div style="width:28px;height:16px;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:background .12s" id="dark-toggle" onclick="toggleDark(this)">
+      <div style="width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left .12s;box-shadow:0 1px 2px rgba(0,0,0,.2)" id="dark-knob"></div>
+    </div>
+  </div>
 
-const Card = ({ title, subtitle, children, right, padded = true, style }) => (
-  <section
-    style={{
-      background: "#fff",
-      border: "1px solid var(--line)",
-      borderRadius: 10,
-      boxShadow: "0 1px 0 #0f172a05",
-      overflow: "hidden",
-      ...style,
-    }}
-  >
-    {(title || right) && (
-      <header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "12px 16px",
-          borderBottom: "1px solid var(--line)",
-          gap: 12,
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          {title && <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>{title}</div>}
-          {subtitle && <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 1 }}>{subtitle}</div>}
+  <div class="user-strip">
+    <div class="user-av">MK</div>
+    <div style="flex:1;min-width:0;line-height:1.25">
+      <div style="font-size:12px;font-weight:600;color:var(--ink)">Marek Kovács</div>
+      <div style="font-size:11px;color:var(--muted)">Руководитель интеграции</div>
+    </div>
+    <svg width="14" height="14" fill="none" stroke="var(--muted)" stroke-width="1.7" viewBox="0 0 24 24" style="cursor:pointer;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3h.1a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8v.1a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+  <!-- Topbar -->
+  <div id="tb">
+    <div class="tb-left">
+      <div class="tb-bc" id="tb-bc">Партнёрский портал</div>
+      <div class="tb-h1"><span id="tb-title">Добро пожаловать</span><span id="tb-badge"></span></div>
+    </div>
+    <div class="tb-right">
+      <div class="srv-badge"><span class="srv-dot" id="srv-dot"></span><span id="srv-label">connecting…</span></div>
+      <div id="tb-actions" style="display:flex;gap:8px"></div>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <!-- ══ SUCCESS (partner mode) ══ -->
+    <div class="screen" id="screen-success">
+      <div class="empty-state anim" style="max-width:480px">
+        <div style="width:64px;height:64px;border-radius:16px;background:var(--g50);border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px">✓</div>
+        <div class="empty-title" id="success-title">Компания подключена!</div>
+        <div class="empty-sub" id="success-sub">Ваш API успешно настроен. Агент платформы начнёт включать вас в логистические цепочки клиентов.</div>
+        <div style="background:var(--sf2);border:1px solid var(--line);border-radius:10px;padding:16px;text-align:left;width:100%;margin-bottom:20px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Что дальше</div>
+          <div style="font-size:13px;color:var(--ms);line-height:1.8">
+            <div>✓ Конфигурация сохранена в реестре платформы</div>
+            <div>✓ OAuth авторизация проверена</div>
+            <div id="success-actions-line">✓ Actions настроены и готовы к вызовам</div>
+            <div style="margin-top:8px;color:var(--muted);font-size:12px">Команда 15min.store свяжется с вами для финального подтверждения.</div>
+          </div>
         </div>
-        {right}
-      </header>
-    )}
-    <div style={{ padding: padded ? 16 : 0 }}>{children}</div>
-  </section>
-);
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+          <button class="btn primary lg" onclick="showScreen('wizard');startOnboarding()">Подключить ещё компанию</button>
+          <a href="https://15min.store" class="btn lg" style="text-decoration:none">На сайт платформы →</a>
+        </div>
+      </div>
+    </div>
 
-const Field = ({ label, hint, children, required, mono, full }) => (
-  <label style={{ display: "flex", flexDirection: "column", gap: 6, gridColumn: full ? "1 / -1" : "auto" }}>
-    <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ink)", display: "flex", justifyContent: "space-between" }}>
-      <span>
-        {label}
-        {required && <span style={{ color: "#b91c1c", marginLeft: 3 }}>*</span>}
-      </span>
-      {hint && <span style={{ color: "var(--muted)", fontWeight: 400, fontSize: 11.5 }}>{hint}</span>}
-    </span>
-    {children}
-  </label>
-);
+    <!-- ══ EMPTY STATE ══ -->
+    <div class="screen active" id="screen-empty">
+      <div class="empty-state anim">
+        <div class="empty-icon">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 3l9 5v8l-9 5-9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v10"/></svg>
+        </div>
+        <div class="empty-title" id="empty-main-title">Подключите вашу компанию</div>
+        <div class="empty-sub">Подключите OAuth и опишите ваши API endpoints — агент платформы начнёт автоматически включать вас в логистические цепочки. Код не нужен.</div>
+        <button class="btn primary lg" onclick="startOnboarding()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Начать подключение
+        </button>
+        <div style="margin-top:16px;font-size:12px;color:var(--muted)">Займёт около 5 минут</div>
+      </div>
+    </div>
 
-const Input = ({ value, placeholder, mono, prefix, suffix, readOnly }) => (
-  <div
-    style={{
-      display: "flex",
-      alignItems: "stretch",
-      background: readOnly ? "var(--surface-2)" : "#fff",
-      border: "1px solid var(--line)",
-      borderRadius: 7,
-      overflow: "hidden",
-      height: 32,
-      fontSize: 12.5,
-    }}
-  >
-    {prefix && (
-      <span
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "0 10px",
-          background: "var(--surface-2)",
-          color: "var(--muted)",
-          fontSize: 12,
-          borderRight: "1px solid var(--line)",
-          fontFamily: mono ? "var(--mono)" : "inherit",
-        }}
-      >
-        {prefix}
-      </span>
-    )}
-    <span
-      style={{
-        flex: 1,
-        display: "flex",
-        alignItems: "center",
-        padding: "0 10px",
-        color: value ? "var(--ink)" : "var(--muted)",
-        fontFamily: mono ? "var(--mono)" : "inherit",
-        fontSize: mono ? 12 : 12.5,
-      }}
-    >
-      {value || placeholder}
-    </span>
-    {suffix && (
-      <span
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "0 8px",
-          color: "var(--muted)",
-          borderLeft: "1px solid var(--line)",
-          background: "var(--surface-2)",
-          fontSize: 11.5,
-        }}
-      >
-        {suffix}
-      </span>
-    )}
+    <!-- ══ WIZARD ══ -->
+    <div class="screen" id="screen-wizard">
+      <!-- Stepper -->
+      <div class="stepper" id="stepper">
+        <div class="sc sc-active" id="sc1">1</div>
+        <div class="step-info"><div class="step-lbl">Профиль</div><div class="step-sub">Компания и API</div></div>
+        <div class="step-line" id="sl1"></div>
+        <div class="sc sc-pending" id="sc2">2</div>
+        <div class="step-info"><div class="step-lbl">OAuth</div><div class="step-sub">Авторизация</div></div>
+        <div class="step-line" id="sl2"></div>
+        <div class="sc sc-pending" id="sc3">3</div>
+        <div class="step-info"><div class="step-lbl">Действия</div><div class="step-sub">Маппинг</div></div>
+        <div class="step-line" id="sl3"></div>
+        <div class="sc sc-pending" id="sc4">4</div>
+        <div class="step-info"><div class="step-lbl">Маппинг</div><div class="step-sub">Ответы API</div></div>
+        <div class="step-line" id="sl4"></div>
+        <div class="sc sc-pending" id="sc5">5</div>
+        <div class="step-info"><div class="step-lbl">Проверка</div><div class="step-sub">Валидация</div></div>
+      </div>
+
+      <!-- Step content -->
+      <div class="wiz-body" id="wiz-body"></div>
+
+      <!-- Footer -->
+      <div style="padding:12px 20px;border-top:1px solid var(--line);background:#fff;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;flex-wrap:wrap;gap:8px" id="wiz-footer">
+        <button class="btn ghost" id="wiz-back" onclick="wizBack()" style="display:none">← Назад</button>
+        <div style="flex:1"></div>
+        <div style="font-size:12px;color:var(--muted)" id="wiz-progress">Шаг 1 из 5</div>
+      <button class="btn" onclick="wizSaveExit()">Сохранить и выйти</button>
+        <button class="btn primary" id="wiz-next" onclick="wizNext()" style="margin-left:8px">Далее →</button>
+      </div>
+    </div>
+
+    <!-- ══ OVERVIEW ══ -->
+    <div class="screen" id="screen-overview">
+      <div class="conn-banner">
+        <div class="conn-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px">
+            OAuth connection healthy
+            <span style="color:var(--muted)">·</span>
+            <span class="mono" style="font-size:12px;color:var(--muted);font-weight:400" id="ov-url"></span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Token last refreshed just now. Auto-renews every 60 min via <span class="mono">client_credentials</span>.</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px;padding-right:4px">
+          <div>
+            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">TTL токена</div>
+            <div class="mono" style="font-size:13px;margin-top:2px" id="ov-ttl">—</div>
+          </div>
+          <div style="width:1px;height:26px;background:var(--line)"></div>
+          <div>
+            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Scope</div>
+            <div class="mono" style="font-size:12px;margin-top:2px" id="ov-scope">—</div>
+          </div>
+        </div>
+        <button class="btn sm">↻ Обновить токен</button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:11px;color:var(--muted)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--g600);display:inline-block"></span>Всё хорошо</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--v);display:inline-block"></span>Настройка</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--b600);display:inline-block"></span>Активность</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="stat-acc" style="background:var(--g600)"></div>
+          <div class="stat-top"><span class="stat-label">Соединение</span><span style="font-size:11.5px;font-weight:500;color:var(--g700)">100% uptime</span></div>
+          <div class="stat-val">Работает</div><div class="stat-sub">Режим Sandbox</div>
+        </div>
+        <div class="stat"><div class="stat-acc" style="background:var(--v)"></div>
+          <div class="stat-top"><span class="stat-label">Действия</span><span style="font-size:11.5px;font-weight:500;color:var(--g700)" id="ov-actions-delta">all healthy</span></div>
+          <div class="stat-val" id="ov-actions-val">—</div><div class="stat-sub">configured</div>
+        </div>
+        <div class="stat"><div class="stat-acc" style="background:var(--b600)"></div>
+          <div class="stat-top"><span class="stat-label">Вызовов сегодня</span><span style="font-size:11.5px;font-weight:500;color:var(--g700)" id="ov-calls-delta">—</span></div>
+          <div class="stat-val mono" id="ov-calls">0</div><div class="stat-sub">вызовов за сегодня · через платформу</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">Настроенные действия</div><div class="card-sub" id="ov-actions-sub">Loading…</div></div>
+          <button class="btn sm primary" onclick="showScreen('actions')">Настроить →</button>
+        </div>
+        <div class="tbl-head" style="grid-template-columns:1.4fr 2fr 110px 65px">
+          <div>Action</div><div>Endpoint</div><div>Status</div><div style="text-align:right">Calls</div>
+        </div>
+        <div id="ov-tbl"></div>
+      </div>
+    </div>
+
+    <!-- ══ ACTIONS ══ -->
+    <div class="screen" id="screen-actions">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">API actions</div><div class="card-sub" id="act-sub">Configured actions for this partner</div></div>
+          <button class="btn sm primary">+ Добавить действие</button>
+        </div>
+        <div class="tbl-head" style="grid-template-columns:minmax(120px,1.4fr) minmax(0,2fr) 100px 80px">
+          <div>Action</div><div>Endpoint</div><div>Status</div><div style="text-align:right">Test</div>
+        </div>
+        <div id="act-tbl"></div>
+      </div>
+    </div>
+
+    <!-- ══ CREDENTIALS ══ -->
+    <div class="screen" id="screen-credentials">
+      <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px">
+        <div>
+          <div class="card">
+            <div class="card-head">
+              <div><div class="card-title">OAuth 2.0 · client_credentials</div><div class="card-sub">Platform uses these to mint access tokens.</div></div>
+              <span class="badge ok"><span class="bdot" style="background:var(--g600)"></span>verified</span>
+            </div>
+            <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="grid-column:1/-1">
+                <label class="field-label">URL токена</label>
+                <div class="inp-wrap"><input class="inp-inner mono" id="cr-turl" readonly></div>
+              </div>
+              <div>
+                <label class="field-label">Тип авторизации</label>
+                <div class="inp-wrap"><input class="inp-inner mono" value="client_credentials" readonly></div>
+              </div>
+              <div>
+                <label class="field-label">TTL токена</label>
+                <div class="inp-wrap"><input class="inp-inner mono" value="3600s" readonly></div>
+              </div>
+              <div>
+                <label class="field-label">Client ID</label>
+                <div class="inp-wrap"><input class="inp-inner mono" id="cr-cid" readonly><div style="padding:0 10px;display:flex;align-items:center;border-left:1px solid var(--line);color:var(--muted);cursor:pointer" onclick="copyVal('cr-cid')">⧉</div></div>
+              </div>
+              <div>
+                <label class="field-label">Client secret</label>
+                <div class="inp-wrap"><input class="inp-inner mono" id="cr-secret" type="password" value="" readonly><div style="padding:0 10px;display:flex;align-items:center;border-left:1px solid var(--line);color:var(--muted);cursor:pointer" onclick="toggleSecret()">👁</div></div>
+              </div>
+              <div style="grid-column:1/-1">
+                <label class="field-label">Scope</label>
+                <div class="inp-wrap"><input class="inp-inner mono" id="cr-scope" readonly></div>
+              </div>
+            </div>
+            <div style="padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px">
+              <button class="btn sm">▶ Получить тестовый токен</button>
+              <button class="btn sm danger" style="margin-left:auto">⚠ Отозвать все токены</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Разрешённые права</div><div class="card-sub">What the platform can do</div></div></div>
+            <div id="scopes-list"></div>
+          </div>
+          <div style="padding:14px;background:var(--r50);border:1px solid var(--r200);border-radius:10px">
+            <div style="font-size:13px;font-weight:600;color:#991b1b;margin-bottom:4px">Опасная зона</div>
+            <div style="font-size:12px;color:var(--r700);line-height:1.5;margin-bottom:10px">Disconnecting will revoke all tokens and remove this partner from the platform.</div>
+            <button class="btn sm danger" onclick="disconnectPartner()">Отключить партнёра</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LOGS ══ -->
+    <div class="screen" id="screen-logs">
+      <div style="padding:10px 20px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;background:#fff;flex-shrink:0">
+        <div style="flex:1;display:flex;align-items:center;gap:8px;padding:5px 10px;background:var(--sf2);border:1px solid var(--line);border-radius:7px;font-size:12px;color:var(--muted)">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <span class="mono" style="flex:1;color:var(--muted)">Search logs…</span>
+        </div>
+        <button class="btn sm">↓ Экспорт CSV</button>
+        <button class="btn sm" id="refresh-btn" onclick="loadLogs()">↻ Refresh</button>
+      </div>
+      <div style="padding:10px 20px;background:var(--sf2);border-bottom:1px solid var(--line);display:flex;gap:24px;flex-shrink:0">
+        <div><div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Запросов</div><div class="mono" style="font-size:15px;font-weight:600;margin-top:2px" id="log-total">—</div></div>
+        <div><div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Успешность</div><div class="mono" style="font-size:15px;font-weight:600;margin-top:2px;color:var(--g700)" id="log-sr">—</div></div>
+        <div><div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Ср. задержка</div><div class="mono" style="font-size:15px;font-weight:600;margin-top:2px" id="log-lat">—</div></div>
+        <div><div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Errors</div><div class="mono" style="font-size:15px;font-weight:600;margin-top:2px;color:var(--r700)" id="log-err">—</div></div>
+      </div>
+      <div class="log-layout">
+        <div class="log-tbl">
+          <div class="tbl-head" style="grid-template-columns:100px 50px 46px 1fr 65px 55px">
+            <div>Time</div><div>Method</div><div>Code</div><div>Action · Path</div><div style="text-align:right">Latency</div><div>Env</div>
+          </div>
+          <div id="log-rows"></div>
+        </div>
+        <div class="log-detail" id="log-detail" style="display:none">
+          <div style="padding:16px 20px;border-bottom:1px solid var(--line)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <span class="badge err mono" style="font-size:14px;font-weight:700;padding:4px 12px" id="det-code">502</span>
+              <div><div style="font-size:14px;font-weight:600" id="det-title">Bad Gateway</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:4px" id="det-path"></div></div>
+              <button class="btn sm ghost" style="margin-left:auto" onclick="document.getElementById('log-detail').style.display='none'">×</button>
+            </div>
+            <div style="display:flex;gap:20px">
+              <div><div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Time</div><div class="mono" style="font-size:12px;margin-top:2px" id="det-time">—</div></div>
+              <div><div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Latency</div><div class="mono" style="font-size:12px;margin-top:2px" id="det-latency">—</div></div>
+            </div>
+          </div>
+          <div class="dtabs"><div class="dtab active">Response</div><div class="dtab">Request</div><div class="dtab">Trace</div></div>
+          <div style="padding:16px 20px;flex:1;overflow-y:auto">
+            <div class="code" id="det-body" style="border-radius:7px;font-size:11px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-);
+</div>
 
-const Select = ({ value }) => (
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      padding: "0 10px",
-      background: "#fff",
-      border: "1px solid var(--line)",
-      borderRadius: 7,
-      height: 32,
-      fontSize: 12.5,
-      color: "var(--ink)",
-    }}
-  >
-    <span style={{ flex: 1 }}>{value}</span>
-    <PortalIcon name="chevronDown" size={13} />
+<!-- Tester Modal -->
+<div class="modal-bg" id="tester-modal" onclick="if(event.target===this)closeTester()">
+  <div class="modal" style="width:560px;max-height:85vh;overflow-y:auto">
+    <div class="modal-head">
+      <div>
+        <div style="font-size:14px;font-weight:600">Test: <span class="mono" id="t-name" style="color:var(--v)"></span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="t-co-label">stub mode</div>
+      </div>
+      <button class="modal-close" onclick="closeTester()">×</button>
+    </div>
+    <div style="padding:16px 20px">
+      <div id="t-params" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:12px;cursor:pointer">
+        <input type="checkbox" id="t-dry" checked> dry_run (preview without real call)
+      </label>
+      <button class="btn primary" style="width:100%;padding:9px;justify-content:center" onclick="runTest()">Run</button>
+      <div id="t-result"></div>
+    </div>
   </div>
-);
+</div>
 
-const MethodTag = ({ method }) => {
-  const map = {
-    GET: { bg: "#eff6ff", fg: "#1d4ed8" },
-    POST: { bg: "#ecfdf5", fg: "#047857" },
-    PUT: { bg: "#fffbeb", fg: "#b45309" },
-    PATCH: { bg: "#fef3c7", fg: "#92400e" },
-    DELETE: { bg: "#fef2f2", fg: "#b91c1c" },
+<div id="toast"></div>
+<script>
+
+function toast(msg, type='ok', duration=3000) {
+  const c = document.getElementById('toast');
+  const el = document.createElement('div');
+  el.className = 'toast-item ' + type;
+  const icon = type==='ok'?'✓':type==='err'?'✗':'ℹ';
+  el.innerHTML = `<span style="font-size:14px">${icon}</span><span>${msg}</span>`;
+  c.appendChild(el);
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>el.classList.add('show')); });
+  setTimeout(()=>{
+    el.classList.remove('show');
+    setTimeout(()=>el.remove(), 200);
+  }, duration);
+}
+
+// Автоматически определяем адрес сервера
+const API_BASE = (() => {
+  const h = window.location.hostname;
+  if (h !== "localhost" && h !== "127.0.0.1" && h !== "") {
+    return window.location.origin;
+  }
+  return "http://localhost:8001";
+})();
+
+// Режим: 'platform' (внутренний) или 'partner' (новый партнёр)
+const APP_MODE = (() => {
+  const path = window.location.pathname;
+  const params = new URLSearchParams(window.location.search);
+  if (path.endsWith('/join') || params.get('mode') === 'partner') return 'partner';
+  return 'platform';
+})();
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let STATE = {
+  partners: [],       // загруженные с сервера
+  current: null,      // текущий партнёр
+  wizStep: 1,
+  wizData: {
+    // Шаг 1
+    id: "", name: "", display_name: "", base_url: "", capabilities: [],
+    // Шаг 2
+    token_url: "", client_id: "", client_secret: "", scope: "",
+    // Шаг 3
+    actions: {
+      create_shipment: {method:"POST", path:"/orders"},
+      book_pickup:     {method:"POST", path:"/pickups"},
+      create_reception:{method:"POST", path:"/receptions"},
+      track:           {method:"GET",  path:"/orders/{{tracking_number}}"},
+      calculate_cost:  {method:"POST", path:"/calculator/tariff"},
+      cancel:          {method:"DELETE",path:"/orders/{{shipment_id}}"},
+      get_slots:       {method:"GET",  path:"/availability"},
+    },
+    // Шаг 4
+    response_map: {
+      "create_shipment.shipment_id":       "entity.uuid",
+      "create_shipment.tracking_number":   "entity.cdek_number",
+      "track.status":                      "entity.statuses[0].name",
+      "track.location":                    "entity.statuses[0].city",
+      "calculate_cost.cost_rub":           "total_sum",
+      "calculate_cost.delivery_days_min":  "period_min",
+    }
+  },
+  logs: [],
+  testerAction: "",
+};
+
+const CAPS = ["Магистраль","Last-mile","Забор","Хранение","ПВЗ","Крупногабарит","B2B","Международная"];
+const ACT_PARAMS = {
+  create_shipment:["from_city","to_city","weight_g","sender_name","sender_phone","recipient_name","recipient_phone"],
+  book_pickup:["shipment_id","pickup_date","time_from","time_to"],
+  track:["tracking_number"],cancel:["shipment_id"],
+  calculate_cost:["from_city","to_city","weight_g"],
+  get_slots:["city","date"],create_reception:["to_city","cargo_description"],
+};
+const DEFAULTS = {
+  from_city:"Самара",to_city:"Москва",weight_g:"5000",
+  sender_name:"Иван Петров",sender_phone:"+79991234567",
+  recipient_name:"Пётр Иванов",recipient_phone:"+79997654321",
+  pickup_date:new Date().toISOString().slice(0,10),
+  time_from:"10:00",time_to:"16:00",
+  tracking_number:"TEST-123456",shipment_id:"STUB-001",
+  city:"Москва",date:new Date().toISOString().slice(0,10),
+  cargo_description:"Электроника",
+};
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function apiFetch(path, opts={}) {
+  try {
+    const r = await fetch(API_BASE+path, {headers:{"Content-Type":"application/json"},...opts});
+    if (!r.ok) {
+      const e = await r.json().catch(()=>({detail:r.statusText}));
+      return {success:false,error:e.detail||r.statusText,status:r.status};
+    }
+    return await r.json();
+  } catch(e) {
+    return {success:false,error:"Server unreachable",offline:true};
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function mtag(m){return `<span class="mtag ${m}">${m}</span>`}
+function statusBadge(s){
+  const m={ok:'<span class="badge ok"><span class="bdot" style="background:var(--g600)"></span>healthy</span>',
+    warn:'<span class="badge warn"><span class="bdot" style="background:#d97706"></span>degraded</span>',
+    err:'<span class="badge err"><span class="bdot" style="background:var(--r600)"></span>failing</span>',
+    idle:'<span class="badge neutral">not configured</span>'};
+  return m[s]||m.idle;
+}
+function codeColor(c){return c>=500?'var(--r700)':c>=400?'var(--a700)':'var(--g700)'}
+
+function copyVal(id){
+  const el=document.getElementById(id);
+  if(el){navigator.clipboard.writeText(el.value).then(()=>{});}
+}
+
+function rotateToken() {
+  toast('Запрос на обновление токена отправлен…', 'info');
+  setTimeout(()=>toast('Токен успешно обновлён', 'ok'), 1200);
+}
+
+function toggleSecret(){
+  const inp=document.getElementById('cr-secret');
+  if(inp) inp.type=inp.type==='password'?'text':'password';
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+const TB_CFG = {
+  empty:       {bc:"Партнёрский портал",title:"Добро пожаловать",badge:"",actions:""},
+  wizard:      {bc:"Партнёрский портал › Onboarding",title:"Подключить компанию",badge:"",actions:""},
+  overview:    {bc:"Partners › {n} › Overview",title:"{n}",badge:"connected",actions:"run-health"},
+  actions:     {bc:"Partners › {n} › Actions",title:"Actions",badge:"",actions:"export"},
+  credentials: {bc:"Partners › {n} › Credentials",title:"Credentials",badge:"",actions:"rotate"},
+  logs:        {bc:"Partners › {n} › Logs",title:"Call logs",badge:"errors",actions:"export-csv"},
+};
+
+function showSuccessScreen() {
+  const name = STATE.wizData?.name || 'Компания';
+  const actions = Object.keys(STATE.wizData?.actions || {});
+  document.getElementById('success-title').textContent = `${name} подключена!`;
+  document.getElementById('success-actions-line').textContent =
+    `✓ ${actions.length} actions настроено: ${actions.slice(0,3).join(', ')}${actions.length>3?'…':''}`;
+  showScreen('success');
+}
+
+function showScreen(name) {
+  // Если нет партнёра и пытаемся открыть не empty и не wizard — идём на empty
+  if(!STATE.current && name!=='empty' && name!=='wizard') name='empty';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-a[data-screen]').forEach(n=>n.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  const nav = document.querySelector(`.nav-a[data-screen="${name}"]`);
+  if(nav) nav.classList.add('active');
+
+  const n = STATE.current?.name || "";
+  const cfg = TB_CFG[name] || TB_CFG.empty;
+  document.getElementById('tb-bc').textContent = cfg.bc.replace(/{n}/g,n);
+  document.getElementById('tb-title').innerHTML = cfg.title.replace(/{n}/g,n);
+
+  // Badge
+  const badge = document.getElementById('tb-badge');
+  if(cfg.badge==='connected') {
+    badge.innerHTML = '<span class="badge ok"><span class="bdot" style="background:var(--g600)"></span>connected</span>';
+  } else if(cfg.badge==='errors') {
+    const errs = STATE.logs.filter(l=>l.status>=400).length;
+    badge.innerHTML = errs ? `<span class="badge warn"><span class="bdot" style="background:#d97706"></span>${errs} errors in last hour</span>` : '';
+  } else {
+    badge.innerHTML = '';
+  }
+
+  // Actions
+  const acts = document.getElementById('tb-actions');
+  if(cfg.actions==='run-health') {
+    acts.innerHTML = '<button class="btn" onclick="runHealthCheck()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7L21 8M21 3v5h-5"/></svg> Health check</button><button class="btn primary" onclick="openTester(STATE.current?.actions?.[0]||\"create_shipment\")">▶ Test action</button>';
+  } else if(cfg.actions==='export') {
+    acts.innerHTML = '<button class="btn">↓ Экспорт конфига</button>';
+  } else if(cfg.actions==='rotate') {
+    acts.innerHTML = '<button class="btn primary">↻ Обновить ключ</button>';
+  } else if(cfg.actions==='export-csv') {
+    acts.innerHTML = '<button class="btn">↓ Экспорт CSV</button>';
+  } else {
+    acts.innerHTML = '';
+  }
+
+  // Load data for screen
+  if(name==='logs') {
+    loadLogs();
+    if(window._logRefreshTimer) clearInterval(window._logRefreshTimer);
+    window._logRefreshTimer = setInterval(()=>{
+      if(document.getElementById('screen-logs').classList.contains('active')) loadLogs();
+      else clearInterval(window._logRefreshTimer);
+    }, 30000);
+  }
+  if(name==='overview') renderOverview();
+  if(name==='actions') renderActions();
+  if(name==='credentials') renderCredentials();
+  // Scroll to top
+  document.getElementById('content').scrollTop = 0;
+}
+
+// ── Partners ──────────────────────────────────────────────────────────────────
+async function loadPartners() {
+  const data = await apiFetch("/companies");
+  if(data.companies) {
+    STATE.partners = data.companies;
+    renderPartnerList();
+  }
+}
+
+function renderPartnerList() {
+  // Блокируем nav если нет партнёров
+  const hasPartner = STATE.partners.length > 0;
+  ['nav-actions','nav-credentials','nav-logs'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('locked', !hasPartner);
+  });
+  const list = document.getElementById('co-list');
+  if(!STATE.partners.length) {
+    list.innerHTML = '<div class="co-empty">Нет подключённых партнёров</div>';
+    return;
+  }
+  list.innerHTML = STATE.partners.map(co=>`
+    <button class="nav-a${STATE.current?.id===co.id?' active':''}" onclick="selectPartner('${co.id}')" style="font-size:12.5px">
+      <span style="width:6px;height:6px;border-radius:50%;background:${co.status==='active'?'var(--g600)':'#d97706'};flex-shrink:0"></span>
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${co.name}</span>
+    </button>`).join('');
+
+  // Auto-select first
+  if(!STATE.current && STATE.partners.length) {
+    selectPartner(STATE.partners[0].id, false);
+  }
+}
+
+function selectPartner(id, navigate=true) {
+  STATE.current = STATE.partners.find(c=>c.id===id);
+  if(!STATE.current) return;
+
+  // Update workspace switcher
+  const av = STATE.current.name.slice(0,2).toUpperCase();
+  document.getElementById('ws-av').textContent = av;
+  document.getElementById('ws-name').textContent = STATE.current.name;
+
+  renderPartnerList();
+  if(navigate) showScreen('overview');
+}
+
+// ── Overview ──────────────────────────────────────────────────────────────────
+function renderOverview() {
+  if(!STATE.current) return;
+  const co = STATE.current;
+
+  document.getElementById('ov-url').textContent = (co.base_url||'').replace('https://','');
+  document.getElementById('ov-ttl').textContent = co.token_ttl || '59m 00s';
+  document.getElementById('ov-scope').textContent = co.scope || '—';
+  document.getElementById('ov-calls').textContent = (co.calls_today||0).toLocaleString();
+
+  const actions = co.actions || [];
+  document.getElementById('ov-actions-val').textContent = `${actions.length} / 7`;
+  document.getElementById('ov-actions-sub').textContent = `${actions.length} standard actions configured`;
+
+  document.getElementById('ov-tbl').innerHTML = actions.map((a,i)=>`
+    <div class="tbl-row" style="grid-template-columns:1.4fr 2fr 110px 65px${i===actions.length-1?';border:none':''}">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:22px;height:22px;border-radius:5px;background:var(--sf2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">⚡</div>
+        <span class="mono" style="font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a}</span>
+      </div>
+      <span class="mono" style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(STATE.current?.wizData?.actions||{})[a]?.path||'—'}</span>
+      <span>${statusBadge('ok')}</span>
+      <span class="mono" style="font-size:12px;text-align:right;color:var(--muted)">—</span>
+    </div>`).join('');
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function renderActions() {
+  if(!STATE.current) return;
+  const actions = STATE.current.actions || [];
+  document.getElementById('act-tbl').innerHTML = actions.map((a,i)=>`
+    <div class="tbl-row" style="grid-template-columns:1.4fr 2fr 110px 90px${i===actions.length-1?';border:none':''}">
+      <span class="mono" style="font-size:13px;font-weight:600">${a}</span>
+      <span class="mono" style="font-size:12px;color:var(--muted)">${(STATE.current?.wizData?.actions||{})[a]?.path||'/'}</span>
+      <span>${statusBadge('ok')}</span>
+      <div style="text-align:right"><button class="btn sm accent" onclick="openTester('${a}')">▶ Test</button></div>
+    </div>`).join('');
+}
+
+// ── Credentials ───────────────────────────────────────────────────────────────
+function renderCredentials() {
+  if(!STATE.current) return;
+  const co = STATE.current;
+  document.getElementById('cr-turl').value = co.token_url || '';
+  const secretEl = document.getElementById('cr-secret');
+  if(secretEl) secretEl.value = co.wizData?.client_secret || '••••••••';
+  document.getElementById('cr-cid').value = co.wizData?.client_id || '****';
+  document.getElementById('cr-scope').value = co.scope || '';
+
+  const scopes = (co.scope||'').split(' ').filter(Boolean);
+  document.getElementById('scopes-list').innerHTML = scopes.map((s,i)=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:${i===scopes.length-1?'none':'1px solid #f1f5f9'}">
+      <div style="width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:var(--g50);border:1px solid var(--g200);flex-shrink:0;font-size:11px;color:var(--g700)">✓</div>
+      <span class="mono" style="font-size:12.5px;font-weight:500;flex:1">${s}</span>
+      <span class="badge ok" style="font-size:10.5px">granted</span>
+    </div>`).join('');
+}
+
+function disconnectPartner() {
+  if(!STATE.current) return;
+  showConfirm(
+    `Отключить ${STATE.current.name}?`,
+    'Все OAuth токены будут отозваны. Платформа прекратит создавать отправления через ваш API. Это действие нельзя отменить.',
+    ()=>{
+      const name = STATE.current.name;
+      STATE.partners = STATE.partners.filter(c=>c.id!==STATE.current?.id);
+      STATE.current = null;
+      document.getElementById('ws-av').textContent = '?';
+      document.getElementById('ws-name').textContent = 'Нет подключённых партнёров';
+      renderPartnerList();
+      showScreen('empty');
+      toast(`${name} отключён`, 'info');
+    },
+    'Отключить', true
+  );
+}
+
+// ── Logs ──────────────────────────────────────────────────────────────────────
+async function loadLogs() {
+  const coId = STATE.current?.id;
+  const url = coId ? `/logs?company_id=${coId}&limit=30` : '/logs?limit=30';
+  const data = await apiFetch(url);
+  if(data.logs) {
+    STATE.logs = data.logs;
+    renderLogs(data.logs, data.stats);
+    const errs = data.logs.filter(l=>l.status>=400).length;
+    const badge = document.getElementById('log-badge');
+    if(errs>0){badge.textContent=errs;badge.style.display='';}
+    else badge.style.display='none';
+  }
+}
+
+function renderLogs(logs, stats) {
+  if(stats) {
+    document.getElementById('log-total').textContent = stats.total;
+    document.getElementById('log-sr').textContent = stats.success_rate+'%';
+    document.getElementById('log-lat').textContent = stats.avg_latency+'ms';
+    document.getElementById('log-err').textContent = stats.errors;
+  }
+  document.getElementById('log-rows').innerHTML = logs.map((l,i)=>
+    `<div class="tbl-row${l.status>=400?' err-row':''}" style="grid-template-columns:100px 50px 46px 1fr 65px 55px${i===logs.length-1?';border:none':''}" onclick="showLogDetail(${i})">
+      <span class="mono" style="font-size:11px;color:var(--muted)">${l.time}</span>
+      ${mtag(l.method||'POST')}
+      <span class="mono" style="font-size:12.5px;font-weight:600;color:${codeColor(l.status)}">${l.status}</span>
+      <div style="min-width:0"><div class="mono" style="font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.action}</div>
+        <div class="mono" style="font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.path||''}</div></div>
+      <span class="mono" style="font-size:12px;text-align:right;color:${l.latency>1000?'var(--r700)':'var(--ink)'}">${l.latency}ms</span>
+      <span class="badge ${l.env==='Live'?'info':'warn'}" style="font-size:10px">${l.env||'Sandbox'}</span>
+    </div>`).join('');
+}
+
+function showLogDetail(idx) {
+  const l = STATE.logs[idx];
+  if(!l) return;
+  document.getElementById('log-detail').style.display='flex';
+  document.getElementById('det-code').textContent = l.status;
+  document.getElementById('det-code').className = `badge ${l.status>=400?'err':'ok'} mono`;
+  document.getElementById('det-title').textContent = l.status>=500?'Server Error':l.status>=400?'Client Error':'Success';
+  document.getElementById('det-path').innerHTML = `${mtag(l.method||'POST')}<span class="mono" style="font-size:11.5px;color:var(--muted)">${l.path||''}</span>`;
+  document.getElementById('det-time').textContent = l.time;
+  document.getElementById('det-latency').textContent = l.latency+'ms';
+  document.getElementById('det-body').innerHTML = l.error ?
+    `<span style="color:var(--se)">${JSON.stringify(l.error,null,2)}</span>` :
+    `<span style="color:var(--cfg)">{"status":${l.status},"action":"${l.action}","latency":${l.latency}}</span>`;
+}
+
+// ── Wizard ────────────────────────────────────────────────────────────────────
+function startOnboarding() {
+  STATE.wizStep = 1;
+  STATE.wizData = {
+    id:"",name:"",display_name:"",base_url:"",capabilities:[],
+    token_url:"",client_id:"",client_secret:"",scope:"",
+    actions:{
+      create_shipment:{method:"POST",path:"/orders"},
+      book_pickup:{method:"POST",path:"/intakes"},
+      track:{method:"GET",path:"/orders/{{tracking_number}}"},
+      calculate_cost:{method:"POST",path:"/calculator/tariff"},
+      cancel:{method:"DELETE",path:"/orders/{{shipment_id}}"},
+    },
+    response_map:{
+      "create_shipment.shipment_id":"entity.uuid",
+      "create_shipment.tracking_number":"entity.cdek_number",
+      "track.status":"entity.statuses[0].name",
+      "calculate_cost.cost_rub":"total_sum",
+    }
   };
-  const t = map[method] || map.GET;
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        padding: "1px 6px",
-        fontSize: 10.5,
-        fontWeight: 700,
-        fontFamily: "var(--mono)",
-        letterSpacing: 0.4,
-        color: t.fg,
-        background: t.bg,
-        borderRadius: 4,
-        minWidth: 44,
-        justifyContent: "center",
-      }}
-    >
-      {method}
-    </span>
-  );
-};
+  showScreen('wizard');
+  renderWizStep();
+}
 
-const StatusCode = ({ code }) => {
-  const c = parseInt(code, 10);
-  let tone = "ok";
-  if (c >= 500) tone = "err";
-  else if (c >= 400) tone = "err";
-  else if (c >= 300) tone = "warn";
-  return <Badge tone={tone} mono>{code}</Badge>;
-};
+function updateStepper() {
+  for(let i=1;i<=5;i++){
+    const sc=document.getElementById('sc'+i);
+    const sl=document.getElementById('sl'+i);
+    if(i<STATE.wizStep){sc.className='sc sc-done';sc.innerHTML='<svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg>';}
+    else if(i===STATE.wizStep){sc.className='sc sc-active';sc.textContent=i;}
+    else{sc.className='sc sc-pending';sc.textContent=i;}
+    if(sl) sl.className='step-line'+(i<STATE.wizStep?' done':'');
+  }
+  document.getElementById('wiz-back').style.display = STATE.wizStep>1?'':'none';
+  document.getElementById('wiz-next').textContent = STATE.wizStep===5?'Завершить':'Далее →';
+}
 
-// expose
-Object.assign(window, {
-  PortalIcon, StatusDot, Badge, Btn, Sidebar, Topbar, Card, Field, Input, Select, MethodTag, StatusCode,
+function renderWizStep() {
+  updateStepper();
+  const body = document.getElementById('wiz-body');
+  const d = STATE.wizData;
+
+  if(STATE.wizStep===1) {
+    body.innerHTML = `
+      <div class="wiz-grid">
+        <div class="anim">
+          <h2 style="font-size:16px;font-weight:600;margin-bottom:4px">Шаг 1 — Профиль компании</h2>
+          <p style="font-size:12.5px;color:var(--muted);margin-bottom:20px">Расскажите о вашей компании. Эти данные будут показаны клиентам платформы.</p>
+          <div class="field">
+            <label class="field-label">Системный ID <span style="color:var(--r600)">*</span></label>
+            <input class="inp mono" id="w-id" placeholder="cdek" value="${d.id}">
+            <div class="field-hint">Латиница, без пробелов, уникальный. Пример: cdek, novaya_pochta, my_logistics</div>
+          </div>
+          <div class="field">
+            <label class="field-label">Название компании <span style="color:var(--r600)">*</span></label>
+            <input class="inp" id="w-name" placeholder="СДЭК" value="${d.name}">
+          </div>
+          <div class="field">
+            <label class="field-label">Как называть клиентам платформы <span style="font-size:11px;color:var(--muted);font-weight:400">— не обязательно</span></label>
+            <input class="inp" id="w-display" placeholder="партнёр по магистральной доставке" value="${d.display_name}">
+            <div class="field-hint">Клиенты видят это описание, а не ваше юридическое название. Пример: «быстрая доставка по России»</div>
+          </div>
+          <div class="field">
+            <label class="field-label">Base URL вашего API <span style="color:var(--r600)">*</span></label>
+            <input class="inp mono" id="w-url" placeholder="https://api.cdek.ru/v2" value="${d.base_url}">
+            <div class="field-hint">Корневой адрес API. Все endpoint-ы будут добавляться к нему: <span class="mono">base_url</span> + <span class="mono">/orders</span></div>
+          </div>
+          <div class="field">
+            <label class="field-label" style="margin-bottom:8px">Возможности</label>
+            <div class="chips" id="caps-chips">
+              ${CAPS.map(c=>`<span class="chip${d.capabilities.includes(c)?' on':''}" onclick="toggleCap(this,'${c}')">${d.capabilities.includes(c)?'✓ ':''} ${c}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="background:var(--sf2)">
+            <div class="card-head"><div class="card-title">Подсказка</div></div>
+            <div style="padding:14px;font-size:12.5px;color:var(--muted);line-height:1.6">
+              Для тестирования используйте данные СДЭК Sandbox:<br><br>
+              ID: <span class="mono" style="background:#fff;padding:1px 5px;border-radius:3px">cdek</span><br>
+              Название: <span class="mono" style="background:#fff;padding:1px 5px;border-radius:3px">СДЭК</span><br>
+              Base URL: <span class="mono" style="background:#fff;padding:1px 5px;border-radius:3px;font-size:11px">https://api.cdek.ru/v2</span>
+              <button class="btn sm" style="margin-top:12px;width:100%" onclick="fillCDEK1()">Заполнить данными СДЭК →</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  else if(STATE.wizStep===2) {
+    body.innerHTML = `
+      <div class="wiz-grid">
+        <div class="anim">
+          <h2 style="font-size:16px;font-weight:600;margin-bottom:4px">Шаг 2 — OAuth авторизация</h2>
+          <p style="font-size:12.5px;color:var(--muted);margin-bottom:20px">Выдайте платформе ограниченный доступ к вашему API. Вы можете отозвать его в любой момент.</p>
+          <div class="info-box">
+            <span style="flex-shrink:0">ℹ</span>
+            Мы получим только те разрешения которые вы укажете в scope. Токен будет обновляться автоматически каждые 60 минут.
+          </div>
+          <div class="field">
+            <label class="field-label">Token URL <span style="color:var(--r600)">*</span></label>
+            <input class="inp mono" id="w-turl" placeholder="https://api.company.ru/oauth/token" value="${d.token_url}">
+            <div class="field-hint">Адрес по которому ваш сервер выдаёт токены доступа</div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label class="field-label">Client ID <span style="color:var(--r600)">*</span></label>
+              <input class="inp mono" id="w-cid" placeholder="your_client_id" value="${d.client_id}">
+            </div>
+            <div class="field">
+              <label class="field-label">Client Secret <span style="color:var(--r600)">*</span></label>
+              <input class="inp mono" id="w-csecret" type="password" placeholder="••••••••" value="${d.client_secret}">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Scope <span style="font-size:11px;color:var(--muted);font-weight:400">— разрешения</span></label>
+            <input class="inp mono" id="w-scope" placeholder="order:create order:read" value="${d.scope}">
+            <div class="field-hint">Что именно платформа сможет делать от вашего имени. Пример: <span style="font-family:var(--mono)">order:create order:read pickup:write</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="background:var(--sf2)">
+            <div class="card-head"><div class="card-title">СДЭК Sandbox</div></div>
+            <div style="padding:14px;font-size:12px;color:var(--muted);line-height:1.8;font-family:var(--mono)">
+              Token URL:<br><span style="color:var(--ink);font-size:10.5px">api.cdek.ru/v2/oauth/token</span><br><br>
+              Client ID:<br><span style="color:var(--ink)">EMscd6r9JnFiQ3bLoyjJY6eM78JrJceI</span><br><br>
+              Secret:<br><span style="color:var(--ink)">PjLZkKBHEiLK3YsjtNrt3TGNG0ahs3kG</span>
+              <button class="btn sm" style="margin-top:12px;width:100%;font-family:var(--sans)" onclick="fillCDEK2()">Заполнить →</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  else if(STATE.wizStep===3) {
+    const actions = Object.entries(d.actions);
+    body.innerHTML = `
+      <div class="wiz-grid">
+        <div class="anim">
+          <h2 style="font-size:16px;font-weight:600;margin-bottom:4px">Шаг 3 — Маппинг действий</h2>
+          <p style="font-size:12.5px;color:var(--muted);margin-bottom:20px">Укажите метод и путь на вашем API для каждого стандартного действия платформы.</p>
+          <div class="card" style="overflow:visible">
+            <div class="tbl-head" style="grid-template-columns:160px 80px 1fr"><div>Действие</div><div>Метод</div><div>Path</div></div>
+            ${actions.map(([name,cfg],i)=>`
+              <div class="tbl-row" style="grid-template-columns:160px 80px 1fr;${i===actions.length-1?'border:none':''}">
+                <span class="mono" style="font-size:12.5px;font-weight:500">${name}</span>
+                <select class="sel" id="wm-${name}" style="height:28px;font-size:12px">
+                  ${['GET','POST','PUT','DELETE'].map(m=>`<option${cfg.method===m?' selected':''}>${m}</option>`).join('')}
+                </select>
+                <div class="inp-wrap">
+                  <div class="inp-pfx">/</div>
+                  <input class="inp-inner" id="wp-${name}" value="${cfg.path.replace(/^\//,'')}">
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="card" style="background:var(--sf2)">
+            <div class="card-head"><div class="card-title">Данные СДЭК</div></div>
+            <div style="padding:14px;font-size:12px;color:var(--muted);line-height:1.9;font-family:var(--mono)">
+              create_shipment: <span style="color:var(--ink)">POST /orders</span><br>
+              book_pickup: <span style="color:var(--ink)">POST /intakes</span><br>
+              track: <span style="color:var(--ink)">GET /orders/{'{'}id{'}'}</span><br>
+              calculate_cost: <span style="color:var(--ink)">POST /calculator/tariff</span><br>
+              cancel: <span style="color:var(--ink)">DELETE /orders/{'{'}id{'}'}</span>
+              <button class="btn sm" style="margin-top:12px;width:100%;font-family:var(--sans)" onclick="fillCDEK3()">Заполнить →</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  else if(STATE.wizStep===4) {
+    const fields = Object.entries(d.response_map);
+    body.innerHTML = `
+      <div class="wiz-grid">
+        <div class="anim">
+          <h2 style="font-size:16px;font-weight:600;margin-bottom:4px">Шаг 4 — Маппинг ответов</h2>
+          <p style="font-size:12.5px;color:var(--muted);margin-bottom:8px">Укажите где в JSON-ответе вашего API лежит каждое поле. Используйте dot-notation.</p>
+          <div style="padding:8px 12px;background:var(--sf2);border-radius:7px;font-size:12px;color:var(--muted);margin-bottom:16px;font-family:var(--mono)">
+            Пример: если API возвращает <span style="color:var(--ink)">{"data":{"order":{"id":"123"}}}</span>, то путь будет <span style="color:var(--v)">data.order.id</span>
+          </div>
+          <div class="card" style="overflow:visible">
+            <div class="tbl-head" style="grid-template-columns:minmax(120px,1fr) minmax(0,1fr)"><div>Поле платформы</div><div>Dot-path</div></div>
+            ${fields.map(([f,path],i)=>`
+              <div class="tbl-row" style="grid-template-columns:1fr 1fr;align-items:center;${i===fields.length-1?'border:none':''}">
+                <span class="mono" style="font-size:12px;color:var(--v)">${f}</span>
+                <input class="inp mono" id="wr-${f.replace(/\./g,'_')}" value="${path}" style="height:28px">
+              </div>`).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="card" style="background:var(--sf2)">
+            <div class="card-head"><div class="card-title">Пример ответа СДЭК</div></div>
+            <div class="code" style="border-radius:0 0 9px 9px;font-size:10.5px;padding:12px">
+{<br>
+&nbsp;&nbsp;<span class="sk">"entity"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sk">"uuid"</span>: <span class="ss">"72753031-..."</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sk">"cdek_number"</span>: <span class="ss">"1030021946"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="sk">"statuses"</span>: [{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sk">"name"</span>: <span class="ss">"Принят"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;}]<br>
+&nbsp;&nbsp;}<br>
+}
+            </div>
+            <div style="padding:10px 14px">
+              <button class="btn sm" style="width:100%" onclick="fillCDEK4()">Заполнить →</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  else if(STATE.wizStep===5) {
+    body.innerHTML = `
+      <div style="max-width:600px;margin:0 auto" class="anim">
+        <h2 style="font-size:16px;font-weight:600;margin-bottom:4px">Шаг 5 — Проверка и активация</h2>
+        <p style="font-size:12.5px;color:var(--muted);margin-bottom:20px">Проверяем конфигурацию и регистрируем партнёра в системе.</p>
+        <div class="card" id="val-card">
+          <div class="card-head"><div class="card-title">Результаты проверки</div></div>
+          <div style="padding:16px" id="val-body">
+            <div style="text-align:center;padding:20px;color:var(--muted)">Нажмите «Далее» для запуска проверки</div>
+          </div>
+        </div>
+      </div>`;
+    // Auto-start validation
+    setTimeout(runValidation, 300);
+  }
+}
+
+// ── Wizard fills ──────────────────────────────────────────────────────────────
+function fillCDEK1(){
+  document.getElementById('w-id').value='cdek';
+  document.getElementById('w-name').value='СДЭК';
+  document.getElementById('w-display').value='партнёр по магистральной доставке';
+  document.getElementById('w-url').value='https://api.cdek.ru/v2';
+  STATE.wizData.capabilities=['Магистраль','Забор','ПВЗ'];
+  toast('Данные СДЭК заполнены', 'ok', 2000);
+  document.querySelectorAll('.chip').forEach(c=>{
+    const on=STATE.wizData.capabilities.includes(c.textContent.trim().replace('✓ ',''));
+    c.className='chip'+(on?' on':'');
+    c.textContent=(on?'✓ ':'')+c.textContent.trim().replace('✓ ','');
+  });
+}
+function fillCDEK2(){
+  document.getElementById('w-turl').value='https://api.cdek.ru/v2/oauth/token?parameters';
+  document.getElementById('w-cid').value='EMscd6r9JnFiQ3bLoyjJY6eM78JrJceI';
+  document.getElementById('w-csecret').value='PjLZkKBHEiLK3YsjtNrt3TGNG0ahs3kG';
+  document.getElementById('w-scope').value='order:create order:read';
+  toast('OAuth credentials заполнены', 'ok', 2000);
+}
+function fillCDEK3(){
+  const m={create_shipment:{method:'POST',path:'orders'},book_pickup:{method:'POST',path:'intakes'},
+    track:{method:'GET',path:'orders/{{tracking_number}}'},
+    calculate_cost:{method:'POST',path:'calculator/tariff'},cancel:{method:'DELETE',path:'orders/{{shipment_id}}'}};
+  Object.entries(m).forEach(([name,cfg])=>{
+    const ms=document.getElementById('wm-'+name);
+    const ps=document.getElementById('wp-'+name);
+    if(ms) ms.value=cfg.method;
+    if(ps) ps.value=cfg.path;
+  });
+}
+function fillCDEK4(){
+  const m={'create_shipment_shipment_id':'entity.uuid','create_shipment_tracking_number':'entity.cdek_number',
+    'track_status':'entity.statuses[0].name','calculate_cost_cost_rub':'total_sum'};
+  Object.entries(m).forEach(([k,v])=>{const el=document.getElementById('wr-'+k);if(el)el.value=v;});
+}
+function toggleCap(el,cap){
+  const on=el.classList.contains('on');
+  el.classList.toggle('on',!on);
+  el.textContent=(on?'':' ✓ ')+cap;
+  if(on) STATE.wizData.capabilities=STATE.wizData.capabilities.filter(c=>c!==cap);
+  else STATE.wizData.capabilities.push(cap);
+}
+
+// ── Wizard nav ────────────────────────────────────────────────────────────────
+function validateWizStep() {
+  // Сбрасываем предыдущие ошибки в начале
+  document.querySelectorAll('.inp.err').forEach(el=>el.classList.remove('err'));
+  if(STATE.wizStep===1){
+    const id=document.getElementById('w-id')?.value?.trim();
+    const name=document.getElementById('w-name')?.value?.trim();
+    const url=document.getElementById('w-url')?.value?.trim();
+    if(!id){document.getElementById('w-id')?.classList.add('err');toast('Укажите системный ID компании','err');return false;}
+    if(!/^[a-z0-9_]+$/.test(id)){document.getElementById('w-id')?.classList.add('err');toast('ID: только строчные латинские буквы, цифры и _','err');return false;}
+    if(STATE.partners.find(p=>p.id===id)){document.getElementById('w-id')?.classList.add('err');toast(`Компания с ID "${id}" уже подключена`,'err');return false;}
+    if(!name){document.getElementById('w-name')?.classList.add('err');toast('Укажите название компании','err');return false;}
+    if(!url||!url.startsWith('http')){document.getElementById('w-url')?.classList.add('err');toast('Укажите корректный Base URL (начинается с https://)','err');return false;}
+  }
+  if(STATE.wizStep===2){
+    const turl=document.getElementById('w-turl')?.value?.trim();
+    const cid=document.getElementById('w-cid')?.value?.trim();
+    const csecret=document.getElementById('w-csecret')?.value?.trim();
+    if(!turl||!turl.startsWith('http')){document.getElementById('w-turl')?.classList.add('err');toast('Укажите корректный Token URL','err');return false;}
+    if(!cid){document.getElementById('w-cid')?.classList.add('err');toast('Укажите Client ID','err');return false;}
+    if(!csecret){document.getElementById('w-csecret')?.classList.add('err');toast('Укажите Client Secret','err');return false;}
+    // URL не должен совпадать с base_url
+    const baseUrl=document.getElementById('w-url')?.value?.trim();
+    if(baseUrl&&turl===baseUrl){document.getElementById('w-turl')?.classList.add('err');toast('Token URL не должен совпадать с Base URL API','err');return false;}
+  }
+  return true;
+}
+
+function saveWizStep(){
+  const d=STATE.wizData;
+  if(STATE.wizStep===1){
+    d.id=document.getElementById('w-id')?.value||d.id;
+    d.name=document.getElementById('w-name')?.value||d.name;
+    d.display_name=document.getElementById('w-display')?.value||d.display_name;
+    d.base_url=document.getElementById('w-url')?.value||d.base_url;
+  } else if(STATE.wizStep===2){
+    d.token_url=document.getElementById('w-turl')?.value||d.token_url;
+    d.client_id=document.getElementById('w-cid')?.value||d.client_id;
+    d.client_secret=document.getElementById('w-csecret')?.value||d.client_secret;
+    d.scope=document.getElementById('w-scope')?.value||d.scope;
+  } else if(STATE.wizStep===3){
+    Object.keys(d.actions).forEach(name=>{
+      const m=document.getElementById('wm-'+name)?.value;
+      const rawPath=document.getElementById('wp-'+name)?.value||'';
+      const p=rawPath?('/'+rawPath.replace(/^\//,'')):d.actions[name].path; // не перезаписываем если пусто
+      if(m||rawPath) d.actions[name]={method:m||d.actions[name].method,path:p};
+    });
+  } else if(STATE.wizStep===4){
+    Object.keys(d.response_map).forEach(f=>{
+      const el=document.getElementById('wr-'+f.replace(/\./g,'_'));
+      if(el) d.response_map[f]=el.value;
+    });
+  }
+}
+
+async function wizNext(){
+  if(STATE.wizStep<5 && !validateWizStep()) return;
+  saveWizStep();
+  if(STATE.wizStep===5){
+    await finishOnboarding();
+    return;
+  }
+  STATE.wizStep++;
+  renderWizStep();
+}
+function wizBack(){
+  saveWizStep();
+  if(STATE.wizStep>1){STATE.wizStep--;renderWizStep();}
+}
+function wizSaveExit(){
+  saveWizStep();
+  if(STATE.current) showScreen('overview');
+  else showScreen('empty');
+}
+
+// ── Validation ────────────────────────────────────────────────────────────────
+async function runValidation(){
+  const d=STATE.wizData;
+  const checks=[
+    {label:'Профиль компании',check:()=>d.id&&d.name&&d.base_url,detail:`ID: ${d.id} · ${d.base_url}`},
+    {label:'OAuth credentials',check:()=>d.token_url&&d.client_id,detail:`Token URL: ${d.token_url?.slice(0,40)}…`},
+    {label:'Actions маппинг',check:()=>Object.keys(d.actions).length>0,detail:`${Object.keys(d.actions).length} actions configured`},
+    {label:'Response маппинг',check:()=>Object.keys(d.response_map).length>0,detail:`${Object.keys(d.response_map).length} fields mapped`},
+    {label:'Регистрация в системе',check:async()=>{
+      const config=buildConfig();
+      const r=await apiFetch('/register',{method:'POST',body:JSON.stringify({config_json:JSON.stringify(config),dry_run:true})});
+      return r.status==='valid'||r.actions_count>0;
+    },detail:'Сервер принял конфиг'},
+  ];
+
+  const valBody=document.getElementById('val-body');
+  const d2=STATE.wizData;
+  valBody.innerHTML=`
+    <div style="padding:12px 14px;background:var(--sf2);border-radius:8px;margin-bottom:16px;font-size:12.5px;line-height:1.7">
+      <div style="font-weight:600;margin-bottom:4px">Будет создано:</div>
+      <div>Компания: <b>${d2.name}</b> (ID: <span class="mono">${d2.id}</span>)</div>
+      <div>API: <span class="mono" style="font-size:11.5px">${d2.base_url}</span></div>
+      <div>Actions: ${Object.keys(d2.actions).join(', ')}</div>
+    </div>`+
+  checks.map(c=>`
+    <div class="val-item">
+      <div class="val-icon val-spin" id="vi-${c.label.replace(/\s/g,'_')}">○</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${c.label}</div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:2px">${c.detail||''}</div></div>
+      <span id="vs-${c.label.replace(/\s/g,'_')}"></span>
+    </div>`).join('');
+
+  let allOk=true;
+  for(const c of checks){
+    await new Promise(r=>setTimeout(r,400));
+    const key=c.label.replace(/\s/g,'_');
+    let ok;
+    try{ok=await c.check();}catch{ok=false;}
+    const icon=document.getElementById('vi-'+key);
+    const status=document.getElementById('vs-'+key);
+    if(icon){icon.className=ok?'val-icon val-ok':'val-icon val-err';icon.textContent=ok?'✓':'✗';}
+    if(status){status.innerHTML=ok?'<span class="badge ok" style="font-size:11px">passed</span>':'<span class="badge err" style="font-size:11px">failed</span>';}
+    if(!ok) allOk=false;
+  }
+
+  document.getElementById('wiz-next').textContent=allOk?'Активировать партнёра':'Вернуться и исправить';
+  document.getElementById('wiz-next').className=allOk?'btn primary accent':'btn';
+  if(!allOk) {
+    document.getElementById('wiz-next').onclick=()=>{STATE.wizStep=1;renderWizStep();};
+  } else {
+    // Восстанавливаем правильный обработчик
+    document.getElementById('wiz-next').onclick=()=>wizNext();
+  }
+}
+
+function buildConfig(){
+  const d=STATE.wizData;
+  // Credentials передаются отдельно (не в публичном конфиге)
+  return {
+    id:d.id,name:d.name,display_name:d.display_name,base_url:d.base_url,
+    auth:{type:'oauth2_client_credentials',token_url:d.token_url,
+      client_id_env:`${d.id.toUpperCase()}_CLIENT_ID`,
+      client_secret_env:`${d.id.toUpperCase()}_CLIENT_SECRET`,
+      client_id:d.client_id,   // Для sandbox — передаём напрямую
+      client_secret:d.client_secret,
+      scope:d.scope,token_ttl_seconds:3600},
+    actions:Object.fromEntries(Object.entries(d.actions).map(([name,cfg])=>[name,{
+      method:cfg.method,path:cfg.path,
+      response_map:Object.fromEntries(
+        Object.entries(d.response_map)
+          .filter(([k])=>k.startsWith(name+'.'))
+          .map(([k,v])=>[k.replace(name+'.',''),v])
+      )
+    }]))
+  };
+}
+
+async function finishOnboarding(){
+  const config=buildConfig();
+  document.getElementById('wiz-next').disabled=true;
+  document.getElementById('wiz-next').textContent='Подключаем…';
+  document.getElementById('wiz-next').style.opacity='0.7';
+
+  const r=await apiFetch('/register',{method:'POST',body:JSON.stringify({config_json:JSON.stringify(config),dry_run:false})});
+
+  if(r.status==='registered'||r.company_id){
+    // Добавляем в локальный список
+    const newPartner={
+      id:STATE.wizData.id,name:STATE.wizData.name,
+      display_name:STATE.wizData.display_name,
+      status:'active',calls_today:0,
+      token_url:STATE.wizData.token_url,
+      base_url:STATE.wizData.base_url,
+      scope:STATE.wizData.scope,
+      token_ttl:'59m 00s',
+      actions:Object.keys(STATE.wizData.actions),
+      wizData:STATE.wizData,
+    };
+    STATE.partners.push(newPartner);
+    STATE.current=newPartner;
+    STATE.wizStep=1;
+    renderPartnerList();
+    toast(`${STATE.wizData.name} успешно подключён`, 'ok', 4000);
+    if (APP_MODE === 'partner') {
+      showSuccessScreen();
+    } else {
+      showScreen('overview');
+    }
+  } else {
+    document.getElementById('wiz-next').disabled=false;
+    document.getElementById('wiz-next').textContent='Попробовать снова';
+    document.getElementById('wiz-next').style.opacity='1';
+    toast('Ошибка: '+(r.error||r.detail||'Попробуйте ещё раз'), 'err', 5000);
+  }
+}
+
+// ── Tester ────────────────────────────────────────────────────────────────────
+function openTester(action){
+  STATE.testerAction=action;
+  document.getElementById('t-name').textContent=action;
+  document.getElementById('t-co-label').textContent=(STATE.current?.name||'partner')+' · sandbox mode';
+  document.getElementById('t-result').innerHTML='';
+  document.getElementById('t-dry').checked=true;
+  const params=ACT_PARAMS[action]||[];
+  document.getElementById('t-params').innerHTML=params.map(p=>`
+    <div><label style="display:block;font-size:11px;color:var(--muted);margin-bottom:3px;font-family:var(--mono)">${p}</label>
+    <input id="tp-${p}" value="${DEFAULTS[p]||''}" style="width:100%;font-size:12px;font-family:var(--mono);padding:6px 9px;border:1px solid var(--line);border-radius:7px;background:var(--sf);color:var(--ink)"></div>`).join('');
+  document.getElementById('tester-modal').classList.add('open');
+}
+function closeTester(){document.getElementById('tester-modal').classList.remove('open');}
+
+async function runTest(){
+  const action=STATE.testerAction;
+  const coId=STATE.current?.id||'darkstore';
+  const dryRun=document.getElementById('t-dry').checked;
+  const params={};
+  (ACT_PARAMS[action]||[]).forEach(p=>{const el=document.getElementById('tp-'+p);if(el)params[p]=el.value;});
+
+  document.getElementById('t-result').innerHTML='<div style="padding:14px;text-align:center;color:var(--muted);font-size:13px">Выполняется…</div>';
+
+  const r=await apiFetch('/execute',{method:'POST',body:JSON.stringify({company_id:coId,action,params,dry_run:dryRun})});
+  const ok=r.success!==false;
+
+  document.getElementById('t-result').innerHTML=`
+    <div style="margin-top:14px;border-radius:8px;overflow:hidden;border:1px solid var(--line)">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--line);background:${ok?'var(--g50)':'var(--r50)'};display:flex;align-items:center;gap:8px">
+        <span style="font-size:13px;font-weight:600;color:${ok?'var(--g700)':'var(--r700)'}">${r.offline?'⚠ Сервер недоступен':ok?(dryRun?'Preview':'Executed'):'Error'}</span>
+        ${r.stub?'<span class="badge warn" style="font-size:10px;border:none">stub</span>':'<span class="badge ok" style="font-size:10px;border:none">live</span>'}
+      </div>
+      <pre style="margin:0;padding:12px 14px;background:var(--code);color:var(--cfg);font-family:var(--mono);font-size:11.5px;line-height:1.65;white-space:pre-wrap;word-break:break-all;max-height:260px;overflow-y:auto">${JSON.stringify(r,null,2)}</pre>
+      ${r.offline?'<div style="padding:10px 14px;background:var(--a50);border-top:1px solid var(--a300);font-size:12px;color:var(--a800)">Сервер не запущен. В терминале: <span style="font-family:var(--mono);background:#fef3c7;padding:1px 5px;border-radius:3px">python3 api_server.py</span></div>':''}
+    </div>`;
+
+  if(!dryRun&&!r.offline){setTimeout(loadLogs,1000);if(r.success)toast('Запрос выполнен успешно','ok');else toast('Ошибка при выполнении запроса','err');}
+}
+
+// ── Toast notifications ──────────────────────────────────────────────────────
+function toast(msg, type='info', duration=3500) {
+  const icons = {ok:'✓', err:'✗', info:'ℹ', warn:'⚠'};
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ'}</span><span style="flex:1">${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(()=>{
+    el.style.animation='toastOut .2s ease forwards';
+    setTimeout(()=>el.remove(), 200);
+  }, duration);
+}
+
+// ── Confirm dialog ────────────────────────────────────────────────────────────
+function showConfirm(title, sub, onOk, okLabel='Подтвердить', danger=true) {
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-sub').textContent = sub;
+  const okBtn = document.getElementById('confirm-ok');
+  okBtn.textContent = okLabel;
+  okBtn.className = danger ? 'btn danger' : 'btn primary';
+  document.getElementById('confirm-bg').classList.add('open');
+  okBtn.onclick = ()=>{ document.getElementById('confirm-bg').classList.remove('open'); onOk(); };
+  document.getElementById('confirm-cancel').onclick = ()=>{ document.getElementById('confirm-bg').classList.remove('open'); };
+}
+
+// ── Search ───────────────────────────────────────────────────────────────────
+function openSearch() {
+  document.getElementById('search-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('search-inp').focus(),50);
+}
+
+document.addEventListener('keydown', e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();}
+  if(e.key==='Escape'){
+    document.getElementById('search-modal')?.classList.remove('open');
+    document.getElementById('confirm-bg')?.classList.remove('open');
+  }
 });
 
-  </script>
-  <script type="text/babel">
-
-const { useState, useEffect, useCallback } = React;
-
-// ── Живой тест действия ────────────────────────────────────────────────────
-const ActionTester = ({ companyId, actionName, onClose }) => {
-  const [schema, setSchema] = useState(null);
-  const [params, setParams] = useState({});
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [dryRun, setDryRun] = useState(true);
-
-  useEffect(() => {
-    API.getActionSchema(companyId, actionName).then(s => {
-      setSchema(s);
-      const defaults = {};
-      (s.required_params || []).forEach(p => {
-        const d = { from_city: "Самара", to_city: "Москва", weight_g: "5000",
-                    length_cm: "30", width_cm: "20", height_cm: "15",
-                    sender_name: "Иван Петров", sender_phone: "+79991234567",
-                    recipient_name: "Пётр Иванов", recipient_phone: "+79997654321",
-                    pickup_date: new Date().toISOString().slice(0,10),
-                    time_from: "10:00", time_to: "16:00",
-                    contact_name: "Иван Петров", contact_phone: "+79991234567",
-                    tracking_number: "TRK123456", shipment_id: "STUB-001" };
-        defaults[p] = d[p] || "";
-      });
-      setParams(defaults);
-    });
-  }, [companyId, actionName]);
-
-  const run = async () => {
-    setLoading(true);
-    setResult(null);
-    try {
-      const r = await API.executeAction(companyId, actionName, params, dryRun);
-      setResult(r);
-    } catch(e) {
-      setResult({ success: false, error: e.message });
-    }
-    setLoading(false);
-  };
-
-  return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(15,23,42,0.55)", display:"flex",
-                  alignItems:"center", justifyContent:"center", zIndex:1000 }}
-         onClick={e => e.target === e.currentTarget && onClose()}>
-      <div style={{ background:"#fff", borderRadius:12, width:640, maxHeight:"85vh",
-                    overflow:"auto", border:"1px solid #e2e8f0", boxShadow:"0 24px 48px rgba(15,23,42,0.18)" }}>
-        <div style={{ padding:"16px 20px", borderBottom:"1px solid #e2e8f0", display:"flex",
-                      alignItems:"center", justifyContent:"space-between" }}>
-          <div>
-            <div style={{ fontSize:14, fontWeight:600, color:"#0f172a" }}>
-              Тест: <span style={{ fontFamily:"var(--mono)", color:"#5b21b6" }}>{actionName}</span>
-            </div>
-            <div style={{ fontSize:12, color:"#64748b", marginTop:2 }}>
-              Компания: {companyId} {result?.stub && <span style={{ color:"#d97706" }}>· stub-режим</span>}
-            </div>
-          </div>
-          <button onClick={onClose} style={{ background:"none", border:"none", cursor:"pointer",
-                          color:"#64748b", fontSize:18 }}>×</button>
-        </div>
-
-        <div style={{ padding:"16px 20px" }}>
-          {schema && (
-            <div style={{ marginBottom:16 }}>
-              <div style={{ fontSize:11, fontWeight:600, color:"#64748b", textTransform:"uppercase",
-                            letterSpacing:0.5, marginBottom:8 }}>Параметры</div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
-                {(schema.required_params || []).map(p => (
-                  <div key={p}>
-                    <label style={{ fontSize:11, color:"#64748b", display:"block", marginBottom:3,
-                                    fontFamily:"var(--mono)" }}>{p}</label>
-                    <input value={params[p] || ""} onChange={e => setParams({...params, [p]: e.target.value})}
-                           style={{ width:"100%", fontSize:12, fontFamily:"var(--mono)", padding:"5px 8px",
-                                    border:"1px solid #e2e8f0", borderRadius:6, background:"#f7f8fa",
-                                    color:"#0f172a" }} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:14 }}>
-            <label style={{ display:"flex", alignItems:"center", gap:6, fontSize:13, color:"#0f172a",
-                            cursor:"pointer" }}>
-              <input type="checkbox" checked={dryRun} onChange={e => setDryRun(e.target.checked)} />
-              dry_run (превью без реального вызова)
-            </label>
-          </div>
-
-          <button onClick={run} disabled={loading}
-                  style={{ width:"100%", padding:"9px 0", background:"#0f172a", color:"#fff",
-                           border:"none", borderRadius:7, fontSize:13, fontWeight:600,
-                           cursor:loading?"not-allowed":"pointer", opacity:loading?0.7:1 }}>
-            {loading ? "Выполняется..." : dryRun ? "Превью запроса" : "Выполнить"}
-          </button>
-
-          {result && (
-            <div style={{ marginTop:14, borderRadius:8, overflow:"hidden", border:"1px solid #e2e8f0" }}>
-              <div style={{ padding:"8px 12px", background: result.success ? "#ecfdf5" : "#fef2f2",
-                            borderBottom:"1px solid #e2e8f0", display:"flex", alignItems:"center", gap:8 }}>
-                <span style={{ fontSize:13, fontWeight:600,
-                               color: result.success ? "#047857" : "#b91c1c" }}>
-                  {result.success ? (result.dry_run ? "Превью готово" : "Выполнено") : "Ошибка"}
-                </span>
-                {result.stub && <span style={{ fontSize:11, color:"#d97706", background:"#fffbeb",
-                                              padding:"2px 7px", borderRadius:4, border:"1px solid #fcd34d" }}>stub</span>}
-              </div>
-              <pre style={{ margin:0, padding:"12px 14px", background:"#0b1220", color:"#e2e8f0",
-                            fontFamily:"var(--mono)", fontSize:11.5, lineHeight:1.6,
-                            whiteSpace:"pre-wrap", wordBreak:"break-all" }}>
-                {JSON.stringify(result, null, 2)}
-              </pre>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ── Онбординг с живым validate ─────────────────────────────────────────────
-const LiveWizard = ({ onDone }) => {
-  const [step, setStep] = useState(0);
-  const [form, setForm] = useState({
-    id: "", name: "", display_name: "", base_url: "",
-    token_url: "", client_id: "", client_secret: "", scope: "shipment:create shipment:read",
-    actions: { create_shipment: { method:"POST", path:"/orders" },
-               book_pickup: { method:"POST", path:"/pickups" },
-               track: { method:"GET", path:"/orders/{{tracking_number}}" },
-               calculate_cost: { method:"POST", path:"/calculator" },
-               cancel: { method:"DELETE", path:"/orders/{{shipment_id}}" } },
-    response_map: { "create_shipment.shipment_id": "data.id",
-                    "create_shipment.tracking_number": "data.tracking",
-                    "track.status": "data.status.name",
-                    "calculate_cost.cost_rub": "data.total" }
+function runSearch(q) {
+  const res = document.getElementById('search-results');
+  if(!q.trim()){res.innerHTML='<div style="padding:12px;font-size:12px;color:var(--muted)">Начните вводить запрос</div>';return;}
+  const items = [];
+  // Partners
+  STATE.partners.forEach(p=>{
+    if(p.name.toLowerCase().includes(q.toLowerCase())||p.id.includes(q.toLowerCase()))
+      items.push({icon:'🏢',title:p.name,sub:p.id+' · '+p.base_url,action:()=>{selectPartner(p.id);document.getElementById('search-modal').classList.remove('open');}});
   });
-  const [validating, setValidating] = useState(false);
-  const [preview, setPreview] = useState(null);
+  // Actions
+  if(STATE.current) {
+    (STATE.current.actions||[]).forEach(a=>{
+      if(a.includes(q.toLowerCase()))
+        items.push({icon:'⚡',title:a,sub:'Action · '+STATE.current.name,action:()=>{showScreen('actions');document.getElementById('search-modal').classList.remove('open');}});
+    });
+  }
+  // Logs
+  STATE.logs.filter(l=>l.action?.includes(q)||String(l.status).includes(q)).slice(0,3).forEach(l=>{
+    items.push({icon:l.status>=400?'🔴':'🟢',title:l.action+' · '+l.status,sub:l.time+' · '+l.latency+'ms',action:()=>{showScreen('logs');document.getElementById('search-modal').classList.remove('open');}});
+  });
+  // Nav shortcuts
+  [['обзор','overview','⊞'],['подключение','wizard','≡'],['действия','actions','⚡'],['доступы','credentials','🔑'],['логи','logs','▤']].forEach(([kw,screen,ico])=>{
+    if(kw.includes(q.toLowerCase()))
+      items.push({icon:ico,title:kw.charAt(0).toUpperCase()+kw.slice(1),sub:'Перейти в раздел',action:()=>{showScreen(screen);document.getElementById('search-modal').classList.remove('open');}});
+  });
 
-  const validate = async () => {
-    setValidating(true);
-    const config = {
-      id: form.id || "new_partner",
-      name: form.name,
-      display_name: form.display_name,
-      base_url: form.base_url,
-      auth: { type:"oauth2_client_credentials", token_url: form.token_url,
-              client_id_env: "PARTNER_CLIENT_ID", client_secret_env: "PARTNER_CLIENT_SECRET",
-              scope: form.scope, token_ttl_seconds: 3600 },
-      actions: Object.fromEntries(Object.entries(form.actions).map(([k,v]) => [k, {
-        method: v.method, path: v.path,
-        response_map: Object.fromEntries(
-          Object.entries(form.response_map).filter(([rk]) => rk.startsWith(k+"."))
-          .map(([rk, rv]) => [rk.replace(k+".",""), rv])
-        )
-      }]))
-    };
-    const result = await API.registerCompany(config, true);
-    setPreview({ config, result });
-    setValidating(false);
-    if (result.status === "valid") setStep(4);
-  };
+  if(!items.length){res.innerHTML='<div style="padding:12px;font-size:12px;color:var(--muted)">Ничего не найдено</div>';return;}
+  res.innerHTML=items.map((item,i)=>`
+    <div onclick="window._searchItems[${i}]()" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:7px;cursor:pointer;font-size:13px" onmouseover="this.style.background='var(--sf2)'" onmouseout="this.style.background='transparent'">
+      <span style="font-size:16px;flex-shrink:0">${item.icon}</span>
+      <div><div style="font-weight:500">${item.title}</div><div style="font-size:11.5px;color:var(--muted)">${item.sub}</div></div>
+    </div>`).join('');
+  window._searchItems = items.map(i=>i.action);
+}
 
-  const save = async () => {
-    if (!preview) return;
-    const result = await API.registerCompany(preview.config, false);
-    if (result.status === "registered") onDone(preview.config);
-  };
+// ── Dark mode ─────────────────────────────────────────────────────────────────
+function toggleDark(el) {
+  const dark = document.body.classList.toggle('dark');
+  el.style.background = dark ? 'var(--v)' : 'var(--line)';
+  document.getElementById('dark-knob').style.left = dark ? '14px' : '2px';
+}
 
-  const inp = (key, placeholder, mono=false) => (
-    <input value={form[key]} onChange={e => setForm({...form, [key]: e.target.value})}
-           placeholder={placeholder}
-           style={{ width:"100%", fontSize:13, fontFamily: mono?"var(--mono)":"inherit",
-                    padding:"7px 10px", border:"1px solid #e2e8f0", borderRadius:7,
-                    background:"#f7f8fa", color:"#0f172a" }} />
+// ── Server ping ───────────────────────────────────────────────────────────────
+async function pingServer(){
+  try{
+    const r=await fetch(API_BASE+'/health',{signal:AbortSignal.timeout(2000)});
+    const d=await r.json();
+    document.getElementById('srv-dot').style.background='var(--g600)';
+    document.getElementById('srv-label').textContent=`live · ${d.registry_companies} companies`;
+  }catch{
+    document.getElementById('srv-dot').style.background='var(--r600)';
+    document.getElementById('srv-label').textContent='server offline';
+  }
+}
+
+// ── Onboarding click handler ─────────────────────────────────────────────────
+function handleOnboardingClick() {
+  // Если онбординг уже начат — возвращаемся к текущему шагу
+  if(STATE.wizStep > 1 && STATE.wizStep < 5) {
+    showScreen('wizard');
+    renderWizStep();
+    return;
+  }
+  // Если нет партнёра — начинаем с нуля
+  if(!STATE.current) {
+    startOnboarding();
+    return;
+  }
+  // Если есть партнёр — можно добавить нового
+  showConfirm(
+    'Начать подключение нового партнёра?',
+    'Текущий прогресс онбординга будет сброшен.',
+    ()=>startOnboarding(),
+    'Начать', false
   );
+}
 
-  const steps = ["Компания","OAuth","Действия","Маппинг","Готово"];
+// ── Health check ─────────────────────────────────────────────────────────────
+async function runHealthCheck() {
+  toast('Проверяем подключение…', 'info', 2000);
+  const r = await apiFetch('/health');
+  if(r.status==='ok') {
+    toast(`Сервер работает · ${r.registry_companies} компаний в реестре`, 'ok');
+  } else {
+    toast('Сервер недоступен', 'err');
+  }
+}
 
-  return (
-    <div style={{ padding:28, maxWidth:720, margin:"0 auto" }}>
-      <div style={{ display:"flex", gap:0, marginBottom:28, background:"#fff",
-                    border:"1px solid #e2e8f0", borderRadius:10, overflow:"hidden" }}>
-        {steps.map((s,i) => (
-          <div key={s} style={{ flex:1, padding:"10px 4px", textAlign:"center",
-                                fontSize:11.5, fontWeight: i<=step?600:400,
-                                color: i<step?"#047857": i===step?"#0f172a":"#94a3b8",
-                                background: i===step?"#f8f7ff": i<step?"#ecfdf5":"#fff",
-                                borderRight: i<4?"1px solid #e2e8f0":"none" }}>
-            {i < step ? "✓ " : ""}{s}
-          </div>
-        ))}
-      </div>
+// ── Filter logs ──────────────────────────────────────────────────────────────
+function filterLogs(query) {
+  const q=(document.getElementById('log-search')?.value||'').toLowerCase();
+  const statusF=document.getElementById('log-status-filter')?.value||'';
+  let logs=[...STATE.logs];
+  if(q) logs=logs.filter(l=>(l.action||'').includes(q)||(l.path||'').includes(q)||String(l.status).includes(q));
+  if(statusF==='ok') logs=logs.filter(l=>l.status<400);
+  if(statusF==='err') logs=logs.filter(l=>l.status>=400);
+  renderLogs(logs, null);
+}
 
-      {step === 0 && (
-        <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-          <div>
-            <label style={{ fontSize:12, color:"#64748b", display:"block", marginBottom:4 }}>Системный ID компании</label>
-            {inp("id","my_company","mono")}
-          </div>
-          <div>
-            <label style={{ fontSize:12, color:"#64748b", display:"block", marginBottom:4 }}>Название компании</label>
-            {inp("name","Моя Логистика")}
-          </div>
-          <div>
-            <label style={{ fontSize:12, color:"#64748b", display:"block", marginBottom:4 }}>Как называть клиентам платформы</label>
-            {inp("display_name","партнёр по доставке")}
-          </div>
-          <div>
-            <label style={{ fontSize:12, color:"#64748b", display:"block", marginBottom:4 }}>Base URL вашего API</label>
-            {inp("base_url","https://api.yourcompany.ru/v2","mono")}
-          </div>
-          <button onClick={() => setStep(1)}
-                  style={{ alignSelf:"flex-end", padding:"8px 20px", background:"#0f172a",
-                           color:"#fff", border:"none", borderRadius:7, fontSize:13,
-                           fontWeight:600, cursor:"pointer" }}>Далее →</button>
-        </div>
-      )}
+// ── Export CSV ────────────────────────────────────────────────────────────────
+function exportCSV() {
+  if(!STATE.logs.length){toast('Нет логов для экспорта','warn');return;}
+  const header = 'Time,Method,Status,Action,Path,Latency,Env';
+  const rows = STATE.logs.map(l=>`${l.time},${l.method||''},${l.status},${l.action},${l.path||''},${l.latency},${l.env||''}`);
+  const csv = [header,...rows].join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `logs_${STATE.current?.id||'all'}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV скачан', 'ok', 2000);
+}
 
-      {step === 1 && (
-        <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-          <div style={{ padding:"10px 14px", background:"#fffbeb", border:"1px solid #fcd34d",
-                        borderRadius:8, fontSize:12, color:"#92400e" }}>
-            Мы получим только те разрешения которые вы укажете в scope.
-            Вы можете отозвать доступ в любой момент.
-          </div>
-          <div>
-            <label style={{ fontSize:12, color:"#64748b", display:"block", marginBottom:4 }}>URL для получения токена</label>
-            {inp("token_url","https://api.yourcompany.ru/oauth/token","mono")}
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-            <div>
-              <label style={{ fontSize:12, color:"#64748b", display:"block", marginBottom:4 }}>Client ID</label>
-              {inp("client_id","your_client_id","mono")}
-            </div>
-            <div>
-              <label style={{ fontSize:12, color:"#64748b", display:"block", marginBottom:4 }}>Client Secret</label>
-              <input type="password" value={form.client_secret}
-                     onChange={e => setForm({...form, client_secret: e.target.value})}
-                     placeholder="••••••••"
-                     style={{ width:"100%", fontSize:13, padding:"7px 10px",
-                              border:"1px solid #e2e8f0", borderRadius:7,
-                              background:"#f7f8fa", color:"#0f172a" }} />
-            </div>
-          </div>
-          <div>
-            <label style={{ fontSize:12, color:"#64748b", display:"block", marginBottom:4 }}>Scope (через пробел)</label>
-            {inp("scope","shipment:create shipment:read","mono")}
-          </div>
-          <div style={{ display:"flex", justifyContent:"space-between" }}>
-            <button onClick={() => setStep(0)} style={{ padding:"8px 16px", background:"none",
-                    border:"1px solid #e2e8f0", borderRadius:7, cursor:"pointer", fontSize:13 }}>← Назад</button>
-            <button onClick={() => setStep(2)} style={{ padding:"8px 20px", background:"#0f172a",
-                    color:"#fff", border:"none", borderRadius:7, fontSize:13, fontWeight:600, cursor:"pointer" }}>Далее →</button>
-          </div>
-        </div>
-      )}
+// ── Init ──────────────────────────────────────────────────────────────────────
+pingServer();
+setInterval(pingServer,5000);
 
-      {step === 2 && (
-        <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-          <div style={{ fontSize:12, color:"#64748b", marginBottom:4 }}>
-            Укажите HTTP метод и путь для каждого действия
-          </div>
-          {Object.entries(form.actions).map(([action, cfg]) => (
-            <div key={action} style={{ display:"grid", gridTemplateColumns:"180px 90px 1fr",
-                                       gap:8, alignItems:"center" }}>
-              <span style={{ fontFamily:"var(--mono)", fontSize:12.5, color:"#0f172a",
-                             fontWeight:500 }}>{action}</span>
-              <select value={cfg.method}
-                      onChange={e => setForm({...form, actions:{...form.actions,
-                        [action]:{...cfg, method:e.target.value}}})}
-                      style={{ fontSize:12, padding:"6px 8px", border:"1px solid #e2e8f0",
-                               borderRadius:6, background:"#f7f8fa", color:"#0f172a" }}>
-                {["GET","POST","PUT","DELETE"].map(m => <option key={m}>{m}</option>)}
-              </select>
-              <input value={cfg.path}
-                     onChange={e => setForm({...form, actions:{...form.actions,
-                       [action]:{...cfg, path:e.target.value}}})}
-                     style={{ fontSize:12, fontFamily:"var(--mono)", padding:"6px 10px",
-                              border:"1px solid #e2e8f0", borderRadius:6,
-                              background:"#f7f8fa", color:"#0f172a" }} />
-            </div>
-          ))}
-          <div style={{ display:"flex", justifyContent:"space-between", marginTop:8 }}>
-            <button onClick={() => setStep(1)} style={{ padding:"8px 16px", background:"none",
-                    border:"1px solid #e2e8f0", borderRadius:7, cursor:"pointer", fontSize:13 }}>← Назад</button>
-            <button onClick={() => setStep(3)} style={{ padding:"8px 20px", background:"#0f172a",
-                    color:"#fff", border:"none", borderRadius:7, fontSize:13, fontWeight:600, cursor:"pointer" }}>Далее →</button>
-          </div>
-        </div>
-      )}
+if (APP_MODE === 'partner') {
+  // Партнёрский режим — скрываем лишнее, сразу онбординг
+  document.getElementById('co-list').style.display = 'none';
+  // Скрываем Overview/Actions/Credentials/Logs в nav
+  ['nav-overview','nav-actions','nav-credentials','nav-logs'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  // Меняем workspace title
+  document.getElementById('ws-name').textContent = 'Logistics API Platform';
+  document.getElementById('ws-av').textContent = 'LA';
+  document.getElementById('ws-av').style.background = 'linear-gradient(135deg,#5b21b6,#7c3aed)';
+  // Скрываем кнопку добавить партнёра в сайдбаре (не нужна)
+  document.querySelectorAll('.sb-add').forEach(el => el.style.display = 'none');
+  // Показываем страницу подключения
+  showScreen('empty');
+  // Переопределяем кнопку "Начать подключение" — сразу запускаем онбординг
+  document.querySelector('.empty-state .btn').addEventListener('click', startOnboarding);
+} else {
+  // Режим платформы — загружаем всех партнёров
+  loadPartners();
+  showScreen('empty');
+}
+</script>
 
-      {step === 3 && (
-        <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-          <div style={{ fontSize:12, color:"#64748b", marginBottom:4 }}>
-            Укажите dot-path для ключевых полей ответа (например: <code style={{ fontFamily:"var(--mono)" }}>data.order.id</code>)
-          </div>
-          {Object.entries(form.response_map).map(([field, path]) => (
-            <div key={field} style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, alignItems:"center" }}>
-              <span style={{ fontFamily:"var(--mono)", fontSize:12, color:"#5b21b6",
-                             fontWeight:500 }}>{field}</span>
-              <input value={path}
-                     onChange={e => setForm({...form, response_map:{...form.response_map, [field]:e.target.value}})}
-                     style={{ fontSize:12, fontFamily:"var(--mono)", padding:"6px 10px",
-                              border:"1px solid #e2e8f0", borderRadius:6,
-                              background:"#f7f8fa", color:"#0f172a" }} />
-            </div>
-          ))}
-          <div style={{ display:"flex", justifyContent:"space-between", marginTop:8 }}>
-            <button onClick={() => setStep(2)} style={{ padding:"8px 16px", background:"none",
-                    border:"1px solid #e2e8f0", borderRadius:7, cursor:"pointer", fontSize:13 }}>← Назад</button>
-            <button onClick={validate} disabled={validating}
-                    style={{ padding:"8px 20px", background:"#5b21b6",
-                    color:"#fff", border:"none", borderRadius:7, fontSize:13, fontWeight:600,
-                    cursor:validating?"not-allowed":"pointer", opacity:validating?0.7:1 }}>
-              {validating ? "Проверяем..." : "Проверить и сохранить"}
-            </button>
-          </div>
-        </div>
-      )}
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
 
-      {step === 4 && preview && (
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <div style={{ padding:"12px 16px", background:"#ecfdf5", border:"1px solid #a7f3d0",
-                        borderRadius:8, fontSize:13, color:"#047857", fontWeight:500 }}>
-            ✓ Конфиг валиден — {preview.result.actions_count} действий настроено
-          </div>
-          <div style={{ borderRadius:8, overflow:"hidden", border:"1px solid #e2e8f0" }}>
-            <div style={{ padding:"8px 14px", background:"#0b1220", fontSize:11,
-                          color:"#64748b", fontFamily:"var(--mono)" }}>Сгенерированный конфиг адаптера</div>
-            <pre style={{ margin:0, padding:"12px 14px", background:"#0b1220", color:"#e2e8f0",
-                          fontFamily:"var(--mono)", fontSize:11, lineHeight:1.6,
-                          whiteSpace:"pre-wrap", maxHeight:240, overflow:"auto" }}>
-              {JSON.stringify(preview.config, null, 2)}
-            </pre>
-          </div>
-          <button onClick={save}
-                  style={{ padding:"10px 0", background:"#0f172a", color:"#fff",
-                           border:"none", borderRadius:7, fontSize:13, fontWeight:600,
-                           cursor:"pointer" }}>
-            Подключить компанию
-          </button>
-        </div>
-      )}
+<!-- Search modal -->
+<div class="modal-bg" id="search-modal" style="align-items:flex-start;padding-top:80px">
+  <div class="modal" style="width:560px;max-height:420px;overflow:hidden;display:flex;flex-direction:column">
+    <div style="padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="search-inp" placeholder="Поиск по actions, логам, партнёрам…" style="flex:1;border:none;outline:none;font-size:14px;font-family:var(--sans);color:var(--ink);background:transparent" oninput="runSearch(this.value)">
+      <button onclick="document.getElementById('search-modal').classList.remove('open')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px">ESC</button>
     </div>
-  );
-};
+    <div id="search-results" style="overflow-y:auto;max-height:340px;padding:8px"></div>
+  </div>
+</div>
 
-// ── Главное приложение ─────────────────────────────────────────────────────
-const PortalApp = () => {
-  const [screen, setScreen] = useState("overview");
-  const [companies, setCompanies] = useState(STUB_DATA.companies);
-  const [activeCompany, setActiveCompany] = useState(STUB_DATA.companies[0]);
-  const [tester, setTester] = useState(null);
-  const [showWizard, setShowWizard] = useState(false);
-  const [logs, setLogs] = useState(STUB_DATA.logs);
-
-  const onCompanyAdded = (config) => {
-    const newCo = { id: config.id, name: config.name,
-                    display_name: config.display_name, status: "active",
-                    actions: Object.keys(config.actions), calls_today: 0,
-                    uptime: "—", token_ttl: "—" };
-    setCompanies([...companies, newCo]);
-    setActiveCompany(newCo);
-    setShowWizard(false);
-    setScreen("overview");
-  };
-
-  // Sidebar навигация
-  const sidebarItems = [
-    { id:"overview", label:"Обзор", icon:"home" },
-    { id:"wizard",   label:"Подключить", icon:"plus" },
-    { id:"actions",  label:"Действия API", icon:"lightning" },
-    { id:"credentials", label:"Доступы", icon:"key" },
-    { id:"logs",     label:"Логи", icon:"logs" },
-  ];
-
-  return (
-    <div style={{ display:"flex", height:"100vh", background:"#f7f8fa",
-                  fontFamily:"var(--sans)", color:"#0f172a" }}>
-
-      {/* Sidebar */}
-      <aside style={{ width:220, background:"#0f172a", display:"flex",
-                      flexDirection:"column", flexShrink:0 }}>
-        <div style={{ padding:"20px 16px 16px", borderBottom:"1px solid #1e293b" }}>
-          <div style={{ fontSize:13, fontWeight:700, color:"#fff",
-                        fontFamily:"var(--mono)", letterSpacing:-0.3 }}>
-            logistics.api
-          </div>
-          <div style={{ fontSize:11, color:"#475569", marginTop:2 }}>Partner Portal</div>
-        </div>
-
-        {/* Company switcher */}
-        <div style={{ padding:"12px 8px 8px" }}>
-          <div style={{ fontSize:10, fontWeight:600, color:"#475569", textTransform:"uppercase",
-                        letterSpacing:0.5, padding:"0 8px", marginBottom:6 }}>Партнёры</div>
-          {companies.map(co => (
-            <div key={co.id} onClick={() => { setActiveCompany(co); setScreen("overview"); }}
-                 style={{ padding:"7px 10px", borderRadius:6, cursor:"pointer", marginBottom:2,
-                          background: activeCompany.id===co.id ? "#1e293b" : "transparent",
-                          display:"flex", alignItems:"center", gap:8 }}>
-              <span style={{ width:6, height:6, borderRadius:999, flexShrink:0,
-                             background: co.status==="active"?"#16a34a":co.status==="configuring"?"#d97706":"#dc2626" }} />
-              <span style={{ fontSize:12.5, color: activeCompany.id===co.id?"#fff":"#94a3b8",
-                             fontWeight: activeCompany.id===co.id?500:400, overflow:"hidden",
-                             textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                {co.name}
-              </span>
-            </div>
-          ))}
-          <button onClick={() => setShowWizard(true)}
-                  style={{ width:"100%", padding:"7px 10px", background:"transparent",
-                           border:"1px dashed #334155", borderRadius:6, color:"#64748b",
-                           fontSize:12, cursor:"pointer", textAlign:"left", marginTop:4 }}>
-            + Добавить партнёра
-          </button>
-        </div>
-
-        <div style={{ flex:1, borderTop:"1px solid #1e293b", padding:"12px 8px" }}>
-          {sidebarItems.filter(i=>i.id!=="wizard").map(item => (
-            <div key={item.id} onClick={() => setScreen(item.id)}
-                 style={{ padding:"8px 10px", borderRadius:6, cursor:"pointer", marginBottom:2,
-                          background: screen===item.id?"#1e293b":"transparent",
-                          display:"flex", alignItems:"center", gap:10 }}>
-              <span style={{ color: screen===item.id?"#a78bfa":"#475569", flexShrink:0 }}>
-                <PortalIcon name={item.icon} size={15} />
-              </span>
-              <span style={{ fontSize:12.5, color: screen===item.id?"#fff":"#94a3b8",
-                             fontWeight: screen===item.id?500:400 }}>
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </aside>
-
-      {/* Main */}
-      <main style={{ flex:1, overflow:"auto", display:"flex", flexDirection:"column" }}>
-        {/* Topbar */}
-        <div style={{ padding:"14px 24px", borderBottom:"1px solid #e2e8f0", background:"#fff",
-                      display:"flex", alignItems:"center", gap:12, flexShrink:0 }}>
-          <div style={{ flex:1 }}>
-            <div style={{ fontSize:14, fontWeight:600, color:"#0f172a" }}>
-              {activeCompany.name}
-            </div>
-            <div style={{ fontSize:11.5, color:"#64748b", marginTop:1, fontFamily:"var(--mono)" }}>
-              {activeCompany.id} · {activeCompany.calls_today.toLocaleString()} вызовов сегодня
-            </div>
-          </div>
-          <span style={{ display:"inline-flex", alignItems:"center", gap:6, fontSize:12,
-                         padding:"4px 10px", borderRadius:999,
-                         background: activeCompany.status==="active"?"#ecfdf5":"#fffbeb",
-                         color: activeCompany.status==="active"?"#047857":"#d97706",
-                         border: activeCompany.status==="active"?"1px solid #a7f3d0":"1px solid #fcd34d" }}>
-            <span style={{ width:6, height:6, borderRadius:999,
-                           background: activeCompany.status==="active"?"#16a34a":"#d97706" }} />
-            {activeCompany.status==="active"?"подключён":"настройка"}
-          </span>
-        </div>
-
-        {/* Content */}
-        <div style={{ flex:1 }}>
-          {screen==="overview" && (
-            <div style={{ padding:24 }}>
-              {/* Stats */}
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14, marginBottom:20 }}>
-                {[
-                  { label:"Статус", value:"Operational", sub:"Нет инцидентов 30 дней", color:"#16a34a" },
-                  { label:"Действий", value:`${activeCompany.actions?.length || 0} / 7`,
-                    sub:`${7-(activeCompany.actions?.length||0)} не настроено`, color:"#5b21b6" },
-                  { label:"Вызовов сегодня", value:activeCompany.calls_today.toLocaleString(),
-                    sub:"обновлено только что", color:"#2563eb" },
-                ].map(s => (
-                  <div key={s.label} style={{ background:"#fff", border:"1px solid #e2e8f0",
-                                              borderRadius:10, padding:"14px 16px", position:"relative",
-                                              overflow:"hidden" }}>
-                    <div style={{ position:"absolute", left:0, top:0, bottom:0, width:3, background:s.color }} />
-                    <div style={{ fontSize:11, fontWeight:600, color:"#64748b", textTransform:"uppercase",
-                                  letterSpacing:0.5, marginBottom:8 }}>{s.label}</div>
-                    <div style={{ fontSize:24, fontWeight:600, color:"#0f172a", marginBottom:4 }}>{s.value}</div>
-                    <div style={{ fontSize:12, color:"#64748b" }}>{s.sub}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Actions table */}
-              <div style={{ background:"#fff", border:"1px solid #e2e8f0", borderRadius:10, overflow:"hidden" }}>
-                <div style={{ padding:"14px 16px", borderBottom:"1px solid #e2e8f0", display:"flex",
-                              alignItems:"center", justifyContent:"space-between" }}>
-                  <div style={{ fontSize:13, fontWeight:600 }}>Настроенные действия</div>
-                  <button onClick={() => setScreen("actions")}
-                          style={{ fontSize:12, padding:"5px 12px", background:"none",
-                                   border:"1px solid #e2e8f0", borderRadius:6, cursor:"pointer", color:"#475569" }}>
-                    Настроить →
-                  </button>
-                </div>
-                {(activeCompany.actions||[]).map((a,i) => (
-                  <div key={a} style={{ padding:"11px 16px", borderBottom: i<(activeCompany.actions.length-1)?"1px solid #f1f5f9":"none",
-                                        display:"flex", alignItems:"center", gap:12 }}>
-                    <span style={{ fontFamily:"var(--mono)", fontSize:13, color:"#0f172a", flex:1 }}>{a}</span>
-                    <span style={{ fontSize:11, padding:"3px 8px", borderRadius:999,
-                                   background:"#ecfdf5", color:"#047857", border:"1px solid #a7f3d0" }}>
-                      ● работает
-                    </span>
-                    <button onClick={() => setTester({ company: activeCompany.id, action: a })}
-                            style={{ fontSize:11, padding:"4px 10px", background:"none",
-                                     border:"1px solid #e2e8f0", borderRadius:6, cursor:"pointer", color:"#5b21b6" }}>
-                      Тест
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {screen==="actions" && (
-            <div style={{ padding:24 }}>
-              <div style={{ background:"#fff", border:"1px solid #e2e8f0", borderRadius:10, overflow:"hidden" }}>
-                <div style={{ padding:"14px 16px", borderBottom:"1px solid #e2e8f0" }}>
-                  <div style={{ fontSize:13, fontWeight:600 }}>Действия API</div>
-                  <div style={{ fontSize:12, color:"#64748b", marginTop:2 }}>Нажмите «Тест» для проверки каждого действия</div>
-                </div>
-                {["create_shipment","book_pickup","track","calculate_cost","cancel","create_reception","get_slots"].map((a,i,arr) => {
-                  const configured = (activeCompany.actions||[]).includes(a);
-                  return (
-                    <div key={a} style={{ padding:"12px 16px", borderBottom:i<arr.length-1?"1px solid #f1f5f9":"none",
-                                          display:"flex", alignItems:"center", gap:12 }}>
-                      <span style={{ fontFamily:"var(--mono)", fontSize:13, fontWeight:500,
-                                     color:"#0f172a", flex:1 }}>{a}</span>
-                      <span style={{ fontSize:11, padding:"3px 8px", borderRadius:999,
-                                     background:configured?"#ecfdf5":"#f8fafc",
-                                     color:configured?"#047857":"#94a3b8",
-                                     border:configured?"1px solid #a7f3d0":"1px solid #e2e8f0" }}>
-                        {configured ? "● настроено" : "○ не настроено"}
-                      </span>
-                      {configured && (
-                        <button onClick={() => setTester({ company: activeCompany.id, action: a })}
-                                style={{ fontSize:12, padding:"5px 12px", background:"#5b21b6",
-                                         color:"#fff", border:"none", borderRadius:6, cursor:"pointer" }}>
-                          Тест
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {screen==="credentials" && (
-            <div style={{ padding:24 }}>
-              <div style={{ background:"#fff", border:"1px solid #e2e8f0", borderRadius:10,
-                            overflow:"hidden", marginBottom:14 }}>
-                <div style={{ padding:"14px 16px", borderBottom:"1px solid #e2e8f0",
-                              display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                  <div style={{ fontSize:13, fontWeight:600 }}>OAuth credentials</div>
-                  <span style={{ fontSize:11, padding:"3px 8px", borderRadius:999,
-                                 background:"#ecfdf5", color:"#047857", border:"1px solid #a7f3d0" }}>активны</span>
-                </div>
-                {[
-                  ["Client ID", `${activeCompany.id}_client_****`],
-                  ["Token URL", `https://api.${activeCompany.id}.ru/oauth/token`],
-                  ["Scope", "shipment:create shipment:read"],
-                  ["Токен истекает", activeCompany.token_ttl],
-                ].map(([label, value]) => (
-                  <div key={label} style={{ padding:"11px 16px", borderBottom:"1px solid #f1f5f9",
-                                            display:"flex", alignItems:"center", gap:12 }}>
-                    <span style={{ fontSize:12, color:"#64748b", width:140, flexShrink:0 }}>{label}</span>
-                    <span style={{ fontFamily:"var(--mono)", fontSize:12.5, color:"#0f172a", flex:1 }}>{value}</span>
-                  </div>
-                ))}
-                <div style={{ padding:"12px 16px", display:"flex", gap:8 }}>
-                  <button style={{ fontSize:12, padding:"6px 14px", background:"none",
-                                   border:"1px solid #e2e8f0", borderRadius:6, cursor:"pointer" }}>
-                    Обновить токен
-                  </button>
-                  <button style={{ fontSize:12, padding:"6px 14px", background:"none",
-                                   border:"1px solid #fca5a5", borderRadius:6, cursor:"pointer", color:"#b91c1c" }}>
-                    Отозвать доступ
-                  </button>
-                </div>
-              </div>
-
-              <div style={{ background:"#fff", border:"1px solid #e2e8f0", borderRadius:10, overflow:"hidden" }}>
-                <div style={{ padding:"14px 16px", borderBottom:"1px solid #e2e8f0",
-                              fontSize:13, fontWeight:600 }}>Разрешения (scope)</div>
-                {[
-                  ["shipment:create","разрешено","ok"],
-                  ["shipment:read","разрешено","ok"],
-                  ["pickup:create","разрешено","ok"],
-                  ["shipment:delete","не запрошено","—"],
-                  ["finance:read","не запрошено","—"],
-                  ["admin:*","не запрошено","—"],
-                ].map(([scope, status, tone]) => (
-                  <div key={scope} style={{ padding:"10px 16px", borderBottom:"1px solid #f1f5f9",
-                                            display:"flex", alignItems:"center", gap:12 }}>
-                    <span style={{ fontFamily:"var(--mono)", fontSize:12.5, color:"#0f172a", flex:1 }}>{scope}</span>
-                    <span style={{ fontSize:11, padding:"3px 8px", borderRadius:999,
-                                   background:tone==="ok"?"#ecfdf5":"#f8fafc",
-                                   color:tone==="ok"?"#047857":"#94a3b8",
-                                   border:tone==="ok"?"1px solid #a7f3d0":"1px solid #e2e8f0" }}>
-                      {status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {screen==="logs" && (
-            <div style={{ padding:24 }}>
-              <div style={{ background:"#fff", border:"1px solid #e2e8f0", borderRadius:10,
-                            overflow:"hidden", marginBottom:14 }}>
-                <div style={{ padding:"14px 16px", borderBottom:"1px solid #e2e8f0",
-                              fontSize:13, fontWeight:600 }}>Последние вызовы</div>
-                <div style={{ padding:"8px 16px", background:"#f8fafc", borderBottom:"1px solid #e2e8f0",
-                              display:"grid", gridTemplateColumns:"80px 1fr 120px 60px 80px",
-                              gap:12, fontSize:10.5, fontWeight:600, color:"#64748b",
-                              textTransform:"uppercase", letterSpacing:0.5 }}>
-                  <div>Время</div><div>Действие</div><div>Компания</div><div>Статус</div><div>Латентность</div>
-                </div>
-                {logs.map(log => (
-                  <div key={log.id} style={{ padding:"10px 16px", borderBottom:"1px solid #f1f5f9",
-                                             display:"grid", gridTemplateColumns:"80px 1fr 120px 60px 80px",
-                                             gap:12, alignItems:"center" }}>
-                    <span style={{ fontFamily:"var(--mono)", fontSize:12, color:"#64748b" }}>{log.time}</span>
-                    <span style={{ fontFamily:"var(--mono)", fontSize:12.5, color:"#0f172a", fontWeight:500 }}>{log.action}</span>
-                    <span style={{ fontSize:12, color:"#475569" }}>{log.company}</span>
-                    <span style={{ fontSize:12, fontFamily:"var(--mono)",
-                                   color:log.ok?"#047857":"#b91c1c", fontWeight:600 }}>{log.status}</span>
-                    <span style={{ fontFamily:"var(--mono)", fontSize:12,
-                                   color:log.latency>400?"#d97706":"#475569" }}>{log.latency}ms</span>
-                  </div>
-                ))}
-              </div>
-
-              {logs.find(l => !l.ok) && (
-                <div style={{ background:"#fff", border:"1px solid #fca5a5", borderRadius:10, overflow:"hidden" }}>
-                  <div style={{ padding:"12px 16px", background:"#fef2f2", borderBottom:"1px solid #fca5a5",
-                                display:"flex", alignItems:"center", gap:10 }}>
-                    <span style={{ fontSize:13, fontWeight:600, color:"#b91c1c" }}>Ошибка 422 · validation_error</span>
-                    <span style={{ fontSize:12, color:"#dc2626", fontFamily:"var(--mono)" }}>
-                      {logs.find(l=>!l.ok)?.action} · {logs.find(l=>!l.ok)?.company}
-                    </span>
-                  </div>
-                  <div style={{ padding:"14px 16px" }}>
-                    <pre style={{ margin:0, padding:"10px 12px", background:"#0b1220", color:"#e2e8f0",
-                                  fontFamily:"var(--mono)", fontSize:11.5, borderRadius:8,
-                                  lineHeight:1.6, whiteSpace:"pre-wrap", marginBottom:10 }}>
-                      {JSON.stringify(logs.find(l=>!l.ok)?.error, null, 2)}
-                    </pre>
-                    <div style={{ fontSize:12.5, color:"#475569" }}>
-                      <span style={{ fontWeight:600, color:"#0f172a" }}>Как исправить: </span>
-                      {logs.find(l=>!l.ok)?.error?.fix}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </main>
-
-      {/* Action tester modal */}
-      {tester && (
-        <ActionTester companyId={tester.company} actionName={tester.action}
-                      onClose={() => setTester(null)} />
-      )}
-
-      {/* Wizard modal */}
-      {showWizard && (
-        <div style={{ position:"fixed", inset:0, background:"rgba(15,23,42,0.55)",
-                      display:"flex", alignItems:"center", justifyContent:"center", zIndex:1000 }}
-             onClick={e => e.target===e.currentTarget && setShowWizard(false)}>
-          <div style={{ background:"#fff", borderRadius:12, width:760, maxHeight:"90vh",
-                        overflow:"auto", border:"1px solid #e2e8f0" }}>
-            <div style={{ padding:"16px 20px", borderBottom:"1px solid #e2e8f0",
-                          display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-              <span style={{ fontSize:14, fontWeight:600 }}>Подключить нового партнёра</span>
-              <button onClick={() => setShowWizard(false)}
-                      style={{ background:"none", border:"none", cursor:"pointer",
-                               fontSize:18, color:"#64748b" }}>×</button>
-            </div>
-            <LiveWizard onDone={onCompanyAdded} />
-          </div>
-        </div>
-      )}
+<!-- Confirm dialog -->
+<div class="confirm-bg" id="confirm-bg">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirm-title"></div>
+    <div class="confirm-sub" id="confirm-sub"></div>
+    <div class="confirm-actions">
+      <button class="btn" id="confirm-cancel">Отмена</button>
+      <button class="btn danger" id="confirm-ok">Подтвердить</button>
     </div>
-  );
-};
+  </div>
+</div>
 
-ReactDOM.createRoot(document.getElementById("root")).render(<PortalApp />);
-
-  </script>
 </body>
 </html>
