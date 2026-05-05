@@ -263,7 +263,7 @@ def add_log(company_id: str, action: str, method: str, path: str, status: int, l
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
-@app.get("/")
+@app.get("/api/status")
 def root():
     return {"status": "ok", "service": "Logistics Platform API", "version": "0.1"}
 
