@@ -1687,12 +1687,23 @@ async function finishOnboarding(){
     STATE.current=newPartner;
     STATE.wizStep=1;
     clearProgress();
+    // Cache partner data for immediate LK use (avoids API race condition on redirect)
+    try {
+      localStorage.setItem('lrp_'+STATE.wizData.id, JSON.stringify({
+        id:STATE.wizData.id, name:STATE.wizData.name,
+        display_name:STATE.wizData.display_name, base_url:STATE.wizData.base_url,
+        token_url:STATE.wizData.token_url, scope:STATE.wizData.scope,
+        status:'pending', actions:Object.keys(STATE.wizData.actions||{}),
+        capabilities:STATE.wizData.capabilities||[], calls_today:0, token_ttl:'59m 00s',
+        ts:Date.now()
+      }));
+    } catch(e) {}
     renderPartnerList();
     toast(`${STATE.wizData.name} успешно подключён`, 'ok', 4000);
     if (APP_MODE === 'partner') {
-      // Store partner id for redirect
-      window._registeredPartnerId = STATE.wizData.id;
-      showSuccessScreen();
+      // Skip success screen — redirect directly to partner dashboard
+      const pid = STATE.wizData.id;
+      window.location.href = '/partner/' + pid + '?welcome=1';
     } else {
       showScreen('overview');
     }
@@ -1908,18 +1919,35 @@ if (APP_MODE === 'partner_lk') {
 
   // Загружаем ТОЛЬКО данные этого партнёра
   (async function() {
-    const data = await apiFetch('/companies/' + PARTNER_LK_ID);
-    if (!data || data.error || !data.id) {
-      document.getElementById('ws-name').textContent = 'Не найден: ' + PARTNER_LK_ID;
+    const raw = await apiFetch('/companies/' + PARTNER_LK_ID);
+    // API returns {company:{...}, adapter:{...}} or 404
+    let data = (raw && !raw.error) ? (raw.company || raw.adapter || (raw.id ? raw : null)) : null;
+    // Fallback: localStorage cache from onboarding (fixes race condition on immediate redirect)
+    if (!data) {
+      try {
+        const cached = JSON.parse(localStorage.getItem('lrp_'+PARTNER_LK_ID)||'null');
+        if (cached && Date.now()-cached.ts < 86400000) data = cached;
+      } catch(e) {}
+    }
+    if (!data) {
+      document.getElementById('ws-name').textContent = PARTNER_LK_ID;
+      showScreen('overview');
+      document.getElementById('screen-overview').innerHTML = `<div style="text-align:center;padding:60px 24px;max-width:480px;margin:0 auto"><div style="font-size:40px;margin-bottom:16px">⏳</div><div style="font-size:18px;font-weight:600;margin-bottom:8px">Кабинет активируется</div><div style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6">Компания <strong>${PARTNER_LK_ID}</strong> зарегистрирована и проходит проверку.<br>Команда 15min.store активирует кабинет в течение 1-2 рабочих дней.</div><div style="background:var(--b50);border:1px solid var(--b200);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--b700);text-align:left"><div>✓ Конфигурация сохранена</div><div>✓ OAuth credentials приняты</div><div>⏳ Верификация · 1-2 рабочих дня</div></div></div>`;
       return;
     }
-    // Добавляем как единственного партнёра и делаем текущим
-    STATE.partners = [data];
-    STATE.current = data;
+    // Merge adapter fields for actions list
+    const mergedData = Object.assign({}, raw?.adapter || {}, data);
+    if(!mergedData.actions && raw?.adapter?.actions) {
+      mergedData.actions = Object.keys(raw.adapter.actions);
+    } else if(raw?.adapter?.actions && typeof raw.adapter.actions === 'object') {
+      mergedData.actions = Object.keys(raw.adapter.actions);
+    }
+    STATE.partners = [mergedData];
+    STATE.current = mergedData;
 
     // Обновляем workspace header
-    const av = data.name.slice(0,2).toUpperCase();
-    document.getElementById('ws-name').textContent = data.name;
+    const av = mergedData.name.slice(0,2).toUpperCase();
+    document.getElementById('ws-name').textContent = mergedData.name;
     document.getElementById('ws-av').textContent = av;
 
     // Рендерим данные
@@ -1938,11 +1966,49 @@ if (APP_MODE === 'partner_lk') {
 
     // User name from partner data
     const nameEl = document.getElementById('sb-user-name');
-    if (nameEl) nameEl.textContent = data.display_name || data.name || 'Партнёр';
+    if (nameEl) nameEl.textContent = mergedData.display_name || mergedData.name || 'Партнёр';
 
-    // Verification status badge
+    // Verification status
     const badge = document.getElementById('verify-badge');
-    if (badge && data.status !== 'active') badge.style.display = 'inline-flex';
+    if (badge && mergedData.status !== 'active') badge.style.display = 'inline-flex';
+
+    // Welcome banner for new registrations (?welcome=1)
+    if (new URLSearchParams(location.search).get('welcome') === '1') {
+      // Remove ?welcome=1 from URL without reload
+      history.replaceState({}, '', '/partner/' + PARTNER_LK_ID);
+      // Inject welcome banner
+      const banner = document.createElement('div');
+      banner.id = 'welcome-banner';
+      banner.style.cssText = [
+        'position:fixed;top:0;left:0;right:0;z-index:500',
+        'background:#0f172a;color:#fff',
+        'padding:12px 24px',
+        'display:flex;align-items:center;gap:12px',
+        'font-size:13px',
+        'transition:transform .4s ease,opacity .4s ease',
+      ].join(';');
+      banner.innerHTML = `
+        <div style="width:22px;height:22px;border-radius:6px;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="12" height="12" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <span><strong>${mergedData.name}</strong> подключена! Конфигурация сохранена, OAuth проверен. Команда 15min.store активирует кабинет в течение 1-2 рабочих дней.</span>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:12px">
+          <span style="font-size:11px;color:rgba(255,255,255,.5)">письмо с подтверждением отправлено</span>
+          <button onclick="document.getElementById('welcome-banner').style.opacity='0';setTimeout(()=>document.getElementById('welcome-banner').remove(),400)"
+            style="background:rgba(255,255,255,.12);border:none;color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px">✕</button>
+        </div>`;
+      document.body.appendChild(banner);
+      // Auto-hide after 8 seconds
+      setTimeout(() => {
+        const b = document.getElementById('welcome-banner');
+        if (b) { b.style.opacity='0'; setTimeout(()=>b.remove(), 400); }
+      }, 8000);
+      // Push main content down
+      const main = document.getElementById('main');
+      if (main) { main.style.paddingTop = '46px'; setTimeout(()=>{ if(main) main.style.paddingTop=''; }, 8400); }
+    }
+
+
   })();
 
 } else if (APP_MODE === 'partner') {
