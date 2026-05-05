@@ -395,7 +395,7 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 
     <!-- ══ SUCCESS (partner mode) ══ -->
     <div class="screen" id="screen-success">
-      <div class="empty-state anim" style="max-width:480px">
+      <div class="empty-state anim" style="max-width:500px">
         <div style="width:64px;height:64px;border-radius:16px;background:var(--g50);border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px">✓</div>
         <div class="empty-title" id="success-title">Компания подключена!</div>
         <div class="empty-sub" id="success-sub">Ваш API успешно настроен. Агент платформы начнёт включать вас в логистические цепочки клиентов.</div>
@@ -405,12 +405,21 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
             <div>✓ Конфигурация сохранена в реестре платформы</div>
             <div>✓ OAuth авторизация проверена</div>
             <div id="success-actions-line">✓ Actions настроены и готовы к вызовам</div>
-            <div style="margin-top:8px;color:var(--muted);font-size:12px">Команда 15min.store свяжется с вами для финального подтверждения.</div>
+            <div style="margin-top:8px;color:var(--muted);font-size:12px">Команда 15min.store проверит конфигурацию в течение 1-2 рабочих дней.</div>
           </div>
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-          <button class="btn primary lg" onclick="showScreen('wizard');startOnboarding()">Подключить ещё компанию</button>
-          <a href="https://15min.store" class="btn lg" style="text-decoration:none">На сайт платформы →</a>
+        <div style="display:flex;gap:10px;flex-direction:column;align-items:center;width:100%">
+          <a id="lk-main-btn" href="#" class="btn primary lg" style="text-decoration:none;width:100%;justify-content:center;font-size:15px;padding:14px 24px">
+            → Открыть мой кабинет партнёра
+          </a>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+            <button class="btn" onclick="showScreen('wizard');startOnboarding()">Подключить ещё компанию</button>
+            <a href="/" class="btn" style="text-decoration:none">На главную →</a>
+          </div>
+        </div>
+        <div id="email-notice-success" style="background:var(--b50);border:1px solid var(--b200);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--b700);margin-top:16px;display:flex;align-items:flex-start;gap:8px;width:100%">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><path d="M4 4h16v16H4V4zm0 4l8 5 8-5"/></svg>
+          <span>Письмо с подтверждением отправлено на ваш email. Команда 15min.store проверит конфигурацию в течение <strong>1-2 рабочих дней</strong>.</span>
         </div>
       </div>
     </div>
@@ -832,6 +841,12 @@ const TB_CFG = {
 };
 
 function showSuccessScreen() {
+  // Set LK button href
+  const pid = window._registeredPartnerId || STATE.wizData?.id;
+  if (pid) {
+    const lkBtn = document.getElementById('lk-main-btn');
+    if (lkBtn) lkBtn.href = '/partner/' + pid;
+  }
   // Show email confirmation notice
   setTimeout(() => {
     const pid = window._registeredPartnerId || STATE.wizData?.id;
