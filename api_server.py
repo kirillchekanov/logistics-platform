@@ -22,6 +22,68 @@ try:
 except ImportError:
     httpx = None
 
+try:
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+except ImportError:
+    psycopg2 = None
+
+def get_db():
+    """Получить соединение с PostgreSQL."""
+    url = os.environ.get("DATABASE_URL")
+    if not url or not psycopg2:
+        return None
+    try:
+        return psycopg2.connect(url)
+    except Exception as e:
+        print(f"[DB] connect error: {e}")
+        return None
+
+def init_db():
+    """Создать таблицы если не существуют."""
+    conn = get_db()
+    if not conn:
+        print("[DB] Skipping DB init — no DATABASE_URL or psycopg2")
+        return
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS partners (
+                    id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    display_name TEXT,
+                    base_url TEXT,
+                    config JSONB,
+                    status TEXT DEFAULT 'active',
+                    created_at TIMESTAMP DEFAULT NOW()
+                );
+                CREATE TABLE IF NOT EXISTS clients (
+                    id TEXT PRIMARY KEY,
+                    company_name TEXT NOT NULL,
+                    inn TEXT,
+                    balance_rub DECIMAL DEFAULT 0,
+                    reserved_rub DECIMAL DEFAULT 0,
+                    contact_email TEXT,
+                    contact_phone TEXT,
+                    status TEXT DEFAULT 'active',
+                    created_at TIMESTAMP DEFAULT NOW()
+                );
+                CREATE TABLE IF NOT EXISTS wallet_transactions (
+                    id SERIAL PRIMARY KEY,
+                    client_id TEXT REFERENCES clients(id),
+                    type TEXT,
+                    amount_rub DECIMAL,
+                    description TEXT,
+                    created_at TIMESTAMP DEFAULT NOW()
+                );
+            """)
+        conn.commit()
+        print("[DB] Tables ready")
+    except Exception as e:
+        print(f"[DB] init error: {e}")
+    finally:
+        conn.close()
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
@@ -139,6 +201,23 @@ CALL_LOGS = [
 # ── FastAPI ───────────────────────────────────────────────────────────────────
 
 app = FastAPI(title="Logistics Platform API", version="0.1")
+
+@app.on_event("startup")
+def on_startup():
+    init_db()
+    conn = get_db()
+    if conn:
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT id, config FROM partners WHERE status='active'")
+                for row in cur.fetchall():
+                    REGISTRY[row[0]] = row[1]
+            print(f"[DB] Loaded {len(REGISTRY)} partners from DB")
+        except Exception as e:
+            print(f"[DB] load error: {e}")
+        finally:
+            conn.close()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -490,11 +569,35 @@ def register_company(req: RegisterCompanyRequest):
             "message": "Config is valid. Call with dry_run=false to save.",
         }
 
-    # Сохраняем адаптер
+    # Сохраняем адаптер в БД и в память
+    conn = get_db()
+    if conn:
+        try:
+            import json as _json
+            with conn.cursor() as cur:
+                cur.execute(
+                    """INSERT INTO partners (id, name, display_name, base_url, config, status)
+                       VALUES (%s, %s, %s, %s, %s, 'active')
+                       ON CONFLICT (id) DO UPDATE SET name=EXCLUDED.name,
+                       display_name=EXCLUDED.display_name, base_url=EXCLUDED.base_url,
+                       config=EXCLUDED.config""",
+                    (company_id, config.get('name'), config.get('display_name'),
+                     config.get('base_url'), _json.dumps(config))
+                )
+            conn.commit()
+            print(f"[DB] Partner {company_id} saved to DB")
+        except Exception as e:
+            print(f"[DB] save error: {e}")
+        finally:
+            conn.close()
+    REGISTRY[company_id] = config
     if ADAPTERS_DIR.exists():
         adapter_path = ADAPTERS_DIR / f"{company_id}.json"
-        adapter_path.write_text(json.dumps(config, ensure_ascii=False, indent=2))
-        ADAPTERS[company_id] = config
+        try:
+            adapter_path.write_text(json.dumps(config, ensure_ascii=False, indent=2))
+        except Exception:
+            pass
+    ADAPTERS[company_id] = config
 
     return {
         "status": "registered",
@@ -789,4 +892,3 @@ if __name__ == "__main__":
     print(f"  Portal  : http://localhost:{port}/portal")
     print(f"{'='*55}\n")
     uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
-
