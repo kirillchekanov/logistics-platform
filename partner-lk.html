@@ -279,6 +279,26 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 
 /* Loading */
 .screen-loading{opacity:.5;pointer-events:none;transition:opacity .15s}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .wiz-grid{grid-template-columns:1fr!important}
+  .wiz-grid>div:last-child{display:none}
+  #wiz-body .grid2{grid-template-columns:1fr!important}
+  aside{width:200px!important;flex:0 0 200px!important}
+  #tb{padding:10px 14px!important}
+  .stat-row{grid-template-columns:1fr!important}
+  .conn-banner{flex-wrap:wrap;gap:8px}
+  .conn-banner>div:nth-child(3),
+  .conn-banner>div:nth-child(4){display:none}
+}
+@media(max-width:700px){
+  aside{position:fixed;left:0;top:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.2s;box-shadow:4px 0 20px rgba(0,0,0,.15)}
+  aside.open{transform:translateX(0)}
+  #main{margin-left:0!important;max-width:100vw!important}
+  #mobile-toggle{display:flex}
+}
+#mobile-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;width:36px;height:36px;background:var(--ink);color:#fff;border:none;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
 </style>
 </head>
 <body>
@@ -324,8 +344,8 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
 
   <div style="display:flex;flex-direction:column;gap:1px">
     <div class="nav-label">Ресурсы</div>
-    <button class="nav-a"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M4 4h12a4 4 0 014 4v12H8a4 4 0 01-4-4V4z"/><path d="M4 4v12a4 4 0 004 4"/></svg>Документация API</button>
-    <button class="nav-a"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 015 0c0 1.5-2.5 2-2.5 3.5"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>Поддержка</button>
+    <a href="https://web-production-93110.up.railway.app/api/status" target="_blank" class="nav-a" style="text-decoration:none"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M4 4h12a4 4 0 014 4v12H8a4 4 0 01-4-4V4z"/><path d="M4 4v12a4 4 0 004 4"/></svg>Документация API</a>
+    <a href="mailto:support@15min.store?subject=Помощь с OAuth&body=Моя компания: " class="nav-a" style="text-decoration:none"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 015 0c0 1.5-2.5 2-2.5 3.5"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>Поддержка</a>
   </div>
 
   <div class="nav-spacer"></div>
@@ -350,8 +370,8 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
   <div class="user-strip">
     <div class="user-av">MK</div>
     <div style="flex:1;min-width:0;line-height:1.25">
-      <div style="font-size:12px;font-weight:600;color:var(--ink)">Marek Kovács</div>
-      <div style="font-size:11px;color:var(--muted)">Руководитель интеграции</div>
+      <div style="font-size:12px;font-weight:600;color:var(--ink)" id="sb-user-name">Партнёр</div>
+      <div style="font-size:11px;color:var(--muted)" id="sb-user-role">Integration lead</div>
     </div>
     <svg width="14" height="14" fill="none" stroke="var(--muted)" stroke-width="1.7" viewBox="0 0 24 24" style="cursor:pointer;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3h.1a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8v.1a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
   </div>
@@ -502,7 +522,10 @@ aside{width:232px;flex:0 0 232px;border-right:1px solid var(--line);background:v
           <div style="padding:0 20px 0 0;border-right:1px solid var(--line)">
             <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Earned this month</div>
             <div class="mono" style="font-size:22px;font-weight:700" id="earn-month">—</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:3px">след. выплата <span style="color:var(--g600);font-weight:600" id="earn-date">15 числа</span></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">
+              <span title="Данные появятся после участия в первой цепочке доставки" style="cursor:help;border-bottom:1px dashed var(--muted)" id="earn-hint">появятся после первой цепочки</span>
+              · выплата <span style="color:var(--g600);font-weight:600" id="earn-date">15 числа</span>
+            </div>
           </div>
           <div style="padding:0 20px;border-right:1px solid var(--line)">
             <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Active chains</div>
@@ -693,10 +716,15 @@ const API_BASE = (() => {
 })();
 
 // Режим: 'platform' (внутренний) или 'partner' (новый партнёр)
+const _PATH = window.location.pathname;
+const _PARAMS = new URLSearchParams(window.location.search);
+const PARTNER_LK_ID = (() => {
+  const m = _PATH.match(/\/partner\/([^/]+)/);
+  return m ? m[1] : null;
+})();
 const APP_MODE = (() => {
-  const path = window.location.pathname;
-  const params = new URLSearchParams(window.location.search);
-  if (path.endsWith('/join') || params.get('mode') === 'partner') return 'partner';
+  if (PARTNER_LK_ID) return 'partner_lk';
+  if (_PATH.endsWith('/join') || _PARAMS.get('mode') === 'partner') return 'partner';
   return 'platform';
 })();
 
@@ -707,7 +735,7 @@ let STATE = {
   wizStep: 1,
   wizData: {
     // Шаг 1
-    id: "", name: "", display_name: "", base_url: "", capabilities: [],
+    id: "", name: "", display_name: "", base_url: "", capabilities: [], companyType: "",
     // Шаг 2
     token_url: "", client_id: "", client_secret: "", scope: "",
     // Шаг 3
@@ -804,6 +832,43 @@ const TB_CFG = {
 };
 
 function showSuccessScreen() {
+  // Show email confirmation notice
+  setTimeout(() => {
+    const pid = window._registeredPartnerId || STATE.wizData?.id;
+    const emailNotice = document.getElementById('email-notice');
+    if (!emailNotice) {
+      const successBody = document.querySelector('#screen-success');
+      if (successBody && pid) {
+        const notice = document.createElement('div');
+        notice.id = 'email-notice';
+        notice.style.cssText = 'background:var(--b50);border:1px solid var(--b200);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--b700);margin-top:12px;display:flex;align-items:flex-start;gap:8px;max-width:460px;margin-left:auto;margin-right:auto';
+        notice.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><path d="M4 4h16v16H4V4zm0 4l8 5 8-5"/></svg><span>Письмо с подтверждением отправлено на ваш email. Команда 15min.store проверит конфигурацию в течение <strong>1-2 рабочих дней</strong>.</span>';
+        const successEl = document.querySelector('#screen-success .empty-state') || successBody;
+        if (successEl) successEl.appendChild(notice);
+      }
+    }
+  }, 150);
+  // Inject "Open my cabinet" button if partner_id available
+  setTimeout(() => {
+    const pid = window._registeredPartnerId || STATE.wizData?.id;
+    if (pid) {
+      const existing = document.getElementById('lk-btn-inject');
+      if (!existing) {
+        const btnArea = document.querySelector('#screen-success .empty-actions') ||
+                        document.querySelector('#screen-success');
+        if (btnArea) {
+          const lkBtn = document.createElement('a');
+          lkBtn.id = 'lk-btn-inject';
+          lkBtn.href = '/partner/' + pid;
+          lkBtn.style.cssText = 'display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#0f172a;color:#fff;border-radius:9px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px';
+          lkBtn.innerHTML = '→ Открыть мой кабинет';
+          const firstBtn = btnArea.querySelector('button, a');
+          if (firstBtn) btnArea.insertBefore(lkBtn, firstBtn);
+          else btnArea.appendChild(lkBtn);
+        }
+      }
+    }
+  }, 100);
   const name = STATE.wizData?.name || 'Компания';
   const actions = Object.keys(STATE.wizData?.actions || {});
   document.getElementById('success-title').textContent = `${name} подключена!`;
@@ -1012,6 +1077,15 @@ function renderLogs(logs, stats) {
     document.getElementById('log-lat').textContent = stats.avg_latency+'ms';
     document.getElementById('log-err').textContent = stats.errors;
   }
+  if(logs.length === 0) {
+    document.getElementById('log-rows').innerHTML = `<div style="text-align:center;padding:40px 24px;color:var(--muted)">
+      <div style="font-size:28px;margin-bottom:12px;opacity:.3">📋</div>
+      <div style="font-size:14px;font-weight:500;color:var(--ink);margin-bottom:6px">Вызовов пока нет</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Логи появятся когда платформа начнёт отправлять запросы к вашему API</div>
+      <button class="btn sm primary" onclick="showScreen('test');openTester('${STATE.current?.actions?.[0]||'create_shipment'}')">▶ Запустить тестовый запрос</button>
+    </div>`;
+    return;
+  }
   document.getElementById('log-rows').innerHTML = logs.map((l,i)=>
     `<div class="tbl-row${l.status>=400?' err-row':''}" style="grid-template-columns:100px 50px 46px 1fr 65px 55px${i===logs.length-1?';border:none':''}" onclick="showLogDetail(${i})">
       <span class="mono" style="font-size:11px;color:var(--muted)">${l.time}</span>
@@ -1040,7 +1114,54 @@ function showLogDetail(idx) {
 }
 
 // ── Wizard ────────────────────────────────────────────────────────────────────
+const CARRIER_ACTIONS = {
+  create_shipment:{method:'POST',path:'/orders'},
+  book_pickup:{method:'POST',path:'/intakes'},
+  track:{method:'GET',path:'/orders/{{tracking_number}}'},
+  calculate_cost:{method:'POST',path:'/calculator/tariff'},
+  cancel:{method:'DELETE',path:'/orders/{{shipment_id}}'}
+};
+const WAREHOUSE_ACTIONS = {
+  create_reception:{method:'POST',path:'/receptions'},
+  get_slots:{method:'GET',path:'/slots'},
+  store:{method:'POST',path:'/storage'},
+  ship_from_warehouse:{method:'POST',path:'/shipments'}
+};
+
+function selectType(type) {
+  STATE.wizData.companyType = type;
+  if(type==='carrier') STATE.wizData.actions = {...CARRIER_ACTIONS};
+  else if(type==='warehouse') STATE.wizData.actions = {...WAREHOUSE_ACTIONS};
+  else STATE.wizData.actions = {...CARRIER_ACTIONS,...WAREHOUSE_ACTIONS};
+  // Re-render step 1 to update UI
+  renderWizStep();
+}
+
+function saveProgress() {
+  try { localStorage.setItem('wiz_progress', JSON.stringify({step:STATE.wizStep,data:STATE.wizData})); } catch(e) {}
+}
+function loadProgress() {
+  try {
+    const saved = localStorage.getItem('wiz_progress');
+    if(saved) { const p=JSON.parse(saved); return p; }
+  } catch(e) {}
+  return null;
+}
+function clearProgress() {
+  try { localStorage.removeItem('wiz_progress'); } catch(e) {}
+}
+
 function startOnboarding() {
+  const saved = loadProgress();
+  if(saved && saved.step > 1) {
+    if(confirm(`Найден незавершённый онбординг (шаг ${saved.step} из 5). Продолжить с места остановки?`)) {
+      STATE.wizStep = saved.step;
+      STATE.wizData = saved.data;
+      showScreen('wizard');
+      renderWizStep();
+      return;
+    } else { clearProgress(); }
+  }
   STATE.wizStep = 1;
   STATE.wizData = {
     id:"",name:"",display_name:"",base_url:"",capabilities:[],
@@ -1073,7 +1194,7 @@ function updateStepper() {
     if(sl) sl.className='step-line'+(i<STATE.wizStep?' done':'');
   }
   document.getElementById('wiz-back').style.display = STATE.wizStep>1?'':'none';
-  document.getElementById('wiz-next').textContent = STATE.wizStep===5?'Завершить':'Далее →';
+  document.getElementById('wiz-next').textContent = STATE.wizStep===5?'Активировать интеграцию →':'Далее →';
 }
 
 function renderWizStep() {
@@ -1086,11 +1207,34 @@ function renderWizStep() {
       <div class="wiz-grid">
         <div class="anim">
           <h2 style="font-size:16px;font-weight:600;margin-bottom:4px">Шаг 1 — Профиль компании</h2>
-          <p style="font-size:12.5px;color:var(--muted);margin-bottom:20px">Расскажите о вашей компании. Эти данные будут показаны клиентам платформы.</p>
+          <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px">Расскажите о вашей компании. Эти данные будут показаны клиентам платформы.</p>
+          <div class="field" style="margin-bottom:20px">
+            <label class="field-label" style="margin-bottom:8px">Тип компании <span style="color:var(--r600)">*</span></label>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px" id="type-selector">
+              <div class="type-card ${d.companyType==='carrier'?'on':''}" onclick="selectType('carrier')" style="border:1.5px solid ${d.companyType==='carrier'?'var(--v)':'var(--line)'};border-radius:9px;padding:12px;cursor:pointer;transition:.15s;background:${d.companyType==='carrier'?'var(--vl)':'#fff'}">
+                <div style="font-size:18px;margin-bottom:6px">🚚</div>
+                <div style="font-size:12.5px;font-weight:600">Перевозчик</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">СДЭК, ДЛ, Boxberry</div>
+              </div>
+              <div class="type-card ${d.companyType==='warehouse'?'on':''}" onclick="selectType('warehouse')" style="border:1.5px solid ${d.companyType==='warehouse'?'var(--v)':'var(--line)'};border-radius:9px;padding:12px;cursor:pointer;transition:.15s;background:${d.companyType==='warehouse'?'var(--vl)':'#fff'}">
+                <div style="font-size:18px;margin-bottom:6px">🏭</div>
+                <div style="font-size:12.5px;font-weight:600">Склад / Фулфилмент</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">хранение, FBS, FBO</div>
+              </div>
+              <div class="type-card ${d.companyType==='both'?'on':''}" onclick="selectType('both')" style="border:1.5px solid ${d.companyType==='both'?'var(--v)':'var(--line)'};border-radius:9px;padding:12px;cursor:pointer;transition:.15s;background:${d.companyType==='both'?'var(--vl)':'#fff'}">
+                <div style="font-size:18px;margin-bottom:6px">⚡</div>
+                <div style="font-size:12.5px;font-weight:600">Оба</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">перевозка + хранение</div>
+              </div>
+            </div>
+            <div class="field-hint" style="margin-top:6px" id="type-hint">${d.companyType==='warehouse'?'Для вас будут настроены: приёмка, хранение, отгрузка, слоты':d.companyType==='carrier'?'Для вас будут настроены: создание заказов, трекинг, отмена, расчёт стоимости':'Выберите тип — это определит набор доступных действий'}</div>
+          </div>
           <div class="field">
             <label class="field-label">Системный ID <span style="color:var(--r600)">*</span></label>
-            <input class="inp mono" id="w-id" placeholder="cdek" value="${d.id}">
-            <div class="field-hint">Латиница, без пробелов, уникальный. Пример: cdek, novaya_pochta, my_logistics</div>
+            <input class="inp mono" id="w-id" placeholder="cdek" value="${d.id}" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,'')">
+            <div class="field-hint">Латиница, без пробелов, уникальный. Пример: cdek, novaya_pochta, my_logistics
+              <span style="margin-left:8px;color:var(--v);cursor:pointer;font-weight:500" onclick="autoGenId()">← сгенерировать из названия</span>
+            </div>
           </div>
           <div class="field">
             <label class="field-label">Название компании <span style="color:var(--r600)">*</span></label>
@@ -1138,6 +1282,10 @@ function renderWizStep() {
             <span style="flex-shrink:0">ℹ</span>
             Мы получим только те разрешения которые вы укажете в scope. Токен будет обновляться автоматически каждые 60 минут.
           </div>
+          <div style="background:var(--b50);border:1px solid var(--b200);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--b700);margin-bottom:16px;display:flex;align-items:flex-start;gap:8px">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+            <span><strong>Где взять credentials?</strong> Войдите в admin-панель вашего API → раздел OAuth / Apps → создайте приложение с типом <code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px">client_credentials</code>. Нужна помощь? <a href="mailto:support@15min.store" style="color:var(--b600);text-decoration:underline">Напишите нам</a> — настроим вместе.</span>
+          </div>
           <div class="field">
             <label class="field-label">Token URL <span style="color:var(--r600)">*</span></label>
             <input class="inp mono" id="w-turl" placeholder="https://api.company.ru/oauth/token" value="${d.token_url}">
@@ -1181,18 +1329,33 @@ function renderWizStep() {
           <h2 style="font-size:16px;font-weight:600;margin-bottom:4px">Шаг 3 — Маппинг действий</h2>
           <p style="font-size:12.5px;color:var(--muted);margin-bottom:20px">Укажите метод и путь на вашем API для каждого стандартного действия платформы.</p>
           <div class="card" style="overflow:visible">
-            <div class="tbl-head" style="grid-template-columns:160px 80px 1fr"><div>Действие</div><div>Метод</div><div>Path</div></div>
-            ${actions.map(([name,cfg],i)=>`
-              <div class="tbl-row" style="grid-template-columns:160px 80px 1fr;${i===actions.length-1?'border:none':''}">
-                <span class="mono" style="font-size:12.5px;font-weight:500">${name}</span>
-                <select class="sel" id="wm-${name}" style="height:28px;font-size:12px">
-                  ${['GET','POST','PUT','DELETE'].map(m=>`<option${cfg.method===m?' selected':''}>${m}</option>`).join('')}
-                </select>
-                <div class="inp-wrap">
-                  <div class="inp-pfx">/</div>
-                  <input class="inp-inner" id="wp-${name}" value="${cfg.path.replace(/^\//,'')}">
+            
+            ${actions.map(([name,cfg],i)=>{
+              const info={create_shipment:['Создать отправление','Платформа вызывает при создании нового заказа'],book_pickup:['Забор у отправителя','Назначить курьера для забора у клиента'],track:['Трекинг','Получить статус и местоположение заказа'],calculate_cost:['Расчёт стоимости','Рассчитать цену до запуска цепочки'],cancel:['Отмена заказа','Отменить созданное отправление'],get_slots:['Доступные слоты','Список временных окон для доставки'],create_reception:['Приёмка товара','Фиксация поступления товара на склад'],store:['Хранение','Размещение товара в ячейке склада'],ship_from_warehouse:['Отгрузка','Сборка и отправка заказа со склада']}[name]||[name,''];
+              const defMethod={create_shipment:'POST',book_pickup:'POST',track:'GET',calculate_cost:'POST',cancel:'DELETE',get_slots:'GET',create_reception:'POST',store:'POST',ship_from_warehouse:'POST'}[name]||'POST';
+              return `<div style="padding:12px 16px;border-bottom:${i===actions.length-1?'none':'1px solid var(--line)'}">
+                <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;font-family:var(--mono)">${name}</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:1px">${info[0]} · ${info[1]}</div>
+                  </div>
                 </div>
-              </div>`).join('')}
+                <div style="display:grid;grid-template-columns:100px 1fr;gap:8px;align-items:center">
+                  <div>
+                    <label style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">Метод <span title="POST — создание/изменение, GET — чтение, DELETE — удаление" style="cursor:help;border-bottom:1px dashed var(--muted)">?</span></label>
+                    <select class="sel" id="wm-${name}" style="height:28px;font-size:12px;width:100%">
+                      ${['GET','POST','PUT','DELETE'].map(m=>`<option${(cfg.method||defMethod)===m?' selected':''}>${m}</option>`).join('')}
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">Path (часть URL после домена)</label>
+                    <div class="inp-wrap">
+                      <div class="inp-pfx">/</div>
+                      <input class="inp-inner" id="wp-${name}" value="${cfg.path.replace(/^\//,'')}" placeholder="orders">
+                    </div>
+                  </div>
+                </div>
+              </div>`;}).join('')}
           </div>
         </div>
         <div>
@@ -1218,8 +1381,16 @@ function renderWizStep() {
         <div class="anim">
           <h2 style="font-size:16px;font-weight:600;margin-bottom:4px">Шаг 4 — Маппинг ответов</h2>
           <p style="font-size:12.5px;color:var(--muted);margin-bottom:8px">Укажите где в JSON-ответе вашего API лежит каждое поле. Используйте dot-notation.</p>
-          <div style="padding:8px 12px;background:var(--sf2);border-radius:7px;font-size:12px;color:var(--muted);margin-bottom:16px;font-family:var(--mono)">
-            Пример: если API возвращает <span style="color:var(--ink)">{"data":{"order":{"id":"123"}}}</span>, то путь будет <span style="color:var(--v)">data.order.id</span>
+          <div style="background:var(--sf2);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px;color:var(--ink)">Как читать dot-notation:</div>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center">
+              <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">{<br>&nbsp;&nbsp;"entity": {<br>&nbsp;&nbsp;&nbsp;&nbsp;"uuid": "abc-123",<br>&nbsp;&nbsp;&nbsp;&nbsp;"statuses": [{"name": "Принят"}]<br>&nbsp;&nbsp;}<br>}</div>
+              <div style="color:var(--muted);font-size:18px">→</div>
+              <div style="font-size:11.5px;line-height:2">
+                <div><code style="font-family:var(--mono);background:var(--vl);color:var(--v);padding:1px 6px;border-radius:4px">entity.uuid</code> → "abc-123"</div>
+                <div><code style="font-family:var(--mono);background:var(--vl);color:var(--v);padding:1px 6px;border-radius:4px">entity.statuses[0].name</code> → "Принят"</div>
+              </div>
+            </div>
           </div>
           <div class="card" style="overflow:visible">
             <div class="tbl-head" style="grid-template-columns:minmax(120px,1fr) minmax(0,1fr)"><div>Поле платформы</div><div>Dot-path</div></div>
@@ -1377,6 +1548,7 @@ async function wizNext(){
     return;
   }
   STATE.wizStep++;
+  saveProgress();
   renderWizStep();
 }
 function wizBack(){
@@ -1466,6 +1638,15 @@ function buildConfig(){
   };
 }
 
+function autoGenId() {
+  const name = document.getElementById('w-name')?.value || '';
+  const id = name.toLowerCase()
+    .replace(/[а-я]/g, c => ({'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'}[c]||c))
+    .replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,30);
+  const el = document.getElementById('w-id');
+  if (el) { el.value = id; el.dispatchEvent(new Event('input')); }
+}
+
 async function finishOnboarding(){
   const config=buildConfig();
   document.getElementById('wiz-next').disabled=true;
@@ -1490,9 +1671,12 @@ async function finishOnboarding(){
     STATE.partners.push(newPartner);
     STATE.current=newPartner;
     STATE.wizStep=1;
+    clearProgress();
     renderPartnerList();
     toast(`${STATE.wizData.name} успешно подключён`, 'ok', 4000);
     if (APP_MODE === 'partner') {
+      // Store partner id for redirect
+      window._registeredPartnerId = STATE.wizData.id;
       showSuccessScreen();
     } else {
       showScreen('overview');
@@ -1632,7 +1816,7 @@ async function pingServer(){
     const r=await fetch(API_BASE+'/health',{signal:AbortSignal.timeout(2000)});
     const d=await r.json();
     document.getElementById('srv-dot').style.background='var(--g600)';
-    document.getElementById('srv-label').textContent=`live · ${d.registry_companies} companies`;
+    document.getElementById('srv-label').textContent=d.registry_companies?`${d.registry_companies} партнёров`:'online';
   }catch{
     document.getElementById('srv-dot').style.background='var(--r600)';
     document.getElementById('srv-label').textContent='server offline';
@@ -1701,23 +1885,63 @@ function exportCSV() {
 pingServer();
 setInterval(pingServer,5000);
 
-if (APP_MODE === 'partner') {
+if (APP_MODE === 'partner_lk') {
+  // ── Режим личного кабинета партнёра ─────────────────────────────────────
+  // Скрываем список всех компаний — партнёр видит только себя
+  document.getElementById('co-list').style.display = 'none';
+  document.querySelectorAll('.sb-add').forEach(el => el.style.display = 'none');
+
+  // Загружаем ТОЛЬКО данные этого партнёра
+  (async function() {
+    const data = await apiFetch('/companies/' + PARTNER_LK_ID);
+    if (!data || data.error || !data.id) {
+      document.getElementById('ws-name').textContent = 'Не найден: ' + PARTNER_LK_ID;
+      return;
+    }
+    // Добавляем как единственного партнёра и делаем текущим
+    STATE.partners = [data];
+    STATE.current = data;
+
+    // Обновляем workspace header
+    const av = data.name.slice(0,2).toUpperCase();
+    document.getElementById('ws-name').textContent = data.name;
+    document.getElementById('ws-av').textContent = av;
+
+    // Рендерим данные
+    renderPartnerList();
+    showScreen('overview');
+    renderOverview();
+    renderActions();
+    renderCredentials();
+
+    // Earnings & Chains — прочерки с подсказкой
+    document.getElementById('earn-month').textContent = '0 ₽';
+    document.getElementById('earn-total').textContent = '0 ₽';
+    document.getElementById('chains-count').textContent = '0';
+    document.getElementById('earn-date').textContent = '15 числа';
+    document.getElementById('earn-delta').textContent = '';
+
+    // User name from partner data
+    const nameEl = document.getElementById('sb-user-name');
+    if (nameEl) nameEl.textContent = data.display_name || data.name || 'Партнёр';
+
+    // Verification status badge
+    const badge = document.getElementById('verify-badge');
+    if (badge && data.status !== 'active') badge.style.display = 'inline-flex';
+  })();
+
+} else if (APP_MODE === 'partner') {
   // Партнёрский режим — скрываем лишнее, сразу онбординг
   document.getElementById('co-list').style.display = 'none';
-  // Скрываем Overview/Actions/Credentials/Logs в nav
   ['nav-overview','nav-actions','nav-credentials','nav-logs'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
-  // Меняем workspace title
   document.getElementById('ws-name').textContent = 'Logistics API Platform';
   document.getElementById('ws-av').textContent = 'LA';
   document.getElementById('ws-av').style.background = 'linear-gradient(135deg,#5b21b6,#7c3aed)';
-  // Скрываем кнопку добавить партнёра в сайдбаре (не нужна)
   document.querySelectorAll('.sb-add').forEach(el => el.style.display = 'none');
-  // Показываем страницу подключения
   showScreen('empty');
-  // Переопределяем кнопку "Начать подключение" — сразу запускаем онбординг
   document.querySelector('.empty-state .btn').addEventListener('click', startOnboarding);
 } else {
   // Режим платформы — загружаем всех партнёров
