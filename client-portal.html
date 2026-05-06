@@ -220,6 +220,21 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 5px; border: 2px solid var(--bg); }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; gap: 12px; padding: 12px 16px; border-right: none; border-bottom: 1px solid var(--line); }
+    .client-card { flex: 1 1 180px; }
+    .nav { flex-direction: row; flex: 1 1 100%; gap: 4px; }
+    .nav-label { display: none; }
+    .content { padding: 20px 16px; }
+    .topbar { padding: 12px 16px; }
+  }
+  @media (max-width: 640px) {
+    .balance-card { grid-template-columns: 1fr; gap: 20px; }
+    .balance-amount { font-size: 48px; }
+    .balance-meta { flex-wrap: wrap; gap: 12px; }
+  }
 </style>
 </head>
 <body>
