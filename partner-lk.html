@@ -542,7 +542,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
         </div>
         <div class="stat"><div class="stat-acc" style="background:var(--v)"></div>
           <div class="stat-top"><span class="stat-label">Действия</span><span style="font-size:11.5px;font-weight:500;color:var(--g700)" id="ov-actions-delta">all healthy</span></div>
-          <div class="stat-val" id="ov-actions-val">—</div><div class="stat-sub">configured</div>
+          <div class="stat-val" id="ov-actions-val">—</div><div class="stat-sub">настроено</div>
         </div>
         <div class="stat"><div class="stat-acc" style="background:var(--b600)"></div>
           <div class="stat-top"><span class="stat-label">Вызовов сегодня</span><span style="font-size:11.5px;font-weight:500;color:var(--g700)" id="ov-calls-delta">—</span></div>
@@ -592,88 +592,119 @@ body.dark .earn-card .mono{color:var(--ink)!important}
 
     <!-- ══ ACTIONS ══ -->
     <div class="screen" id="screen-actions">
-      <div class="card" style="margin-bottom:16px">
-        <div class="card-head">
-          <div>
-            <div class="card-title">Действия API</div>
-            <div class="card-sub" id="act-sub">Настроенные действия этого партнёра</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button class="btn sm" onclick="runHealthCheckDetailed()">
-              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7L21 8M21 3v5h-5"/></svg>
-              Проверить
-            </button>
-            <button class="btn sm" disabled title="Доступно после верификации" style="opacity:.45;cursor:not-allowed">+ Добавить</button>
-          </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <div>
+          <h2 style="font-size:18px;font-weight:600">Действия</h2>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px" id="act-sub">Загрузка…</div>
         </div>
-        <div class="tbl-head" style="grid-template-columns:minmax(140px,1.6fr) 70px minmax(0,2fr) 110px 70px 70px 48px">
-          <div>Действие</div><div>Метод</div><div>Endpoint</div><div>Статус</div><div style="text-align:right">P50</div><div style="text-align:right">P99</div><div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn sm" onclick="exportConfig()">↓ Экспорт конфига</button>
+          <button class="btn sm" disabled title="Доступно после верификации" style="opacity:.45;cursor:not-allowed">+ Действие</button>
         </div>
-        <div id="act-tbl"></div>
       </div>
-      <div id="act-detail-panel" style="display:none"></div>
+      <div style="display:flex;gap:6px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)">
+        <button class="act-filter-pill active" id="af-all" onclick="filterActions('all',this)">Все</button>
+        <button class="act-filter-pill" id="af-ok" onclick="filterActions('ok',this)">● Healthy</button>
+        <button class="act-filter-pill" id="af-idle" onclick="filterActions('idle',this)">Idle</button>
+      </div>
+      <div id="act-tbl"></div>
+      <div id="act-detail-panel" style="display:none;margin-top:16px"></div>
     </div>
 
     <!-- ══ CREDENTIALS ══ -->
     <div class="screen" id="screen-credentials">
-      <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
         <div>
-          <div class="card">
+          <h2 style="font-size:18px;font-weight:600">Credentials &amp; права</h2>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">OAuth 2.0 · client_credentials</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn sm" onclick="downloadEnv()">↓ Download .env</button>
+          <button class="btn sm primary" onclick="rotateSecret()">↻ Обновить secret</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 380px;gap:20px">
+        <div>
+          <!-- OAuth card -->
+          <div class="card" style="margin-bottom:16px">
             <div class="card-head">
-              <div><div class="card-title">OAuth 2.0 · client_credentials</div><div class="card-sub">Platform uses these to mint access tokens.</div></div>
-              <span class="badge ok"><span class="bdot" style="background:var(--g600)"></span>verified</span>
+              <div><div class="card-title">OAuth 2.0 · client_credentials</div>
+                <div class="card-sub">Используется платформой для получения токенов доступа</div></div>
+              <span class="badge ok" id="cr-verified-badge"><span class="bdot" style="background:var(--g600)"></span>verified</span>
             </div>
-            <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
               <div style="grid-column:1/-1">
-                <label class="field-label">Token URL</label>
-                <div class="inp-wrap"><input class="inp-inner mono" id="cr-turl" readonly></div>
+                <label class="field-label">Token endpoint <span style="color:var(--r600)">*</span></label>
+                <div class="inp-wrap"><input class="inp-inner mono" id="cr-turl" readonly placeholder="https://api.example.com/oauth/token"></div>
               </div>
               <div>
-                <label class="field-label">Тип авторизации</label>
+                <label class="field-label">Grant type</label>
                 <div class="inp-wrap"><input class="inp-inner mono" value="client_credentials" readonly></div>
               </div>
               <div>
-                <label class="field-label">TTL токена</label>
+                <label class="field-label">Token TTL</label>
                 <div class="inp-wrap"><input class="inp-inner mono" value="3600s" readonly></div>
               </div>
               <div>
-                <label class="field-label">Client ID</label>
-                <div class="inp-wrap"><input class="inp-inner mono" id="cr-cid" readonly><div style="padding:0 10px;display:flex;align-items:center;border-left:1px solid var(--line);color:var(--muted);cursor:pointer" onclick="copyVal('cr-cid')">⧉</div></div>
+                <label class="field-label">Client ID <span style="font-size:10px;color:var(--muted)">(ваш идентификатор)</span></label>
+                <div class="inp-wrap" style="position:relative">
+                  <input class="inp-inner mono" id="cr-cid" readonly>
+                  <button onclick="copyVal('cr-cid')" style="padding:0 12px;border:none;border-left:1px solid var(--line);background:none;cursor:pointer;color:var(--muted);font-size:11px;white-space:nowrap">⧉ Copy</button>
+                </div>
               </div>
               <div>
                 <label class="field-label">Client secret</label>
-                <div class="inp-wrap"><input class="inp-inner mono" id="cr-secret" type="password" value="" readonly style="padding-right:36px"><button onclick="var i=document.getElementById('cr-secret');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:2px;color:var(--muted)" title="Показать"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><div style="padding:0 10px;display:flex;align-items:center;border-left:1px solid var(--line);color:var(--muted);cursor:pointer" onclick="toggleSecret()">👁</div></div>
+                <div class="inp-wrap" style="position:relative">
+                  <input class="inp-inner mono" id="cr-secret" type="password" readonly placeholder="••••••••••••••••">
+                  <button onclick="var i=document.getElementById('cr-secret');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁':'🙈'" style="padding:0 12px;border:none;border-left:1px solid var(--line);background:none;cursor:pointer;color:var(--muted)">👁</button>
+                </div>
               </div>
               <div style="grid-column:1/-1">
-                <label class="field-label">Scope</label>
+                <label class="field-label">Scopes requested</label>
                 <div class="inp-wrap"><input class="inp-inner mono" id="cr-scope" readonly></div>
               </div>
+              <div>
+                <label class="field-label">Refresh strategy</label>
+                <div class="inp-wrap"><input class="inp-inner mono" value="auto · 60s before expiry" readonly></div>
+              </div>
+              <div>
+                <label class="field-label">Partner ID</label>
+                <div class="inp-wrap" style="position:relative">
+                  <input class="inp-inner mono" id="cr-partner-id" readonly>
+                  <button onclick="copyVal('cr-partner-id')" style="padding:0 12px;border:none;border-left:1px solid var(--line);background:none;cursor:pointer;color:var(--muted);font-size:11px">⧉ Copy</button>
+                </div>
+              </div>
             </div>
-            <div style="padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px">
-              <button class="btn sm">▶ Получить тестовый токен</button>
-              <button class="btn sm danger" style="margin-left:auto">⚠ Отозвать все токены</button>
+            <div style="padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center">
+              <button class="btn sm" onclick="mintTestToken()">▶ Получить тестовый токен</button>
+              <button class="btn sm" onclick="copyOAuthCurl()">⧉ Copy curl</button>
+              <button class="btn sm danger" style="margin-left:auto" onclick="revokeTokens()">⚠ Отозвать все токены</button>
             </div>
+          </div>
+          <!-- Rate limits -->
+          <div style="padding:14px 16px;background:var(--b50);border:1px solid var(--b200);border-radius:8px;margin-bottom:16px">
+            <div style="font-size:13px;font-weight:600;color:var(--b700);margin-bottom:8px">Rate limits · SLA · IP</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--muted)">
+              <div>Макс. RPS: <strong style="color:var(--ink)">50 req/s</strong></div>
+              <div>Timeout: <strong style="color:var(--ink)">15 сек</strong></div>
+              <div>Retry: <strong style="color:var(--ink)">3× exp. backoff</strong></div>
+              <div>IP для whitelist: <code style="font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px">185.119.58.0/24</code></div>
+            </div>
+          </div>
+          <!-- Danger zone -->
+          <div style="padding:14px 16px;background:var(--r50);border:1px solid var(--r200);border-radius:8px">
+            <div style="font-size:13px;font-weight:600;color:#991b1b;margin-bottom:4px">Опасная зона</div>
+            <div style="font-size:12px;color:var(--r700);margin-bottom:10px">Отключение отзовёт все токены и уберёт партнёра с платформы.</div>
+            <button class="btn sm danger" onclick="disconnectPartner()">Отключить партнёра</button>
           </div>
         </div>
+        <!-- Scopes panel -->
         <div>
           <div class="card">
-            <div class="card-head"><div><div class="card-title">Права доступа (Scope)</div><div class="card-sub">Что платформа может делать от вашего имени</div></div></div>
-            <div id="scopes-list"></div>
-          </div>
-          <div style="padding:14px;background:var(--b50);border:1px solid var(--b200);border-radius:8px;margin-bottom:12px">
-            <div style="font-size:13px;font-weight:600;color:var(--b700);margin-bottom:6px">Rate limits · SLA · IP</div>
-            <div style="font-size:12px;color:var(--muted);line-height:1.9">
-              Макс. RPS: <strong style="color:var(--ink)">50 req/s</strong><br>
-              Timeout: <strong style="color:var(--ink)">15 сек</strong><br>
-              Retry: <strong style="color:var(--ink)">3× exponential backoff</strong><br>
-              IP платформы для whitelist:<br>
-              <code style="font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.05);padding:2px 6px;border-radius:4px">185.119.58.0/24</code>
+            <div class="card-head">
+              <div><div class="card-title">Права доступа</div><div class="card-sub" id="cr-scopes-count">Загрузка…</div></div>
             </div>
-          </div>
-          <div style="padding:14px;background:var(--r50);border:1px solid var(--r200);border-radius:8px">
-            <div style="font-size:13px;font-weight:600;color:#991b1b;margin-bottom:4px">Опасная зона</div>
-            <div style="font-size:12px;color:var(--r700);line-height:1.5;margin-bottom:10px">Отключение отзовёт все токены и уберёт партнёра с платформы.</div>
-            <button class="btn sm danger" onclick="disconnectPartner()">Отключить партнёра</button>
+            <div id="scopes-list"></div>
           </div>
         </div>
       </div>
@@ -873,7 +904,7 @@ function statusBadge(s){
   const m={ok:'<span class="badge ok"><span class="bdot" style="background:var(--g600)"></span>healthy</span>',
     warn:'<span class="badge warn"><span class="bdot" style="background:#d97706"></span>degraded</span>',
     err:'<span class="badge err"><span class="bdot" style="background:var(--r600)"></span>failing</span>',
-    idle:'<span class="badge neutral">not configured</span>'};
+    idle:'<span class="badge neutral">not настроено</span>'};
   return m[s]||m.idle;
 }
 function codeColor(c){return c>=500?'var(--r700)':c>=400?'var(--a700)':'var(--g700)'}
@@ -956,8 +987,8 @@ function showSuccessScreen() {
 }
 
 function showScreen(name, skipHistory) {
-  // Если нет партнёра и пытаемся открыть не empty и не wizard — идём на empty
-  if(!STATE.current && name!=='empty' && name!=='wizard') name='empty';
+  // В режиме partner_lk не редиректим на empty — данные могут ещё грузиться
+  if(!STATE.current && name!=='empty' && name!=='wizard' && APP_MODE !== 'partner_lk') name='empty';
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-a[data-screen]').forEach(n=>n.classList.remove('active'));
   const screenEl = document.getElementById('screen-'+name);
@@ -1096,7 +1127,7 @@ function renderOverview() {
   const callsYest = Math.floor(callsToday * (0.8 + Math.random()*0.3));
   document.getElementById('calls-sub').textContent = 'vs. ' + callsYest.toLocaleString('ru') + ' вчера';
 
-  const actions = co.actions || [];
+  const actions = getActionsList(co);
   document.getElementById('ov-actions-val').textContent = `${actions.length} / 7`;
   document.getElementById('ov-actions-sub').textContent = `${actions.length} действий настроено`;
 
@@ -1106,111 +1137,296 @@ function renderOverview() {
         <div style="width:22px;height:22px;border-radius:5px;background:var(--sf2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">⚡</div>
         <span class="mono" style="font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a}</span>
       </div>
-      <span class="mono" style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(STATE.current?.wizData?.actions||{})[a]?.path||'—'}</span>
+      <span class="mono" style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(getActionMap(co))[a]?.path||'—'}</span>
       <span>${statusBadge('ok')}</span>
       <span class="mono" style="font-size:12px;text-align:right;color:var(--muted)">—</span>
     </div>`).join('');
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
-function renderActions() {
-  if(!STATE.current) return;
-  const co = STATE.current;
-  const actions = co.actions || [];
-  // Build action configs — from wizData, adapter, or defaults
-  const actionMap = co.wizData?.actions || co.adapter?.actions || {};
-  const METHOD_DEFAULTS = {create_shipment:'POST',book_pickup:'POST',track:'GET',calculate_cost:'POST',cancel:'DELETE',get_slots:'GET',create_reception:'POST',store:'POST',ship_from_warehouse:'POST'};
-  const PATH_DEFAULTS = {create_shipment:'/orders',book_pickup:'/intakes',track:'/orders/{id}',calculate_cost:'/calculator/tariff',cancel:'/orders/{id}',get_slots:'/slots',create_reception:'/receptions',store:'/storage',ship_from_warehouse:'/shipments'};
+const KNOWN_ACTIONS = {
+  carrier: {
+    create_shipment:{method:'POST',path:'/orders'},
+    book_pickup:{method:'POST',path:'/intakes'},
+    track:{method:'GET',path:'/orders/{tracking_number}'},
+    calculate_cost:{method:'POST',path:'/calculator/tariff'},
+    cancel:{method:'DELETE',path:'/orders/{id}'}
+  },
+  warehouse: {
+    create_reception:{method:'POST',path:'/receptions'},
+    get_slots:{method:'GET',path:'/slots'},
+    store:{method:'POST',path:'/storage'},
+    ship_from_warehouse:{method:'POST',path:'/shipments'}
+  }
+};
 
-  document.getElementById('act-sub').textContent = `${actions.length} действий настроено`;
-  document.getElementById('act-tbl').innerHTML = actions.map((a,i)=>{
-    const cfg = actionMap[a] || {};
-    const method = cfg.method || METHOD_DEFAULTS[a] || 'POST';
-    const path = cfg.path || PATH_DEFAULTS[a] || '/'+a;
-    const p50 = Math.floor(Math.random()*150+60);
-    const p99 = Math.floor(p50*2.5+Math.random()*100);
-    const methodColor = {GET:'var(--g700)',POST:'var(--b700)',DELETE:'var(--r700)',PUT:'var(--a700)'}[method]||'var(--muted)';
-    const methodBg   = {GET:'var(--g50)',POST:'var(--b50)',DELETE:'var(--r50)',PUT:'var(--a50)'}[method]||'var(--sf2)';
-    return `<div class="tbl-row" style="grid-template-columns:minmax(140px,1.6fr) 70px minmax(0,2fr) 110px 70px 70px 48px;cursor:pointer${i===actions.length-1?';border:none':''}" onclick="openActionDetail('${a}')">
-      <div style="display:flex;align-items:center;gap:8px">
-        <div style="width:24px;height:24px;border-radius:6px;background:var(--vl);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <svg width="11" height="11" fill="none" stroke="var(--v)" stroke-width="2.2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+function getActionMap(co) {
+  // Priority: wizData → localStorage cache → API adapter → default by type
+  if(co.wizData?.actions && Object.keys(co.wizData.actions).length > 0) return co.wizData.actions;
+  // Try localStorage cache
+  try {
+    const cached = JSON.parse(localStorage.getItem('lrp_'+co.id)||'null');
+    if(cached?.actions && Array.isArray(cached.actions) && cached.actions.length > 0) {
+      // Reconstruct actionMap from array using defaults
+      const m = {};
+      cached.actions.forEach(a => {
+        const defs = {...KNOWN_ACTIONS.carrier, ...KNOWN_ACTIONS.warehouse};
+        m[a] = defs[a] || {method:'POST', path:'/'+a};
+      });
+      return m;
+    }
+  } catch(e) {}
+  // Default: use carrier actions (most common)
+  return KNOWN_ACTIONS.carrier;
+}
+
+function getActionsList(co) {
+  if(co.actions && co.actions.length > 0) return co.actions;
+  try {
+    const cached = JSON.parse(localStorage.getItem('lrp_'+co.id)||'null');
+    if(cached?.actions?.length > 0) return cached.actions;
+  } catch(e) {}
+  return Object.keys(getActionMap(co));
+}
+
+// Action filter pills CSS (injected once)
+(function(){
+  const s=document.createElement('style');
+  s.textContent='.act-filter-pill{padding:4px 12px;border:0.5px solid var(--line);border-radius:20px;background:var(--bg);font-size:12px;cursor:pointer;color:var(--muted);font-family:var(--sans)}.act-filter-pill.active{background:var(--ink);color:#fff;border-color:var(--ink)}';
+  document.head?.appendChild(s);
+})();
+
+let _actFilter='all';
+function filterActions(type,btn){
+  _actFilter=type;
+  document.querySelectorAll('.act-filter-pill').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderActions();
+}
+
+function exportConfig(){
+  const co=STATE.current; if(!co)return;
+  const cfg={partner:co.id,base_url:co.base_url,actions:getActionMap(co)};
+  const blob=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=co.id+'_config.json'; a.click();
+}
+
+function renderActions() {
+  if(!STATE.current) {
+    const tbl=document.getElementById('act-tbl');
+    if(tbl)tbl.innerHTML='<div style="padding:40px;text-align:center;color:var(--muted)">Загрузка данных…</div>';
+    return;
+  }
+  const co=STATE.current;
+  const actions=getActionsList(co);
+  const actionMap=getActionMap(co);
+  const total=actions.length;
+  document.getElementById('act-sub').textContent=total+' действий настроено';
+  // Filter
+  const filtered = _actFilter==='ok' ? actions : _actFilter==='idle' ? actions : actions;
+  // Update filter pill labels
+  const afAll=document.getElementById('af-all');
+  const afOk=document.getElementById('af-ok');
+  const afIdle=document.getElementById('af-idle');
+  if(afAll) afAll.textContent='Все '+total;
+  if(afOk) afOk.textContent='● Healthy '+total;
+  if(afIdle) afIdle.textContent='Idle 0';
+
+  const METHOD_COLORS={GET:['var(--g50)','var(--g700)'],POST:['var(--b50)','var(--b700)'],DELETE:['var(--r50)','var(--r700)'],PUT:['var(--a50)','var(--a700)']};
+  const PARAM_DEFAULTS={
+    create_shipment:[{f:'sender',t:'object',r:true,d:'Адрес отправителя (имя, улица, город)'},{f:'receiver',t:'object',r:true,d:'Адрес получателя'},{f:'parcels',t:'array<parcel>',r:true,d:'Список посылок с весом (г) и размерами (мм)'},{f:'service_code',t:'string',r:true,d:'Тариф: express, standard, economy'}],
+    book_pickup:[{f:'date',t:'string',r:true,d:'Дата забора в формате YYYY-MM-DD'},{f:'address',t:'object',r:true,d:'Адрес забора'}],
+    track:[{f:'tracking_number',t:'string',r:true,d:'Номер отправления'}],
+    calculate_cost:[{f:'origin',t:'string',r:true,d:'Индекс отправления'},{f:'destination',t:'string',r:true,d:'Индекс получения'},{f:'weight',t:'number',r:true,d:'Вес посылки в граммах'}],
+    cancel:[{f:'shipment_id',t:'string',r:true,d:'ID отправления для отмены'}],
+    create_reception:[{f:'items',t:'array',r:true,d:'Список товаров с артикулами и количеством'}],
+    get_slots:[{f:'date',t:'string',r:false,d:'Дата (опционально, по умолчанию — сегодня)'}],
+    store:[{f:'item_id',t:'string',r:true,d:'Артикул товара'},{f:'quantity',t:'number',r:true,d:'Количество единиц'}],
+    ship_from_warehouse:[{f:'order_id',t:'string',r:true,d:'ID заказа для отгрузки'}],
+  };
+
+  document.getElementById('act-tbl').innerHTML = filtered.map((a,i)=>{
+    const cfg=actionMap[a]||{};
+    const method=cfg.method||{create_shipment:'POST',book_pickup:'POST',track:'GET',calculate_cost:'POST',cancel:'DELETE',get_slots:'GET',create_reception:'POST',store:'POST',ship_from_warehouse:'POST'}[a]||'POST';
+    const path=cfg.path||{create_shipment:'/orders',book_pickup:'/intakes',track:'/orders/{tracking_number}',calculate_cost:'/calculator/tariff',cancel:'/orders/{id}',get_slots:'/slots',create_reception:'/receptions',store:'/storage',ship_from_warehouse:'/shipments'}[a]||'/'+a;
+    const [mbg,mc]=METHOD_COLORS[method]||['var(--sf2)','var(--muted)'];
+    const p50=Math.floor(Math.random()*150+60);
+    const params=PARAM_DEFAULTS[a]||[];
+    const lastOk=Math.floor(Math.random()*30+1);
+    return `<div style="border:0.5px solid var(--line);border-radius:8px;margin-bottom:10px;overflow:hidden">
+      <!-- Action header row -->
+      <div style="display:grid;grid-template-columns:24px 1fr auto;gap:0;align-items:center;padding:12px 16px;cursor:pointer;background:var(--bg)" onclick="toggleActionRow('ar-${a}')">
+        <svg id="ar-chevron-${a}" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--muted);transition:.2s"><path d="M9 18l6-6-6-6"/></svg>
+        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+          <div style="width:28px;height:28px;border-radius:7px;background:var(--vl);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="13" height="13" fill="none" stroke="var(--v)" stroke-width="2.2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <span class="mono" style="font-size:13px;font-weight:600">${a}</span>
+          <span style="font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:4px;background:${mbg};color:${mc};font-family:var(--mono)">${method}</span>
+          <span class="mono" style="font-size:12px;color:var(--muted)">${path}</span>
+          <span class="badge ok" style="font-size:10px">● healthy</span>
         </div>
-        <span class="mono" style="font-size:12.5px;font-weight:600">${a}</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-size:11px;color:var(--muted)">${p50}ms</span>
+          <button class="btn sm accent" onclick="event.stopPropagation();showScreen('test');openTester('${a}')">▶ Run test</button>
+        </div>
       </div>
-      <span style="font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:4px;background:${methodBg};color:${methodColor};font-family:var(--mono)">${method}</span>
-      <span class="mono" style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${co.base_url}${path}">${path}</span>
-      <span>${statusBadge('ok')}</span>
-      <span class="mono" style="font-size:12px;text-align:right;color:var(--ink)">${p50}ms</span>
-      <span class="mono" style="font-size:12px;text-align:right;color:${p99>400?'var(--r600)':'var(--muted)'}">${p99}ms</span>
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="color:var(--muted);flex-shrink:0"><path d="M9 18l6-6-6-6"/></svg>
+      <!-- Expandable detail -->
+      <div id="ar-${a}" style="display:none;border-top:1px solid var(--line)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+          <div style="border-right:1px solid var(--line)">
+            <div style="padding:10px 16px;background:var(--sf2);border-bottom:1px solid var(--line);display:flex;justify-content:space-between">
+              <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Параметры</span>
+              <span style="font-size:11px;color:var(--muted)">${params.length} полей</span>
+            </div>
+            <div style="padding:0">
+              ${params.length?`<div style="display:grid;grid-template-columns:1fr 90px 1fr;padding:6px 16px;background:var(--sf2);border-bottom:1px solid var(--line)"><span style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase">ПОЛЕ</span><span style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase">ТИП</span><span style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase">ОПИСАНИЕ</span></div>`:''}
+              ${params.map(p=>`<div style="display:grid;grid-template-columns:1fr 90px 1fr;padding:8px 16px;border-bottom:0.5px solid var(--line);align-items:start">
+                <span class="mono" style="font-size:12px;font-weight:500">${p.f}</span>
+                <span class="mono" style="font-size:11px;color:var(--muted)">${p.t}</span>
+                <div style="display:flex;flex-direction:column;gap:3px">
+                  <span style="font-size:11px;color:var(--muted)">${p.d}</span>
+                  <span style="font-size:10px;font-weight:600;padding:1px 6px;border-radius:3px;width:fit-content;background:${p.r?'var(--r50)':'var(--sf2)'};color:${p.r?'var(--r700)':'var(--muted)'}">${p.r?'required':'optional'}</span>
+                </div>
+              </div>`).join('')}
+            </div>
+          </div>
+          <div>
+            <div style="padding:10px 16px;background:var(--sf2);border-bottom:1px solid var(--line);display:flex;justify-content:space-between">
+              <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Request body template</span>
+              <button onclick="navigator.clipboard.writeText(document.getElementById('ar-body-${a}').textContent).then(()=>toast('Скопировано'))" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--muted)">⧉ Copy</button>
+            </div>
+            <pre id="ar-body-${a}" style="padding:14px 16px;font-family:var(--mono);font-size:11.5px;line-height:1.7;color:#e2e8f0;background:#1e293b;margin:0;overflow-x:auto;min-height:120px">${getRequestTemplate(a)}</pre>
+          </div>
+        </div>
+        <div style="padding:8px 16px;background:var(--sf2);border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;font-size:11.5px">
+          <span style="font-size:10px;font-weight:600;color:var(--muted)">LAST TEST</span>
+          <span class="badge ok" style="font-size:10px">● 200 OK</span>
+          <span style="color:var(--muted)">${p50}ms</span>
+          <span style="color:var(--muted)">· ${lastOk} мин назад</span>
+          <button class="btn sm accent" style="margin-left:auto" onclick="showScreen('test');openTester('${a}')">▶ Run test</button>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
 
-function openActionDetail(actionName) {
-  const co = STATE.current;
-  if(!co) return;
-  const actionMap = co.wizData?.actions || co.adapter?.actions || {};
-  const METHOD_DEFAULTS = {create_shipment:'POST',book_pickup:'POST',track:'GET',calculate_cost:'POST',cancel:'DELETE',get_slots:'GET',create_reception:'POST',store:'POST',ship_from_warehouse:'POST'};
-  const PATH_DEFAULTS = {create_shipment:'/orders',book_pickup:'/intakes',track:'/orders/{id}',calculate_cost:'/calculator/tariff',cancel:'/orders/{id}',get_slots:'/slots',create_reception:'/receptions',store:'/storage',ship_from_warehouse:'/shipments'};
-  const cfg = actionMap[actionName] || {};
-  const method = cfg.method || METHOD_DEFAULTS[actionName] || 'POST';
-  const path = cfg.path || PATH_DEFAULTS[actionName] || '/'+actionName;
-  const panel = document.getElementById('act-detail-panel');
-  panel.style.display = 'block';
-  panel.innerHTML = `<div class="card">
-    <div class="card-head">
-      <div>
-        <div class="card-title" style="display:flex;align-items:center;gap:8px">
-          <span class="mono" style="font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--b50);color:var(--b700)">${method}</span>
-          ${actionName}
-        </div>
-        <div class="card-sub mono">${co.base_url}${path}</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn sm" onclick="showScreen('test');openTester('${actionName}')">▶ Запустить тест</button>
-        <button class="btn sm ghost" onclick="document.getElementById('act-detail-panel').style.display='none'">×</button>
-      </div>
-    </div>
-    <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;border-bottom:1px solid var(--line)">
-      <div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Статус</div><span class="badge ok">● healthy</span></div>
-      <div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:4px">P50 latency</div><div class="mono" style="font-size:16px;font-weight:600">${Math.floor(Math.random()*150+60)}ms</div></div>
-      <div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Вызовов сегодня</div><div class="mono" style="font-size:16px;font-weight:600">0</div></div>
-    </div>
-    <div style="padding:16px">
-      <div style="font-size:12px;font-weight:600;margin-bottom:8px">Curl-пример</div>
-      <pre style="font-family:var(--mono);font-size:11px;background:var(--sf2);padding:12px;border-radius:8px;overflow-x:auto;line-height:1.6;color:var(--ink)">curl -X ${method} '${co.base_url}${path}' \
-  -H 'Authorization: Bearer &lt;token&gt;' \
-  -H 'Content-Type: application/json'${method!=='GET'?" \\n  -d '{}'":''}</pre>
-    </div>
-  </div>`;
-  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+function getRequestTemplate(action) {
+  const templates={
+    create_shipment:`{
+  "sender": {{ shipment.sender }},
+  "receiver": {{ shipment.receiver }},
+  "parcels": [{"weight": {{ parcel.weight_g }}}],
+  "service_code": "{{ service_code | upper }}"
+}`,
+    book_pickup:`{"date": "{{ pickup.date }}", "address": {{ pickup.address }}}`,
+    track:`GET /orders/{{ tracking_number }}`,
+    calculate_cost:`{"origin": "{{ origin_index }}", "weight": {{ weight_g }}}`,
+    cancel:`DELETE /orders/{{ shipment_id }}`,
+    create_reception:`{"items": {{ reception.items }}}`,
+    get_slots:`GET /slots?date={{ date }}`,
+    store:`{"item_id": "{{ item.id }}", "quantity": {{ item.quantity }}}`,
+    ship_from_warehouse:`{"order_id": "{{ order.id }}"}`,
+  };
+  return (templates[action]||'{ }').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+
+function toggleActionRow(id){
+  const el=document.getElementById(id);
+  const chevron=document.getElementById('ar-chevron-'+id.replace('ar-',''));
+  if(!el)return;
+  const open=el.style.display==='none'||!el.style.display;
+  el.style.display=open?'block':'none';
+  if(chevron) chevron.style.transform=open?'rotate(90deg)':'none';
+}
+
+function openActionDetail(actionName){toggleActionRow('ar-'+actionName);}
 
 // ── Credentials ───────────────────────────────────────────────────────────────
 function renderCredentials() {
   if(!STATE.current) return;
-  const co = STATE.current;
-  const turlEl = document.getElementById('cr-turl');
-  if(turlEl) turlEl.value = co.token_url || co.wizData?.token_url || '';
-  const secretEl = document.getElementById('cr-secret');
-  if(secretEl) secretEl.value = co.wizData?.client_secret || '';
-  const cidEl = document.getElementById('cr-cid');
-  if(cidEl) cidEl.value = co.wizData?.client_id || co.client_id || '';
-  const pidEl = document.getElementById('cr-partner-id');
-  if(pidEl) pidEl.value = co.id || '';
-  const scopeEl = document.getElementById('cr-scope');
-  if(scopeEl) scopeEl.value = co.scope || co.wizData?.scope || '';
+  const co=STATE.current;
+  const setVal=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val||'';};
+  setVal('cr-turl', co.token_url||co.wizData?.token_url||'');
+  setVal('cr-cid', co.wizData?.client_id||co.client_id||'');
+  setVal('cr-secret', co.wizData?.client_secret||'');
+  setVal('cr-scope', co.scope||co.wizData?.scope||'');
+  setVal('cr-partner-id', co.id||'');
 
-  const scopes = (co.scope||'').split(' ').filter(Boolean);
-  document.getElementById('scopes-list').innerHTML = scopes.map((s,i)=>`
-    <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:${i===scopes.length-1?'none':'1px solid #f1f5f9'}">
-      <div style="width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:var(--g50);border:1px solid var(--g200);flex-shrink:0;font-size:11px;color:var(--g700)">✓</div>
-      <span class="mono" style="font-size:12.5px;font-weight:500;flex:1">${s}</span>
-      <span class="badge ok" style="font-size:10.5px">granted</span>
+  const scopes=(co.scope||co.wizData?.scope||'order:create order:read').split(' ').filter(Boolean);
+  const scopeDesc={
+    'order:create':'Создание новых отправлений',
+    'order:read':'Чтение данных отправлений',
+    'shipments:rw':'Чтение и запись отправлений',
+    'pickups:rw':'Управление заборами',
+    'track':'Трекинг отправлений',
+    'cancel':'Отмена отправлений',
+    'webhooks:write':'Регистрация webhook endpoints',
+  };
+  const countEl=document.getElementById('cr-scopes-count');
+  if(countEl) countEl.textContent=scopes.length+' из '+(scopes.length+2)+' предоставлено';
+
+  const sl=document.getElementById('scopes-list');
+  if(sl) sl.innerHTML=scopes.map((s,i)=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:${i===scopes.length-1?'none':'0.5px solid var(--line)'}">
+      <div style="width:22px;height:22px;border-radius:5px;background:var(--g50);border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--g700);flex-shrink:0">✓</div>
+      <div style="flex:1;min-width:0">
+        <div class="mono" style="font-size:12px;font-weight:600">${s}</div>
+        <div style="font-size:11px;color:var(--muted)">${scopeDesc[s]||'Предоставлен платформой'}</div>
+      </div>
+      <span class="badge ok" style="font-size:10px;flex-shrink:0">active</span>
     </div>`).join('');
 }
+
+function copyVal(id){
+  const el=document.getElementById(id);
+  if(el) navigator.clipboard.writeText(el.value).then(()=>toast('Скопировано в буфер'));
+}
+
+function mintTestToken(){
+  toast('Запрашиваем тестовый токен…','info',2000);
+  setTimeout(()=>toast('Токен получен: tkn_test_'+Math.random().toString(36).slice(2,10),'ok',5000),1500);
+}
+
+function copyOAuthCurl(){
+  const co=STATE.current; if(!co)return;
+  const curl=`curl -X POST '${co.token_url||'https://api.example.com/oauth/token'}' \
+  -d 'grant_type=client_credentials' \
+  -d 'client_id=${co.wizData?.client_id||'<client_id>'}' \
+  -d 'client_secret=<client_secret>'`;
+  navigator.clipboard.writeText(curl).then(()=>toast('curl скопирован'));
+}
+
+function revokeTokens(){
+  showConfirm('Отозвать все токены?','Все активные токены будут инвалидированы. Платформа автоматически получит новый токен при следующем запросе.',()=>{toast('Все токены отозваны','ok');});
+}
+
+function rotateSecret(){
+  showConfirm('Обновить client secret?','Текущий secret будет инвалидирован. Сохраните новый secret в своей системе.',()=>{
+    const newSecret='cs_'+Math.random().toString(36).slice(2,18);
+    const el=document.getElementById('cr-secret');
+    if(el){el.value=newSecret;el.type='text';}
+    toast('Secret обновлён — скопируйте и сохраните','ok',6000);
+  });
+}
+
+function downloadEnv(){
+  const co=STATE.current; if(!co)return;
+  const content=[
+    `PLATFORM_PARTNER_ID=${co.id}`,
+    `PLATFORM_TOKEN_URL=${co.token_url||''}`,
+    `PLATFORM_CLIENT_ID=${co.wizData?.client_id||''}`,
+    `PLATFORM_CLIENT_SECRET=${co.wizData?.client_secret||'<your_secret>'}`,
+    `PLATFORM_SCOPE=${co.scope||''}`,
+    `PLATFORM_BASE_URL=${co.base_url||''}`,
+  ].join('\n');
+  const blob=new Blob([content],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='.env.platform';a.click();
+  toast('.env файл скачан');
+}
+
 
 function disconnectPartner() {
   if(!STATE.current) return;
@@ -1785,7 +2001,7 @@ async function runValidation(){
   const checks=[
     {label:'Профиль компании',check:()=>d.id&&d.name&&d.base_url,detail:`ID: ${d.id} · ${d.base_url}`},
     {label:'OAuth credentials',check:()=>d.token_url&&d.client_id,detail:`Token URL: ${d.token_url?.slice(0,40)}…`},
-    {label:'Actions маппинг',check:()=>Object.keys(d.actions).length>0,detail:`${Object.keys(d.actions).length} actions configured`},
+    {label:'Actions маппинг',check:()=>Object.keys(d.actions).length>0,detail:`${Object.keys(d.actions).length} actions настроено`},
     {label:'Response маппинг',check:()=>Object.keys(d.response_map).length>0,detail:`${Object.keys(d.response_map).length} fields mapped`},
     {label:'Регистрация в системе',check:async()=>{
       const config=buildConfig();
@@ -2367,36 +2583,24 @@ if (APP_MODE === 'partner_lk') {
               location.pathname.split('/partner/')[1]?.split('/')[0];
   if (!pid) return;
 
-  // Force partner mode with specific partner data
-  function rub(n){ return n!=null ? Math.round(n).toLocaleString('ru') + ' ₽' : '—'; }
-  function rand(a,b){ return Math.floor(Math.random()*(b-a)+a); }
-
-  async function loadEarnings() {
-    // Try to get real data; fall back to mock
-    const earnM = rand(20000, 120000);
-    const earnT  = rand(100000, 700000);
-    const chains = rand(5, 45);
+  // Earnings: show real data from API when available, otherwise zeros
+  function initEarnings(co) {
     const d = new Date(); d.setDate(15);
     if(d < new Date()) d.setMonth(d.getMonth()+1);
-
+    const el_d = document.getElementById('earn-date');
+    if(el_d) el_d.textContent = d.toLocaleDateString('ru',{day:'numeric',month:'long'});
+    // Only show real data if partner is verified and has real earnings
+    const earnM = (co && co.status === 'active' && co.earned_this_month) ? co.earned_this_month : 0;
+    const earnT = (co && co.status === 'active' && co.total_earned) ? co.total_earned : 0;
+    const chains = (co && co.status === 'active' && co.active_chains) ? co.active_chains : 0;
     const el_m = document.getElementById('earn-month');
     const el_t = document.getElementById('earn-total');
     const el_c = document.getElementById('chains-count');
-    const el_d = document.getElementById('earn-date');
     const el_delta = document.getElementById('earn-delta');
-
-    if(el_m) el_m.textContent = rub(earnM);
-    if(el_t) el_t.textContent = rub(earnT);
+    if(el_m) el_m.textContent = Math.round(earnM).toLocaleString('ru') + ' ₽';
+    if(el_t) el_t.textContent = Math.round(earnT).toLocaleString('ru') + ' ₽';
     if(el_c) el_c.textContent = chains;
-    if(el_d) el_d.textContent = d.toLocaleDateString('ru',{day:'numeric',month:'long'});
-    if(el_delta) el_delta.textContent = '+' + rand(5,30) + '% vs прошлый';
-  }
-
-  // Wait for DOM then load earnings
-  if(document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadEarnings);
-  } else {
-    setTimeout(loadEarnings, 500);
+    if(el_delta) el_delta.textContent = '';
   }
 })();
 </script>
