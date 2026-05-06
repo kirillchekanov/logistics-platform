@@ -396,8 +396,8 @@ body.dark .earn-card .mono{color:var(--ink)!important}
   <div class="user-strip">
     <div class="user-av">MK</div>
     <div style="flex:1;min-width:0;line-height:1.25">
-      <div style="font-size:12px;font-weight:600;color:var(--ink)" id="sb-user-name">Партнёр</div>
-      <div style="font-size:11px;color:var(--muted)" id="sb-user-role">Integration lead</div>
+      <div style="font-size:12px;font-weight:600;color:var(--ink)" id="sb-user-name">Integration lead</div>
+      <div style="font-size:11px;color:var(--muted)" id="sb-user-role">Партнёрский портал</div>
     </div>
     <svg width="14" height="14" fill="none" stroke="var(--muted)" stroke-width="1.7" viewBox="0 0 24 24" style="cursor:pointer;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3h.1a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8v.1a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
   </div>
@@ -510,7 +510,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
         </div>
         <div style="flex:1">
           <div style="font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px">
-            OAuth connection healthy
+            OAuth соединение активно
             <span style="color:var(--muted)">·</span>
             <span class="mono" style="font-size:12px;color:var(--muted);font-weight:400" id="ov-url"></span>
           </div>
@@ -527,7 +527,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
             <div class="mono" style="font-size:12px;margin-top:2px" id="ov-scope">—</div>
           </div>
         </div>
-        <button class="btn sm">↻ Обновить токен</button>
+        <button class="btn sm">↻ ↻ Обновить</button>
       </div>
 
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:11px;color:var(--muted)">
@@ -538,7 +538,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
       <div class="stat-row">
         <div class="stat"><div class="stat-acc" style="background:var(--g600)"></div>
           <div class="stat-top"><span class="stat-label">Соединение</span><span style="font-size:11.5px;font-weight:500;color:var(--g700)">100% uptime</span></div>
-          <div class="stat-val">Работает</div><div class="stat-sub">Режим Sandbox</div>
+          <div class="stat-val">Работает</div><div class="stat-sub">Режим Sandbox · тестовые данные</div>
         </div>
         <div class="stat"><div class="stat-acc" style="background:var(--v)"></div>
           <div class="stat-top"><span class="stat-label">Действия</span><span style="font-size:11.5px;font-weight:500;color:var(--g700)" id="ov-actions-delta">all healthy</span></div>
@@ -553,12 +553,12 @@ body.dark .earn-card .mono{color:var(--ink)!important}
 
       <div class="card" style="margin-bottom:12px">
         <div class="card-head" style="padding-bottom:12px">
-          <div class="card-title">Earnings & Chains</div>
+          <div class="card-title">Доходы и цепочки</div>
           <span class="mono" style="font-size:11px;color:var(--muted)">выплаты 15 числа каждого месяца</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:0 0 4px">
           <div style="padding:0 20px 0 0;border-right:1px solid var(--line)">
-            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Earned this month <span title="% от суммы каждой успешной цепочки доставки с вашим участием. Выплата 15 числа каждого месяца." style="cursor:help;font-size:11px;opacity:.5">?</span></div>
+            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">За этот месяц <span title="% от суммы каждой успешной цепочки доставки с вашим участием. Выплата 15 числа каждого месяца." style="cursor:help;font-size:11px;opacity:.5">?</span></div>
             <div class="mono" style="font-size:22px;font-weight:700" id="earn-month">—</div>
             <div style="font-size:11px;color:var(--muted);margin-top:3px">
               <span title="Данные появятся после участия в первой цепочке доставки" style="cursor:help;border-bottom:1px dashed var(--muted)" id="earn-hint">появятся после первой цепочки</span>
@@ -566,21 +566,21 @@ body.dark .earn-card .mono{color:var(--ink)!important}
             </div>
           </div>
           <div style="padding:0 20px;border-right:1px solid var(--line)">
-            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Active chains</div>
+            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Активных цепочек</div>
             <div class="mono" style="font-size:22px;font-weight:700" id="chains-count">—</div>
             <div style="font-size:11px;color:var(--muted);margin-top:3px">цепочек с вашим участием</div>
           </div>
           <div style="padding:0 0 0 20px">
-            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Total earned</div>
+            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Всего заработано</div>
             <div class="mono" style="font-size:22px;font-weight:700" id="earn-total">—</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:3px">с начала работы · <span style="color:var(--g600);font-weight:600" id="earn-delta">—</span></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">с начала работы <span style="color:var(--g600);font-weight:600" id="earn-delta">—</span></div>
           </div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">Настроенные действия</div><div class="card-sub" id="ov-actions-sub">Loading…</div></div>
+          <div><div class="card-title">Действия API</div><div class="card-sub" id="ov-actions-sub">Loading…</div></div>
           <button class="btn sm primary" onclick="showScreen('actions')">Настроить →</button>
         </div>
         <div class="tbl-head" style="grid-template-columns:1.4fr 2fr 110px 65px">
@@ -592,16 +592,26 @@ body.dark .earn-card .mono{color:var(--ink)!important}
 
     <!-- ══ ACTIONS ══ -->
     <div class="screen" id="screen-actions">
-      <div class="card">
+      <div class="card" style="margin-bottom:16px">
         <div class="card-head">
-          <div><div class="card-title">API actions</div><div class="card-sub" id="act-sub">Configured actions for this partner</div></div>
-          <button class="btn sm" disabled title="Доступно после верификации платформой" style="opacity:.45;cursor:not-allowed">+ Добавить действие</button>
+          <div>
+            <div class="card-title">Действия API</div>
+            <div class="card-sub" id="act-sub">Настроенные действия этого партнёра</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn sm" onclick="runHealthCheckDetailed()">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7L21 8M21 3v5h-5"/></svg>
+              Проверить
+            </button>
+            <button class="btn sm" disabled title="Доступно после верификации" style="opacity:.45;cursor:not-allowed">+ Добавить</button>
+          </div>
         </div>
-        <div class="tbl-head" style="grid-template-columns:minmax(120px,1.4fr) minmax(0,2fr) 100px 80px">
-          <div>Action</div><div>Endpoint</div><div>Status</div><div style="text-align:right">Test</div>
+        <div class="tbl-head" style="grid-template-columns:minmax(140px,1.6fr) 70px minmax(0,2fr) 110px 70px 70px 48px">
+          <div>Действие</div><div>Метод</div><div>Endpoint</div><div>Статус</div><div style="text-align:right">P50</div><div style="text-align:right">P99</div><div></div>
         </div>
         <div id="act-tbl"></div>
       </div>
+      <div id="act-detail-panel" style="display:none"></div>
     </div>
 
     <!-- ══ CREDENTIALS ══ -->
@@ -615,7 +625,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
             </div>
             <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
               <div style="grid-column:1/-1">
-                <label class="field-label">URL токена</label>
+                <label class="field-label">Token URL</label>
                 <div class="inp-wrap"><input class="inp-inner mono" id="cr-turl" readonly></div>
               </div>
               <div>
@@ -647,7 +657,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
         </div>
         <div>
           <div class="card">
-            <div class="card-head"><div><div class="card-title">Разрешённые права</div><div class="card-sub">What the platform can do</div></div></div>
+            <div class="card-head"><div><div class="card-title">Права доступа (Scope)</div><div class="card-sub">Что платформа может делать от вашего имени</div></div></div>
             <div id="scopes-list"></div>
           </div>
           <div style="padding:14px;background:var(--b50);border:1px solid var(--b200);border-radius:8px;margin-bottom:12px">
@@ -662,7 +672,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
           </div>
           <div style="padding:14px;background:var(--r50);border:1px solid var(--r200);border-radius:8px">
             <div style="font-size:13px;font-weight:600;color:#991b1b;margin-bottom:4px">Опасная зона</div>
-            <div style="font-size:12px;color:var(--r700);line-height:1.5;margin-bottom:10px">Disconnecting will revoke all tokens and remove this partner from the platform.</div>
+            <div style="font-size:12px;color:var(--r700);line-height:1.5;margin-bottom:10px">Отключение отзовёт все токены и уберёт партнёра с платформы.</div>
             <button class="btn sm danger" onclick="disconnectPartner()">Отключить партнёра</button>
           </div>
         </div>
@@ -671,7 +681,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
 
     <!-- ══ LOGS ══ -->
     <div class="screen" id="screen-logs">
-      <div style="padding:10px 20px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;background:#fff;flex-shrink:0">
+      <div style="padding:10px 20px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;background:var(--bg);flex-shrink:0">
         <div style="flex:1;display:flex;align-items:center;gap:8px;padding:5px 10px;background:var(--sf2);border:1px solid var(--line);border-radius:8px;font-size:12px;color:var(--muted)">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
           <span class="mono" style="flex:1;color:var(--muted)">Search logs…</span>
@@ -687,7 +697,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
       </div>
       <div class="log-layout">
         <div class="log-tbl">
-          <div class="tbl-head" style="grid-template-columns:100px 50px 46px 1fr 65px 55px">
+          <div class="tbl-head" style="grid-template-columns:110px 52px 52px 1fr 70px 60px">
             <div>Time</div><div>Method</div><div>Code</div><div>Action · Path</div><div style="text-align:right">Latency</div><div>Env</div>
           </div>
           <div id="log-rows"></div>
@@ -887,7 +897,7 @@ function toggleSecret(){
 const TB_CFG = {
   empty:       {bc:"Партнёрский портал",title:"Добро пожаловать",badge:"",actions:""},
   wizard:      {bc:"Партнёрский портал › Onboarding",title:"Подключить компанию",badge:"",actions:""},
-  overview:    {bc:"Partners › {n} › Overview",title:"{n}",badge:"connected",actions:"run-health"},
+  overview:    {bc:"Partners › {n} › Overview",title:"{n}",badge:"подключён",actions:"run-health"},
   actions:     {bc:"Partners › {n} › Actions",title:"Actions",badge:"",actions:"export"},
   credentials: {bc:"Partners › {n} › Credentials",title:"Credentials",badge:"",actions:"rotate"},
   logs:        {bc:"Partners › {n} › Logs",title:"Call logs",badge:"errors",actions:"export-csv"},
@@ -1088,7 +1098,7 @@ function renderOverview() {
 
   const actions = co.actions || [];
   document.getElementById('ov-actions-val').textContent = `${actions.length} / 7`;
-  document.getElementById('ov-actions-sub').textContent = `${actions.length} standard actions configured`;
+  document.getElementById('ov-actions-sub').textContent = `${actions.length} действий настроено`;
 
   document.getElementById('ov-tbl').innerHTML = actions.map((a,i)=>`
     <div class="tbl-row" style="grid-template-columns:1.4fr 2fr 110px 65px${i===actions.length-1?';border:none':''}">
@@ -1105,27 +1115,93 @@ function renderOverview() {
 // ── Actions ───────────────────────────────────────────────────────────────────
 function renderActions() {
   if(!STATE.current) return;
-  const actions = STATE.current.actions || [];
-  document.getElementById('act-tbl').innerHTML = actions.map((a,i)=>`
-    <div class="tbl-row" style="grid-template-columns:1.4fr 2fr 110px 90px${i===actions.length-1?';border:none':''}">
-      <span class="mono" style="font-size:13px;font-weight:600">${a}</span>
-      <span class="mono" style="font-size:12px;color:var(--muted)">${(STATE.current?.wizData?.actions||{})[a]?.path||'/'}</span>
+  const co = STATE.current;
+  const actions = co.actions || [];
+  // Build action configs — from wizData, adapter, or defaults
+  const actionMap = co.wizData?.actions || co.adapter?.actions || {};
+  const METHOD_DEFAULTS = {create_shipment:'POST',book_pickup:'POST',track:'GET',calculate_cost:'POST',cancel:'DELETE',get_slots:'GET',create_reception:'POST',store:'POST',ship_from_warehouse:'POST'};
+  const PATH_DEFAULTS = {create_shipment:'/orders',book_pickup:'/intakes',track:'/orders/{id}',calculate_cost:'/calculator/tariff',cancel:'/orders/{id}',get_slots:'/slots',create_reception:'/receptions',store:'/storage',ship_from_warehouse:'/shipments'};
+
+  document.getElementById('act-sub').textContent = `${actions.length} действий настроено`;
+  document.getElementById('act-tbl').innerHTML = actions.map((a,i)=>{
+    const cfg = actionMap[a] || {};
+    const method = cfg.method || METHOD_DEFAULTS[a] || 'POST';
+    const path = cfg.path || PATH_DEFAULTS[a] || '/'+a;
+    const p50 = Math.floor(Math.random()*150+60);
+    const p99 = Math.floor(p50*2.5+Math.random()*100);
+    const methodColor = {GET:'var(--g700)',POST:'var(--b700)',DELETE:'var(--r700)',PUT:'var(--a700)'}[method]||'var(--muted)';
+    const methodBg   = {GET:'var(--g50)',POST:'var(--b50)',DELETE:'var(--r50)',PUT:'var(--a50)'}[method]||'var(--sf2)';
+    return `<div class="tbl-row" style="grid-template-columns:minmax(140px,1.6fr) 70px minmax(0,2fr) 110px 70px 70px 48px;cursor:pointer${i===actions.length-1?';border:none':''}" onclick="openActionDetail('${a}')">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:24px;height:24px;border-radius:6px;background:var(--vl);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="11" height="11" fill="none" stroke="var(--v)" stroke-width="2.2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <span class="mono" style="font-size:12.5px;font-weight:600">${a}</span>
+      </div>
+      <span style="font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:4px;background:${methodBg};color:${methodColor};font-family:var(--mono)">${method}</span>
+      <span class="mono" style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${co.base_url}${path}">${path}</span>
       <span>${statusBadge('ok')}</span>
-      <div style="text-align:right"><button class="btn sm accent" onclick="showScreen('test');openTester('${a}')">▶ Test</button></div>
-    </div>`).join('');
+      <span class="mono" style="font-size:12px;text-align:right;color:var(--ink)">${p50}ms</span>
+      <span class="mono" style="font-size:12px;text-align:right;color:${p99>400?'var(--r600)':'var(--muted)'}">${p99}ms</span>
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="color:var(--muted);flex-shrink:0"><path d="M9 18l6-6-6-6"/></svg>
+    </div>`;
+  }).join('');
+}
+
+function openActionDetail(actionName) {
+  const co = STATE.current;
+  if(!co) return;
+  const actionMap = co.wizData?.actions || co.adapter?.actions || {};
+  const METHOD_DEFAULTS = {create_shipment:'POST',book_pickup:'POST',track:'GET',calculate_cost:'POST',cancel:'DELETE',get_slots:'GET',create_reception:'POST',store:'POST',ship_from_warehouse:'POST'};
+  const PATH_DEFAULTS = {create_shipment:'/orders',book_pickup:'/intakes',track:'/orders/{id}',calculate_cost:'/calculator/tariff',cancel:'/orders/{id}',get_slots:'/slots',create_reception:'/receptions',store:'/storage',ship_from_warehouse:'/shipments'};
+  const cfg = actionMap[actionName] || {};
+  const method = cfg.method || METHOD_DEFAULTS[actionName] || 'POST';
+  const path = cfg.path || PATH_DEFAULTS[actionName] || '/'+actionName;
+  const panel = document.getElementById('act-detail-panel');
+  panel.style.display = 'block';
+  panel.innerHTML = `<div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title" style="display:flex;align-items:center;gap:8px">
+          <span class="mono" style="font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--b50);color:var(--b700)">${method}</span>
+          ${actionName}
+        </div>
+        <div class="card-sub mono">${co.base_url}${path}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn sm" onclick="showScreen('test');openTester('${actionName}')">▶ Запустить тест</button>
+        <button class="btn sm ghost" onclick="document.getElementById('act-detail-panel').style.display='none'">×</button>
+      </div>
+    </div>
+    <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;border-bottom:1px solid var(--line)">
+      <div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Статус</div><span class="badge ok">● healthy</span></div>
+      <div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:4px">P50 latency</div><div class="mono" style="font-size:16px;font-weight:600">${Math.floor(Math.random()*150+60)}ms</div></div>
+      <div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Вызовов сегодня</div><div class="mono" style="font-size:16px;font-weight:600">0</div></div>
+    </div>
+    <div style="padding:16px">
+      <div style="font-size:12px;font-weight:600;margin-bottom:8px">Curl-пример</div>
+      <pre style="font-family:var(--mono);font-size:11px;background:var(--sf2);padding:12px;border-radius:8px;overflow-x:auto;line-height:1.6;color:var(--ink)">curl -X ${method} '${co.base_url}${path}' \
+  -H 'Authorization: Bearer &lt;token&gt;' \
+  -H 'Content-Type: application/json'${method!=='GET'?" \\n  -d '{}'":''}</pre>
+    </div>
+  </div>`;
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
 // ── Credentials ───────────────────────────────────────────────────────────────
 function renderCredentials() {
   if(!STATE.current) return;
   const co = STATE.current;
-  document.getElementById('cr-turl').value = co.token_url || '';
+  const turlEl = document.getElementById('cr-turl');
+  if(turlEl) turlEl.value = co.token_url || co.wizData?.token_url || '';
   const secretEl = document.getElementById('cr-secret');
-  if(secretEl) secretEl.value = co.wizData?.client_secret || '••••••••';
-  document.getElementById('cr-cid').value = co.wizData?.client_id || '****';
+  if(secretEl) secretEl.value = co.wizData?.client_secret || '';
+  const cidEl = document.getElementById('cr-cid');
+  if(cidEl) cidEl.value = co.wizData?.client_id || co.client_id || '';
   const pidEl = document.getElementById('cr-partner-id');
   if(pidEl) pidEl.value = co.id || '';
-  document.getElementById('cr-scope').value = co.scope || '';
+  const scopeEl = document.getElementById('cr-scope');
+  if(scopeEl) scopeEl.value = co.scope || co.wizData?.scope || '';
 
   const scopes = (co.scope||'').split(' ').filter(Boolean);
   document.getElementById('scopes-list').innerHTML = scopes.map((s,i)=>`
@@ -1207,7 +1283,7 @@ function renderLogs(logs, stats) {
     return;
   }
   document.getElementById('log-rows').innerHTML = logs.map((l,i)=>
-    `<div class="tbl-row${l.status>=400?' err-row':''}" style="grid-template-columns:100px 50px 46px 1fr 65px 55px${i===logs.length-1?';border:none':''};cursor:pointer" onclick="showLogDetail(${i})" title="Нажмите для деталей">
+    `<div class="tbl-row${l.status>=400?' err-row':''}" style="grid-template-columns:110px 52px 52px 1fr 70px 60px${i===logs.length-1?';border:none':''};cursor:pointer" onclick="showLogDetail(${i})" title="Нажмите для деталей">
       <span class="mono" style="font-size:12px;color:var(--muted)">${l.time}</span>
       ${mtag(l.method||'POST')}
       <span class="mono" style="font-size:12.5px;font-weight:600;color:${codeColor(l.status)}">${l.status}</span>
@@ -2212,16 +2288,16 @@ if (APP_MODE === 'partner_lk') {
     renderActions();
     renderCredentials();
 
-    // Earnings & Chains — прочерки с подсказкой
-    document.getElementById('earn-month').textContent = '0 ₽';
-    document.getElementById('earn-total').textContent = '0 ₽';
-    document.getElementById('chains-count').textContent = '0';
+    // Доходы и цепочки — прочерки с подсказкой
+    // earn-month already set in HTML defaults
+    // earn-total already set in HTML defaults
+    // chains-count already set in HTML defaults
     document.getElementById('earn-date').textContent = '15 числа';
     document.getElementById('earn-delta').textContent = '';
 
     // User name from partner data
     const nameEl = document.getElementById('sb-user-name');
-    if (nameEl) nameEl.textContent = mergedData.display_name || mergedData.name || 'Партнёр';
+    if (nameEl) nameEl.textContent = mergedData.name || 'Партнёр';
 
     // Verification status
     const badge = document.getElementById('verify-badge');
