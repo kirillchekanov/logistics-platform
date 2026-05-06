@@ -328,6 +328,15 @@ body.dark .earn-card .mono{color:var(--ink)!important}
 
 .dark .action-ic { background: rgba(139,92,246,.2) !important; }
 .dark [style*="background:#fff"][style*="border-radius:6px"] { background: rgba(139,92,246,.15) !important; }
+
+#earn-month, #earn-total, #chains-count {
+  font-family: var(--mono, 'SF Mono', 'Fira Code', monospace);
+  font-size: 24px !important;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  min-height: 29px;
+}
 </style>
 </head>
 <body>
@@ -560,34 +569,33 @@ body.dark .earn-card .mono{color:var(--ink)!important}
           <span class="mono" style="font-size:11px;color:var(--muted)">выплаты 15 числа каждого месяца</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:0 0 4px">
-          <div style="padding:0 20px 0 0;border-right:1px solid var(--line)">
-            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">За этот месяц <span title="% от суммы каждой успешной цепочки доставки с вашим участием. Выплата 15 числа каждого месяца." style="cursor:help;font-size:11px;opacity:.5">?</span></div>
-            <div class="mono" style="font-size:22px;font-weight:700" id="earn-month">—</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:3px">
-              <span title="Данные появятся после участия в первой цепочке доставки" style="cursor:help;border-bottom:1px dashed var(--muted)" id="earn-hint">появятся после первой цепочки</span>
-              · выплата <span style="color:var(--g600);font-weight:600" id="earn-date">15 числа</span>
+          <div style="padding:0 20px 12px 0;border-right:1px solid var(--line)">
+            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">За этот месяц <span title="% от суммы каждой успешной цепочки доставки с вашим участием. Выплата 15 числа каждого месяца." style="cursor:help;font-size:11px;opacity:.5">?</span></div>
+            <div class="mono" style="font-size:24px;font-weight:700;color:var(--ink)" id="earn-month">0 ₽</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">
+              выплата <span style="color:var(--g600);font-weight:600" id="earn-date">15 числа</span>
             </div>
           </div>
-          <div style="padding:0 20px;border-right:1px solid var(--line)">
-            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Активных цепочек</div>
-            <div class="mono" style="font-size:22px;font-weight:700" id="chains-count">—</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:3px">цепочек с вашим участием</div>
+          <div style="padding:0 20px 12px;border-right:1px solid var(--line)">
+            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Активных цепочек</div>
+            <div class="mono" style="font-size:24px;font-weight:700;color:var(--ink)" id="chains-count">0</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">появятся после верификации</div>
           </div>
-          <div style="padding:0 0 0 20px">
-            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Всего заработано</div>
-            <div class="mono" style="font-size:22px;font-weight:700" id="earn-total">—</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:3px">с начала работы <span style="color:var(--g600);font-weight:600" id="earn-delta">—</span></div>
+          <div style="padding:0 0 12px 20px">
+            <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Всего заработано</div>
+            <div class="mono" style="font-size:24px;font-weight:700;color:var(--ink)" id="earn-total">0 ₽</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">с начала работы <span style="color:var(--g600);font-weight:600" id="earn-delta"></span></div>
           </div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">Действия API</div><div class="card-sub" id="ov-actions-sub">Loading…</div></div>
+          <div><div class="card-title">Действия API</div><div class="card-sub" id="ov-actions-sub">Загрузка…</div></div>
           <button class="btn sm primary" onclick="showScreen('actions')">Настроить →</button>
         </div>
         <div class="tbl-head" style="grid-template-columns:1.4fr 2fr 110px 65px">
-          <div>Action</div><div>Endpoint</div><div>Status</div><div style="text-align:right">Calls</div>
+          <div>Действие</div><div>Endpoint</div><div>Статус</div><div style="text-align:right">Вызовы</div>
         </div>
         <div id="ov-tbl"></div>
       </div>
@@ -2694,10 +2702,6 @@ if (APP_MODE === 'partner_lk') {
 
   // Earnings: show real data from API when available, otherwise zeros
   function initEarnings(co) {
-    const d = new Date(); d.setDate(15);
-    if(d < new Date()) d.setMonth(d.getMonth()+1);
-    const el_d = document.getElementById('earn-date');
-    if(el_d) el_d.textContent = d.toLocaleDateString('ru',{day:'numeric',month:'long'});
     // Only show real data if partner is verified and has real earnings
     const earnM = (co && co.status === 'active' && co.earned_this_month) ? co.earned_this_month : 0;
     const earnT = (co && co.status === 'active' && co.total_earned) ? co.total_earned : 0;
@@ -2706,8 +2710,8 @@ if (APP_MODE === 'partner_lk') {
     const el_t = document.getElementById('earn-total');
     const el_c = document.getElementById('chains-count');
     const el_delta = document.getElementById('earn-delta');
-    if(el_m) el_m.textContent = Math.round(earnM).toLocaleString('ru') + ' ₽';
-    if(el_t) el_t.textContent = Math.round(earnT).toLocaleString('ru') + ' ₽';
+    if(el_m) el_m.textContent = earnM.toLocaleString('ru') + ' ₽';
+    if(el_t) el_t.textContent = earnT.toLocaleString('ru') + ' ₽';
     if(el_c) el_c.textContent = chains;
     if(el_delta) el_delta.textContent = '';
   }
