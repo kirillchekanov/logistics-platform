@@ -183,6 +183,38 @@ def load_adapters():
 REGISTRY = load_registry()
 ADAPTERS = load_adapters()
 
+# Override CDEK credentials from Railway environment variables
+_cdek_client_id = os.getenv("CDEK_CLIENT_ID", "")
+_cdek_client_secret = os.getenv("CDEK_CLIENT_SECRET", "")
+if _cdek_client_id and "cdek" in ADAPTERS:
+    ADAPTERS["cdek"]["auth"]["client_id"] = _cdek_client_id
+    ADAPTERS["cdek"]["auth"]["client_secret"] = _cdek_client_secret
+    print(f"[CDEK] Credentials loaded from env: {_cdek_client_id[:8]}...")
+elif _cdek_client_id and "cdek" not in ADAPTERS:
+    # Create CDEK adapter from env if not in files
+    ADAPTERS["cdek"] = {
+        "id": "cdek", "name": "СДЭК",
+        "base_url": "https://api.edu.cdek.ru/v2",
+        "status": "active",
+        "auth": {
+            "type": "oauth2_client_credentials",
+            "token_url": "https://api.edu.cdek.ru/v2/oauth/token",
+            "client_id": _cdek_client_id,
+            "client_secret": _cdek_client_secret,
+            "scope": "order:create order:delete order:read"
+        },
+        "actions": {
+            "calculate_cost": {"method": "POST", "path": "/calculator/tarifflist"},
+            "track": {"method": "GET", "path": "/orders/{order_uuid}"},
+            "create_shipment": {"method": "POST", "path": "/orders"},
+            "book_pickup": {"method": "POST", "path": "/intakes"},
+            "cancel": {"method": "DELETE", "path": "/orders/{order_uuid}"},
+            "get_slots": {"method": "GET", "path": "/deliverypoints"}
+        }
+    }
+    REGISTRY["cdek"] = ADAPTERS["cdek"]
+    print(f"[CDEK] Created adapter from env vars")
+
 # Логи в памяти (для демо)
 CALL_LOGS = [
     {"id": "req_001", "time": "12:24:08.214", "action": "create_shipment", "method": "POST",
