@@ -728,7 +728,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
       </div>
       <div class="log-layout">
         <div class="log-tbl">
-          <div class="tbl-head" style="grid-template-columns:110px 52px 52px 1fr 70px 60px">
+          <div class="tbl-head" style="grid-template-columns:130px 60px 60px 1fr 80px 70px">
             <div>Time</div><div>Method</div><div>Code</div><div>Action · Path</div><div style="text-align:right">Latency</div><div>Env</div>
           </div>
           <div id="log-rows"></div>
@@ -795,6 +795,11 @@ body.dark .earn-card .mono{color:var(--ink)!important}
 <div id="toast"></div>
 <script>
 // Global navigation function — no dependencies
+const SCREEN_LABELS = {
+  overview: 'Overview', actions: 'Actions', credentials: 'Credentials',
+  logs: 'Logs', wizard: 'Onboarding', empty: 'Overview'
+};
+
 window.NAV = function(screen) {
   // Hide all screens
   document.querySelectorAll('[id^="screen-"]').forEach(function(el) {
@@ -804,7 +809,7 @@ window.NAV = function(screen) {
   var target = document.getElementById('screen-' + screen);
   if (target) {
     target.style.display = screen === 'logs' ? 'flex' : 'block';
-    if (screen === 'overview' || screen === 'actions' || screen === 'credentials') {
+    if (['overview','actions','credentials','success'].indexOf(screen) !== -1) {
       target.style.padding = '20px 24px 32px';
     }
   }
@@ -812,15 +817,33 @@ window.NAV = function(screen) {
   document.querySelectorAll('[id^="nav-"]').forEach(function(btn) {
     btn.style.background = 'transparent';
     btn.style.borderColor = 'transparent';
+    btn.style.fontWeight = '500';
+    btn.style.color = 'var(--ms)';
   });
-  var activeBtn = document.getElementById('nav-' + (screen === 'wizard' ? 'onboarding' : screen === 'success' ? 'overview' : screen));
+  var navId = screen === 'wizard' ? 'onboarding' : screen === 'success' ? 'overview' : screen;
+  var activeBtn = document.getElementById('nav-' + navId);
   if (activeBtn) {
-    activeBtn.style.background = 'var(--sf)';
-    activeBtn.style.borderColor = 'var(--line)';
+    activeBtn.style.background = 'rgba(91,33,182,.08)';
+    activeBtn.style.borderColor = 'rgba(91,33,182,.2)';
     activeBtn.style.fontWeight = '600';
-    activeBtn.style.color = 'var(--ink)';
+    activeBtn.style.color = 'var(--v)';
   }
-  // Call render functions if available
+  // Update breadcrumb
+  var partnerName = (typeof STATE !== 'undefined' && STATE.current) ? STATE.current.name : '';
+  var bc = document.getElementById('tb-bc');
+  var tbTitle = document.getElementById('tb-title');
+  if (bc && partnerName) bc.textContent = 'Partners › ' + partnerName;
+  if (tbTitle) tbTitle.textContent = SCREEN_LABELS[screen] || screen;
+  // Update document title
+  if (partnerName) document.title = (SCREEN_LABELS[screen]||screen) + ' — ' + partnerName + ' · Logistics Platform';
+  // Update SPA URL
+  if (typeof PARTNER_LK_ID !== 'undefined' && PARTNER_LK_ID) {
+    var slugs = {actions:'actions',credentials:'credentials',logs:'logs'};
+    var slug = slugs[screen] || '';
+    var newUrl = '/partner/' + PARTNER_LK_ID + (slug ? '/' + slug : '');
+    if (location.pathname !== newUrl) history.pushState({screen:screen}, '', newUrl);
+  }
+  // Call render functions
   if (screen === 'actions' && typeof renderActions === 'function') renderActions();
   if (screen === 'credentials' && typeof renderCredentials === 'function') renderCredentials();
   if (screen === 'logs' && typeof loadLogs === 'function') loadLogs();
@@ -1540,7 +1563,7 @@ function renderLogs(logs, stats) {
     return;
   }
   document.getElementById('log-rows').innerHTML = logs.map((l,i)=>
-    `<div class="tbl-row${l.status>=400?' err-row':''}" style="grid-template-columns:110px 52px 52px 1fr 70px 60px${i===logs.length-1?';border:none':''};cursor:pointer" onclick="showLogDetail(${i})" title="Нажмите для деталей">
+    `<div class="tbl-row${l.status>=400?' err-row':''}" style="grid-template-columns:130px 60px 60px 1fr 80px 70px${i===logs.length-1?';border:none':''};cursor:pointer" onclick="showLogDetail(${i})" title="Нажмите для деталей">
       <span class="mono" style="font-size:12px;color:var(--muted)">${l.time}</span>
       ${mtag(l.method||'POST')}
       <span class="mono" style="font-size:12.5px;font-weight:600;color:${codeColor(l.status)}">${l.status}</span>
