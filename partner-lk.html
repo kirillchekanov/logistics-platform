@@ -794,6 +794,40 @@ body.dark .earn-card .mono{color:var(--ink)!important}
 
 <div id="toast"></div>
 <script>
+// Global navigation function — no dependencies
+window.NAV = function(screen) {
+  // Hide all screens
+  document.querySelectorAll('[id^="screen-"]').forEach(function(el) {
+    el.style.display = 'none';
+  });
+  // Show target screen
+  var target = document.getElementById('screen-' + screen);
+  if (target) {
+    target.style.display = screen === 'logs' ? 'flex' : 'block';
+    if (screen === 'overview' || screen === 'actions' || screen === 'credentials') {
+      target.style.padding = '20px 24px 32px';
+    }
+  }
+  // Update nav active state
+  document.querySelectorAll('[id^="nav-"]').forEach(function(btn) {
+    btn.style.background = 'transparent';
+    btn.style.borderColor = 'transparent';
+  });
+  var activeBtn = document.getElementById('nav-' + (screen === 'wizard' ? 'onboarding' : screen === 'success' ? 'overview' : screen));
+  if (activeBtn) {
+    activeBtn.style.background = 'var(--sf)';
+    activeBtn.style.borderColor = 'var(--line)';
+    activeBtn.style.fontWeight = '600';
+    activeBtn.style.color = 'var(--ink)';
+  }
+  // Call render functions if available
+  if (screen === 'actions' && typeof renderActions === 'function') renderActions();
+  if (screen === 'credentials' && typeof renderCredentials === 'function') renderCredentials();
+  if (screen === 'logs' && typeof loadLogs === 'function') loadLogs();
+  if (screen === 'overview' && typeof renderOverview === 'function') renderOverview();
+  if (screen === 'wizard' && typeof handleOnboardingClick === 'function') handleOnboardingClick();
+};
+
 
 function toast(msg, type='ok', duration=3000) {
   const c = document.getElementById('toast');

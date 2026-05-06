@@ -401,11 +401,23 @@ def list_companies():
 
 @app.get("/companies/{company_id}")
 def get_company(company_id: str):
-    co = REGISTRY.get(company_id)
-    adapter = ADAPTERS.get(company_id, {})
-    if not co and not adapter:
+    co = REGISTRY.get(company_id) or ADAPTERS.get(company_id)
+    if not co:
         raise HTTPException(status_code=404, detail=f"Company {company_id} not found")
-    return {"company": co or adapter, "adapter": adapter}
+    actions_list = list((co.get("actions") or {}).keys()) if isinstance(co.get("actions"), dict) else (co.get("actions") or [])
+    return {
+        "id": co.get("id", company_id),
+        "name": co.get("name", company_id),
+        "display_name": co.get("display_name", ""),
+        "base_url": co.get("base_url", ""),
+        "token_url": co.get("auth", {}).get("token_url", "") if isinstance(co.get("auth"), dict) else co.get("token_url", ""),
+        "scope": co.get("auth", {}).get("scope", "") if isinstance(co.get("auth"), dict) else co.get("scope", ""),
+        "status": co.get("status", "active"),
+        "capabilities": co.get("capabilities", []),
+        "actions": actions_list,
+        "calls_today": co.get("calls_today", 0),
+        "token_ttl": co.get("token_ttl", "59m 00s"),
+    }
 
 @app.get("/companies/{company_id}/actions")
 def get_company_actions(company_id: str):
@@ -826,7 +838,10 @@ def serve_partner_lk(partner_id: str):
     """Партнёрский личный кабинет."""
     p = Path(__file__).parent / "partner-lk.html"
     if p.exists():
-        return HTMLResponse(content=p.read_text(encoding="utf-8"))
+        content = p.read_text(encoding="utf-8")
+        logger.info(f"[LK] Serving partner-lk.html: {len(content)} bytes for {partner_id}")
+        return HTMLResponse(content=content)
+    logger.error(f"[LK] partner-lk.html NOT FOUND at {p}")
     return HTMLResponse(content="<h1>partner-lk.html not found</h1>", status_code=404)
 
 @app.get("/portal", response_class=HTMLResponse)
