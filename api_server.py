@@ -1554,6 +1554,10 @@ def get_wallet(partner_id: str):
     }
 
 
+
+# ── Chain & Client API ────────────────────────────────────────────────────────
+from chain_api import register_chain_routes
+register_chain_routes(app, get_db, ADAPTERS)
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8001))
     print(f"\n{'='*55}")
