@@ -337,6 +337,17 @@ body.dark .earn-card .mono{color:var(--ink)!important}
   line-height: 1.2;
   min-height: 29px;
 }
+
+#screen-wallet.active{display:block;padding:20px 24px 32px}
+.tx-row{display:grid;grid-template-columns:110px 1fr 90px 100px 90px;gap:12px;align-items:center;padding:10px 16px;border-bottom:0.5px solid var(--line);font-size:12px;transition:background .1s;cursor:pointer}
+.tx-row:hover{background:var(--sf2)}
+.tx-row:last-child{border:none}
+.tx-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;white-space:nowrap;text-align:center}
+.tx-status.paid{background:#dcfce7;color:#166534}
+.tx-status.pending{background:#fef3c7;color:#92400e}
+.tx-status.processing{background:#dbeafe;color:#1e40af}
+.payout-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:0.5px solid var(--line);font-size:12px}
+.payout-row:last-child{border:none}
 </style>
 </head>
 <body>
@@ -359,24 +370,29 @@ body.dark .earn-card .mono{color:var(--ink)!important}
     <div class="nav-label">Партнёрский портал</div>
     <button class="nav-a active" data-screen="overview" id="nav-overview" onclick="(function(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-overview').classList.add('active');if(typeof renderOverview==='function')renderOverview();})()">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
-      Overview
+      Обзор
     </button>
     <button class="nav-a" data-screen="wizard" id="nav-onboarding" onclick="handleOnboardingClick()">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h16"/><circle cx="18" cy="12" r="2"/></svg>
-      Onboarding
+      Подключение
     </button>
     <button class="nav-a" data-screen="actions" id="nav-actions" onclick="(function(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-actions').classList.add('active');if(typeof renderActions==='function')renderActions();})()">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
-      Actions
+      Действия
     </button>
     <button class="nav-a" data-screen="credentials" id="nav-credentials" onclick="(function(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-credentials').classList.add('active');if(typeof renderCredentials==='function')renderCredentials();})()">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg>
-      Credentials
+      Доступы
     </button>
     <button class="nav-a" data-screen="logs" id="nav-logs" onclick="(function(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-logs').classList.add('active');if(typeof loadLogs==='function')loadLogs();})()">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6"/><rect x="4" y="14" width="16" height="6"/><circle cx="7" cy="7" r=".5" fill="currentColor"/><circle cx="7" cy="17" r=".5" fill="currentColor"/></svg>
-      Logs
+      Логи
       <span class="badge soft-warn" id="log-badge" style="margin-left:auto;display:none;font-size:11px;padding:1px 7px">0</span>
+    </button>
+    <button style="display:flex;align-items:center;gap:10px;padding:7px 10px;font-size:13px;font-weight:500;color:var(--ms);background:transparent;border:1px solid transparent;border-radius:8px;cursor:pointer;width:100%;text-align:left" id="nav-wallet" onclick="NAV('wallet')" onmouseover="this.style.background='var(--sf)'" onmouseout="this.style.background='transparent'">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01"/><path d="M2 10h20"/></svg>
+      Кошелёк
+      <span id="wallet-badge" style="margin-left:auto;display:none;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:var(--g50);color:var(--g700)">0 ₽</span>
     </button>
   </div>
 
@@ -806,9 +822,9 @@ body.dark .earn-card .mono{color:var(--ink)!important}
 <div id="toast"></div>
 <script>
 // Global navigation function — no dependencies
-const SCREEN_LABELS = {
-  overview: 'Overview', actions: 'Actions', credentials: 'Credentials',
-  logs: 'Logs', wizard: 'Onboarding', empty: 'Overview'
+const SCREEN_LABELS = {wallet:'Кошелёк',
+  overview: 'Обзор', actions: 'Действия', credentials: 'Доступы',
+  logs: 'Логи', wizard: 'Подключение', empty: 'Обзор'
 };
 
 window.NAV = function(screen) {
@@ -843,7 +859,7 @@ window.NAV = function(screen) {
   var partnerName = (typeof STATE !== 'undefined' && STATE.current) ? STATE.current.name : '';
   var bc = document.getElementById('tb-bc');
   var tbTitle = document.getElementById('tb-title');
-  if (bc && partnerName) bc.textContent = 'Partners › ' + partnerName;
+  if (bc && partnerName) bc.textContent = 'Партнёры › ' + partnerName;
   if (tbTitle) tbTitle.textContent = SCREEN_LABELS[screen] || screen;
   // Update document title
   if (partnerName) document.title = (SCREEN_LABELS[screen]||screen) + ' — ' + partnerName + ' · Logistics Platform';
@@ -860,6 +876,7 @@ window.NAV = function(screen) {
   if (screen === 'logs' && typeof loadLogs === 'function') loadLogs();
   if (screen === 'overview' && typeof renderOverview === 'function') renderOverview();
   if (screen === 'wizard' && typeof handleOnboardingClick === 'function') handleOnboardingClick();
+  if (screen === 'wallet' && typeof renderWallet === 'function') renderWallet();
   // Auto-close mobile sidebar
   if(window.innerWidth <= 700 && typeof closeMobileSidebar === 'function') closeMobileSidebar();
 };
@@ -998,10 +1015,10 @@ function toggleSecret(){
 const TB_CFG = {
   empty:       {bc:"Партнёрский портал",title:"Добро пожаловать",badge:"",actions:""},
   wizard:      {bc:"Партнёрский портал › Onboarding",title:"Подключить компанию",badge:"",actions:""},
-  overview:    {bc:"Partners › {n} › Overview",title:"{n}",badge:"подключён",actions:"run-health"},
-  actions:     {bc:"Partners › {n} › Actions",title:"Actions",badge:"",actions:"export"},
-  credentials: {bc:"Partners › {n} › Credentials",title:"Credentials",badge:"",actions:"rotate"},
-  logs:        {bc:"Partners › {n} › Logs",title:"Call logs",badge:"errors",actions:"export-csv"},
+  overview:    {bc:"Партнёры › {n} › Overview",title:"{n}",badge:"подключён",actions:"run-health"},
+  actions:     {bc:"Партнёры › {n} › Actions",title:"Actions",badge:"",actions:"export"},
+  credentials: {bc:"Партнёры › {n} › Credentials",title:"Credentials",badge:"",actions:"rotate"},
+  logs:        {bc:"Партнёры › {n} › Logs",title:"Call logs",badge:"errors",actions:"export-csv"},
 };
 
 function showSuccessScreen() {
@@ -2434,6 +2451,169 @@ function toggleDark(el) {
   } catch(e) {}
 })();
 
+
+// ── Wallet ────────────────────────────────────────────────────────────────────
+const SCREEN_LABELS_EXT = {wallet:'Кошелёк'};
+Object.assign(SCREEN_LABELS || {}, SCREEN_LABELS_EXT);
+
+let _walletData = null;
+let _walletFilter = 'all';
+
+async function renderWallet() {
+  if(!STATE.current) return;
+  const co = STATE.current;
+
+  // Set payout date
+  const d = new Date(); d.setDate(15);
+  if(d <= new Date()) d.setMonth(d.getMonth()+1);
+  const dateStr = d.toLocaleDateString('ru',{day:'numeric',month:'long'});
+  ['w-payout-date','w-next-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=dateStr;});
+
+  // Load wallet data from API
+  try {
+    const data = await apiFetch('/wallet/'+co.id);
+    if(data && !data.error) {
+      _walletData = data;
+      updateWalletUI(data);
+      return;
+    }
+  } catch(e) {}
+
+  // Fallback: empty state (product not launched)
+  _walletData = {balance:0,pending:0,month:0,total_paid:0,chains:0,transactions:[],payouts:[]};
+  updateWalletUI(_walletData);
+}
+
+function updateWalletUI(data) {
+  const fmt = n => Math.round(n||0).toLocaleString('ru') + ' ₽';
+  const setEl = (id,v) => {const el=document.getElementById(id);if(el)el.textContent=v;};
+
+  setEl('w-pending', fmt(data.pending||0));
+  setEl('w-month', fmt(data.month||0));
+  setEl('w-total-paid', fmt(data.total_paid||0));
+  setEl('w-chains', data.chains||0);
+  setEl('w-next-amount', fmt(data.pending||0));
+  setEl('w-payouts-count', (data.payouts||[]).length + ' выплат');
+  setEl('w-month-sub', (data.transactions||[]).length > 0 ? (data.transactions.length+' транзакций') : 'ещё нет транзакций');
+  setEl('w-tx-sub', (data.transactions||[]).length + ' операций');
+
+  // Update wallet badge
+  const badge = document.getElementById('wallet-badge');
+  if(badge && (data.pending||0) > 0) {
+    badge.style.display='inline-block';
+    badge.textContent = fmt(data.pending);
+  }
+
+  renderTransactions(data.transactions||[]);
+  renderPayouts(data.payouts||[]);
+
+  // Requisites preview
+  const req = loadRequisites();
+  const previewEl = document.getElementById('w-req-preview');
+  if(previewEl && req && req.name) {
+    previewEl.innerHTML = `<span style="color:var(--ink);font-weight:500">${req.name}</span> · р/с ${req.acc ? req.acc.slice(-4).padStart(req.acc.length,'•') : '—'}`;
+  }
+}
+
+function renderTransactions(txs) {
+  const filtered = _walletFilter==='paid' ? txs.filter(t=>t.status==='paid')
+                 : _walletFilter==='pending' ? txs.filter(t=>t.status!=='paid')
+                 : txs;
+
+  const list = document.getElementById('w-tx-list');
+  if(!list) return;
+
+  if(!filtered.length) {
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted)">
+      <div style="font-size:28px;margin-bottom:12px;opacity:.3">₽</div>
+      <div style="font-size:14px;font-weight:500;color:var(--ink);margin-bottom:6px">Транзакций пока нет</div>
+      <div style="font-size:12px">Они появятся после первой успешной доставки в цепочке платформы</div>
+    </div>`;
+    return;
+  }
+
+  const statusBadge = s => ({
+    paid: '<span class="tx-status paid">● Оплачено</span>',
+    pending: '<span class="tx-status pending">⏳ Ожидает</span>',
+    processing: '<span class="tx-status processing">↻ Обработка</span>',
+  }[s] || '<span class="tx-status pending">—</span>');
+
+  list.innerHTML = filtered.map((t,i) => `
+    <div class="tx-row" style="${i===filtered.length-1?'border:none':''}">
+      <span style="color:var(--muted)">${t.date||'—'}</span>
+      <div>
+        <div style="font-weight:500;font-size:12px">${t.chain||t.description||'Цепочка доставки'}</div>
+        <div style="font-size:11px;color:var(--muted)">${t.route||''}</div>
+      </div>
+      <span class="mono" style="text-align:right;font-weight:600;color:var(--g700)">+${Math.round(t.amount||0).toLocaleString('ru')} ₽</span>
+      ${statusBadge(t.status||'pending')}
+      <span style="text-align:right;color:var(--muted)">${t.payout_date||'—'}</span>
+    </div>`).join('');
+}
+
+function renderPayouts(payouts) {
+  const list = document.getElementById('w-payouts-list');
+  if(!list) return;
+  if(!payouts.length) {
+    list.innerHTML = '<div style="padding:20px 16px;text-align:center;color:var(--muted);font-size:12px">Выплат пока не было</div>';
+    return;
+  }
+  list.innerHTML = payouts.map((p,i) => `
+    <div class="payout-row" style="${i===payouts.length-1?'border:none':''}">
+      <div style="width:32px;height:32px;border-radius:8px;background:var(--g50);border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">💸</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500">${p.date}</div>
+        <div style="font-size:11px;color:var(--muted)">${p.method||'Банковский перевод'}</div>
+      </div>
+      <span class="mono" style="font-weight:600;color:var(--ink)">${Math.round(p.amount||0).toLocaleString('ru')} ₽</span>
+    </div>`).join('');
+}
+
+function filterWallet(type, btn) {
+  _walletFilter = type;
+  document.querySelectorAll('[id^="wf-"]').forEach(b=>{b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  renderTransactions(_walletData?.transactions||[]);
+}
+
+function showRequisites() {
+  const req = loadRequisites();
+  if(req) {
+    ['name','inn','kpp','acc','bik','bank','cor'].forEach(k=>{
+      const el=document.getElementById('req-'+k);
+      if(el && req[k]) el.value=req[k];
+    });
+  }
+  document.getElementById('req-modal').style.display='flex';
+}
+
+function saveRequisites() {
+  const req = {};
+  ['name','inn','kpp','acc','bik','bank','cor'].forEach(k=>{
+    const el=document.getElementById('req-'+k);
+    if(el) req[k]=el.value;
+  });
+  try { localStorage.setItem('req_'+STATE.current?.id, JSON.stringify(req)); } catch(e) {}
+  document.getElementById('req-modal').style.display='none';
+  toast('Реквизиты сохранены','ok');
+  updateWalletUI(_walletData||{});
+}
+
+function loadRequisites() {
+  try { return JSON.parse(localStorage.getItem('req_'+STATE.current?.id)||'null'); } catch(e) { return null; }
+}
+
+function exportWalletCSV() {
+  const txs = _walletData?.transactions||[];
+  if(!txs.length) { toast('Нет данных для экспорта','info'); return; }
+  const rows = [['Дата','Цепочка','Маршрут','Сумма','Статус','Дата выплаты'],...txs.map(t=>[t.date,t.chain||t.description,t.route,t.amount,t.status,t.payout_date])];
+  const csv = rows.map(r=>r.join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download = 'wallet_'+STATE.current?.id+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click(); toast('CSV скачан');
+}
+
 // ── Server ping ───────────────────────────────────────────────────────────────
 async function pingServer(){
   try{
@@ -2747,3 +2927,141 @@ if (APP_MODE === 'partner_lk') {
 
 </body>
 </html>
+    <!-- ══ WALLET ══ -->
+    <div class="screen" id="screen-wallet">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div>
+          <h2 style="font-size:18px;font-weight:600">Кошелёк</h2>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Доходы, выплаты и финансовая история</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn sm" onclick="exportWalletCSV()">↓ Экспорт CSV</button>
+          <button class="btn sm primary" onclick="showRequisites()">⚙ Реквизиты</button>
+        </div>
+      </div>
+
+      <!-- Balance cards -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+        <div class="card" style="border-left:3px solid var(--g600)">
+          <div style="padding:14px 16px">
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">К выплате</div>
+            <div class="mono" style="font-size:24px;font-weight:700;color:var(--ink)" id="w-pending">0 ₽</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">выплата <span style="color:var(--g600);font-weight:600" id="w-payout-date">15 числа</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--v)">
+          <div style="padding:14px 16px">
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">За этот месяц</div>
+            <div class="mono" style="font-size:24px;font-weight:700;color:var(--ink)" id="w-month">0 ₽</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px" id="w-month-sub">ещё нет транзакций</div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--b600)">
+          <div style="padding:14px 16px">
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Всего выплачено</div>
+            <div class="mono" style="font-size:24px;font-weight:700;color:var(--ink)" id="w-total-paid">0 ₽</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px" id="w-payouts-count">0 выплат</div>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid #94a3b8">
+          <div style="padding:14px 16px">
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Активных цепочек</div>
+            <div class="mono" style="font-size:24px;font-weight:700;color:var(--ink)" id="w-chains">0</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">с вашим участием</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:16px">
+        <!-- Transactions -->
+        <div>
+          <div class="card">
+            <div class="card-head">
+              <div><div class="card-title">История транзакций</div><div class="card-sub" id="w-tx-sub">Загрузка…</div></div>
+              <div style="display:flex;gap:6px">
+                <button class="log-fpill active" id="wf-all" onclick="filterWallet('all',this)">Все</button>
+                <button class="log-fpill" id="wf-paid" onclick="filterWallet('paid',this)">Оплачено</button>
+                <button class="log-fpill" id="wf-pending" onclick="filterWallet('pending',this)">Ожидает</button>
+              </div>
+            </div>
+            <div class="tbl-head" style="grid-template-columns:110px 1fr 90px 100px 90px">
+              <div>Дата</div><div>Цепочка</div><div style="text-align:right">Сумма</div><div>Статус</div><div style="text-align:right">Выплата</div>
+            </div>
+            <div id="w-tx-list">
+              <div style="text-align:center;padding:40px;color:var(--muted)">
+                <div style="font-size:28px;margin-bottom:12px;opacity:.3">₽</div>
+                <div style="font-size:14px;font-weight:500;color:var(--ink);margin-bottom:6px">Транзакций пока нет</div>
+                <div style="font-size:12px">Они появятся после первой успешной доставки в цепочке</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payouts + Requisites -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <!-- Next payout -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Следующая выплата</div></div>
+            <div style="padding:14px 16px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <div>
+                  <div class="mono" style="font-size:22px;font-weight:700" id="w-next-amount">0 ₽</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">к перечислению <span id="w-next-date" style="color:var(--g600);font-weight:600">15 числа</span></div>
+                </div>
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--g50);border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:18px">💳</div>
+              </div>
+              <div style="background:var(--sf2);border-radius:7px;padding:10px 12px;font-size:12px">
+                <div id="w-req-preview" style="color:var(--muted)">Реквизиты не указаны · <button onclick="showRequisites()" style="background:none;border:none;cursor:pointer;color:var(--v);font-size:12px;font-weight:500;padding:0">Добавить →</button></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payout history -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">История выплат</div></div>
+            <div id="w-payouts-list">
+              <div style="padding:20px 16px;text-align:center;color:var(--muted);font-size:12px">Выплат пока не было</div>
+            </div>
+          </div>
+
+          <!-- Documents -->
+          <div class="card">
+            <div class="card-head">
+              <div><div class="card-title">Документы</div><div class="card-sub">Акты, счета-фактуры</div></div>
+            </div>
+            <div style="padding:14px 16px;text-align:center;color:var(--muted)">
+              <div style="font-size:11px;margin-bottom:8px">Документы формируются автоматически после каждой выплаты</div>
+              <button class="btn sm" disabled style="opacity:.45;cursor:not-allowed">Документов пока нет</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requisites modal -->
+      <div id="req-modal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:400;align-items:center;justify-content:center">
+        <div class="modal" style="width:480px">
+          <div style="padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:15px;font-weight:600">Платёжные реквизиты</div>
+            <button onclick="document.getElementById('req-modal').style.display='none'" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px">×</button>
+          </div>
+          <div style="padding:20px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="grid-column:1/-1"><label class="field-label">Название организации</label><input class="inp mono" id="req-name" placeholder="ООО Даркстор у дома"></div>
+              <div><label class="field-label">ИНН</label><input class="inp mono" id="req-inn" placeholder="7712345678" maxlength="12"></div>
+              <div><label class="field-label">КПП</label><input class="inp mono" id="req-kpp" placeholder="770101001" maxlength="9"></div>
+              <div style="grid-column:1/-1"><label class="field-label">Расчётный счёт</label><input class="inp mono" id="req-acc" placeholder="40702810000000012345" maxlength="20"></div>
+              <div><label class="field-label">БИК банка</label><input class="inp mono" id="req-bik" placeholder="044525225" maxlength="9"></div>
+              <div><label class="field-label">Банк</label><input class="inp mono" id="req-bank" placeholder="Сбербанк России"></div>
+              <div style="grid-column:1/-1"><label class="field-label">Кор. счёт</label><input class="inp mono" id="req-cor" placeholder="30101810400000000225" maxlength="20"></div>
+            </div>
+          </div>
+          <div style="padding:12px 20px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end">
+            <button class="btn" onclick="document.getElementById('req-modal').style.display='none'">Отмена</button>
+            <button class="btn primary" onclick="saveRequisites()">Сохранить реквизиты</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
