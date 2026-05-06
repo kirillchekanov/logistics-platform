@@ -151,12 +151,12 @@ async def call_real_api(base_url: str, method: str, path: str,
 
 # Подключаем наш adapter и orchestrator
 sys.path.insert(0, str(Path(__file__).parent))
-sys.path.insert(0, str(Path(__file__).parent.parent / "http-adapter"))
+sys.path.insert(0, str(Path(__file__).parent / "http-adapter"))
 
 # ── Загрузка реестра ──────────────────────────────────────────────────────────
 
 REGISTRY_DIR = Path(__file__).parent / "registry"
-ADAPTERS_DIR = Path(__file__).parent.parent / "http-adapter" / "adapters"
+ADAPTERS_DIR = Path(__file__).parent / "http-adapter" / "adapters"
 
 def load_registry():
     registry = {}
