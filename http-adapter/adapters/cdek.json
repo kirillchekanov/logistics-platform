@@ -1,0 +1,60 @@
+{
+  "id": "cdek",
+  "name": "СДЭК",
+  "display_name": "СДЭК — экспресс-доставка",
+  "base_url": "https://api.edu.cdek.ru/v2",
+  "status": "active",
+  "capabilities": [
+    "last_mile_delivery",
+    "express",
+    "pickup_points",
+    "cod"
+  ],
+  "auth": {
+    "type": "oauth2_client_credentials",
+    "token_url": "https://api.edu.cdek.ru/v2/oauth/token",
+    "client_id": "EMscd6r9JnFiQ3bLoyjJY6eM78JrJceI",
+    "client_secret": "PjLZkKBHEiLK3YsjtNrt1ZBHR3a4jq4x",
+    "scope": "order:create order:delete order:read",
+    "grant_type": "client_credentials"
+  },
+  "actions": {
+    "create_shipment": {
+      "method": "POST",
+      "path": "/orders",
+      "description": "Создать заказ на доставку"
+    },
+    "book_pickup": {
+      "method": "POST",
+      "path": "/intakes",
+      "description": "Забронировать забор посылки"
+    },
+    "track": {
+      "method": "GET",
+      "path": "/orders/{order_uuid}",
+      "description": "Получить статус заказа"
+    },
+    "calculate_cost": {
+      "method": "POST",
+      "path": "/calculator/tarifflist",
+      "description": "Рассчитать стоимость доставки"
+    },
+    "cancel": {
+      "method": "DELETE",
+      "path": "/orders/{order_uuid}",
+      "description": "Отменить заказ"
+    },
+    "get_slots": {
+      "method": "GET",
+      "path": "/deliverypoints",
+      "description": "Получить список пунктов выдачи"
+    }
+  },
+  "response_map": {
+    "order.id": "entity.uuid",
+    "order.status": "entity.statuses[0].name",
+    "order.tracking_number": "entity.cdek_number",
+    "cost.total": "delivery_sum",
+    "cost.currency": "currency"
+  }
+}
