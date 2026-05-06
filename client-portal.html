@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<title>Личный кабинет</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --bg-2: #efeee9;
+    --surface: #ffffff;
+    --surface-2: #faf9f5;
+    --hover: #f0efea;
+    --line: #e6e4dc;
+    --line-2: #dcd9cf;
+    --text: #1a1a1a;
+    --text-2: #5a5a55;
+    --text-3: #8c8b85;
+    --accent: #d4f542;
+    --accent-2: #c8eb38;
+    --accent-dim: rgba(212, 245, 66, 0.25);
+    --accent-line: rgba(212, 245, 66, 0.6);
+    --ink: #1a1a1a;
+    --green: oklch(0.62 0.16 155);
+    --red: oklch(0.58 0.22 25);
+    --yellow: oklch(0.72 0.16 90);
+    --pastel-pink: #ffd9e0;
+    --pastel-blue: #d9e7ff;
+    --pastel-mint: #c8f0e0;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-size: 14px; line-height: 1.5; }
+  body { letter-spacing: -0.005em; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input, textarea { font-family: inherit; }
+  a { color: inherit; text-decoration: none; }
+
+  .app { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar { background: var(--bg); border-right: 1px solid var(--line); padding: 20px 16px; display: flex; flex-direction: column; gap: 28px; position: sticky; top: 0; height: 100vh; }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px; }
+  .brand-mark { width: 26px; height: 26px; border-radius: 8px; background: var(--ink); display: grid; place-items: center; color: var(--accent); font-family: var(--mono); font-weight: 700; font-size: 13px; }
+  .brand-name { font-weight: 600; font-size: 13px; letter-spacing: -0.01em; }
+  .brand-sub { font-size: 11px; color: var(--text-3); font-family: var(--mono); }
+
+  .client-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .client-card .label { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .client-card .name { font-size: 13px; font-weight: 500; word-break: break-word; }
+  .client-card .id { font-family: var(--mono); font-size: 11px; color: var(--text-2); }
+
+  .nav { display: flex; flex-direction: column; gap: 2px; }
+  .nav-label { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; padding: 0 8px 8px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 999px; color: var(--text-2); font-size: 13px; transition: background 0.1s, color 0.1s; }
+  .nav-item:hover { background: var(--bg-2); color: var(--text); }
+  .nav-item.active { background: var(--ink); color: #fff; }
+  .nav-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.85; }
+  .nav-item.active svg { color: var(--accent); opacity: 1; }
+
+  .sidebar-foot { margin-top: auto; font-size: 11px; color: var(--text-3); padding: 0 8px; font-family: var(--mono); display: flex; align-items: center; gap: 6px; }
+  .pulse { width: 6px; height: 6px; border-radius: 999px; background: var(--green); box-shadow: 0 0 0 3px oklch(0.62 0.16 155 / 0.18); }
+
+  /* Main */
+  .main { padding: 0; min-width: 0; }
+  .topbar { padding: 18px 32px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .crumbs { font-size: 13px; color: var(--text-2); display: flex; align-items: center; gap: 8px; }
+  .crumbs .sep { color: var(--text-3); }
+  .crumbs .current { color: var(--text); font-weight: 500; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 8px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; transition: background 0.1s, border-color 0.1s; }
+  .btn { border-radius: 999px; padding: 8px 16px; }
+  .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--line-2); }
+  .btn-ghost:hover { background: var(--surface); border-color: var(--text-3); }
+  .btn-primary { background: var(--accent); color: var(--ink); }
+  .btn-primary:hover { background: var(--accent-2); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-dark { background: var(--ink); color: #fff; }
+  .btn-dark:hover { background: #2a2a2a; }
+  .btn svg { width: 14px; height: 14px; }
+
+  .content { padding: 32px; max-width: 1100px; }
+
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 24px; }
+  .page-title { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+  .page-sub { font-size: 13px; color: var(--text-2); margin-top: 4px; }
+
+  /* Balance card */
+  .balance-card { background: var(--accent); border-radius: 24px; padding: 32px 32px 28px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; color: var(--ink); }
+  .balance-info .label { font-size: 12px; color: rgba(26,26,26,0.65); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; font-weight: 500; }
+  .balance-info .label .dot-live { width: 6px; height: 6px; border-radius: 999px; background: var(--ink); }
+  .balance-amount { font-family: var(--sans); font-size: 64px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: var(--ink); }
+  .balance-amount .currency { color: rgba(26,26,26,0.55); margin-left: 6px; font-size: 40px; font-weight: 500; }
+  .balance-meta { display: flex; gap: 28px; margin-top: 18px; font-size: 13px; color: rgba(26,26,26,0.7); }
+  .balance-meta .num { font-family: var(--mono); color: var(--ink); font-weight: 500; }
+  .balance-actions { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+  .balance-actions .btn-dark { padding: 14px 22px; justify-content: center; font-size: 14px; border-radius: 999px; }
+
+  /* Sections */
+  .section { margin-top: 36px; }
+  .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .section-title { font-size: 13px; font-weight: 600; letter-spacing: -0.005em; }
+  .section-sub { font-size: 12px; color: var(--text-3); font-family: var(--mono); }
+
+  /* Table */
+  .table { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .row { display: grid; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .row:last-child { border-bottom: none; }
+  .row.head { background: var(--surface-2); color: var(--text-3); font-size: 11px; letter-spacing: 0.04em; padding: 11px 20px; font-weight: 500; }
+  .row.tx { grid-template-columns: 110px 1fr 130px 140px; gap: 16px; }
+  .row.chain { grid-template-columns: 110px 1fr 130px 140px 32px; gap: 16px; cursor: pointer; transition: background 0.1s; }
+  .row.chain:hover { background: var(--hover); }
+  .col-mono { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+  .col-amount { font-family: var(--mono); text-align: right; }
+  .col-amount.debit { color: var(--text); }
+  .col-amount.credit { color: var(--green); }
+  .col-amount { font-weight: 500; }
+  .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .empty { padding: 32px 16px; text-align: center; color: var(--text-3); font-size: 13px; }
+  .skeleton { background: linear-gradient(90deg, var(--bg-2) 0%, #e8e6df 50%, var(--bg-2) 100%); background-size: 200% 100%; animation: shimmer 1.4s infinite linear; height: 12px; border-radius: 3px; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* Status pills */
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-family: var(--mono); border: 1px solid var(--line); background: var(--surface-2); color: var(--text-2); font-weight: 500; }
+  .pill .pdot { width: 5px; height: 5px; border-radius: 999px; background: currentColor; }
+  .pill.success { color: oklch(0.45 0.16 155); border-color: oklch(0.62 0.16 155 / 0.35); background: oklch(0.85 0.10 155 / 0.4); }
+  .pill.progress { color: oklch(0.40 0.05 95); border-color: rgba(0,0,0,0.12); background: var(--accent); }
+  .pill.error { color: oklch(0.45 0.20 25); border-color: oklch(0.58 0.22 25 / 0.3); background: oklch(0.92 0.04 25); }
+  .pill.success .pdot, .pill.error .pdot { animation: none; }
+  .pill.progress .pdot { animation: blink 1.2s infinite; }
+  @keyframes blink { 50% { opacity: 0.3; } }
+
+  .chev { color: var(--text-3); display: grid; place-items: center; }
+
+  /* Modal */
+  .scrim { position: fixed; inset: 0; background: rgba(20,20,15,0.45); backdrop-filter: blur(4px); display: grid; place-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.15s; }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .modal { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; width: 480px; max-width: calc(100vw - 32px); max-height: calc(100vh - 32px); overflow: auto; transform: translateY(8px); transition: transform 0.15s; box-shadow: 0 24px 60px rgba(20,20,15,0.12); }
+  .scrim.open .modal { transform: translateY(0); }
+  .modal-head { padding: 20px 24px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+  .modal-title { font-size: 16px; font-weight: 600; }
+  .modal-sub { font-size: 12px; color: var(--text-3); margin-top: 2px; font-family: var(--mono); }
+  .modal-close { width: 28px; height: 28px; border-radius: 6px; display: grid; place-items: center; color: var(--text-2); }
+  .modal-close:hover { background: var(--hover); color: var(--text); }
+  .modal-body { padding: 20px 24px; }
+  .modal-foot { padding: 16px 24px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 8px; background: var(--surface-2); border-radius: 0 0 20px 20px; }
+
+  .amount-input { display: flex; align-items: center; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; transition: border-color 0.1s; }
+  .amount-input:focus-within { border-color: var(--ink); background: var(--surface); }
+  .amount-input input { background: transparent; border: none; outline: none; color: var(--text); font-family: var(--mono); font-size: 24px; font-weight: 500; flex: 1; min-width: 0; padding: 0; }
+  .amount-input .suffix { font-family: var(--mono); font-size: 18px; color: var(--text-3); }
+  .amount-presets { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .preset { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 12px; color: var(--text-2); font-family: var(--mono); }
+  .preset:hover { border-color: var(--ink); color: var(--text); }
+
+  .invoice { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 18px; font-family: var(--mono); font-size: 12px; line-height: 1.7; }
+  .invoice-row { display: grid; grid-template-columns: 130px 1fr; gap: 12px; padding: 4px 0; }
+  .invoice-row .k { color: var(--text-3); }
+  .invoice-row .v { color: var(--text); word-break: break-all; }
+  .invoice-row.total { border-top: 1px dashed var(--line-2); margin-top: 8px; padding-top: 12px; }
+  .invoice-row.total .v { color: var(--ink); font-weight: 700; font-size: 15px; }
+
+  .field-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 8px; }
+  .stack { display: flex; flex-direction: column; gap: 16px; }
+
+  /* Chain detail */
+  .detail-grid { display: grid; grid-template-columns: 110px 1fr; gap: 12px 16px; font-size: 13px; align-items: baseline; }
+  .detail-grid .k { color: var(--text-3); font-size: 12px; }
+  .detail-grid .v { color: var(--text); }
+  .detail-grid .v.mono { font-family: var(--mono); font-size: 12px; }
+
+  .prompt-box { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; font-size: 13px; line-height: 1.55; color: var(--text); margin-top: 6px; }
+
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 8px; position: relative; }
+  .step { display: grid; grid-template-columns: 24px 1fr auto; gap: 12px; padding: 10px 0; align-items: flex-start; position: relative; }
+  .step:not(:last-child)::before { content: ""; position: absolute; left: 11px; top: 24px; bottom: -10px; width: 1px; background: var(--line-2); }
+  .step-dot { width: 24px; height: 24px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--line); display: grid; place-items: center; font-family: var(--mono); font-size: 10px; color: var(--text-3); position: relative; z-index: 1; font-weight: 500; }
+  .step-dot.done { background: oklch(0.85 0.10 155 / 0.5); border-color: oklch(0.62 0.16 155 / 0.45); color: oklch(0.40 0.16 155); }
+  .step-dot.active { background: var(--accent); border-color: rgba(0,0,0,0.15); color: var(--ink); }
+  .step-dot.error { background: oklch(0.92 0.04 25); border-color: oklch(0.58 0.22 25 / 0.4); color: oklch(0.45 0.20 25); }
+  .step-body .partner { font-size: 12px; color: var(--text-3); font-family: var(--mono); margin-top: 2px; }
+  .step-body .label { font-size: 13px; color: var(--text); }
+  .step-cost { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: #fff; border-radius: 999px; padding: 12px 20px; font-size: 13px; display: flex; align-items: center; gap: 10px; transform: translateY(100px); opacity: 0; transition: all 0.2s; z-index: 200; box-shadow: 0 12px 40px rgba(20,20,15,0.2); }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast .tdot { width: 8px; height: 8px; border-radius: 999px; background: var(--green); }
+  .toast.error .tdot { background: var(--red); }
+
+  /* Settings */
+  .settings-grid { display: grid; gap: 12px; }
+  .setting-row { display: grid; grid-template-columns: 1fr auto; padding: 18px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; align-items: center; gap: 16px; }
+  .setting-row .name { font-size: 13px; font-weight: 500; }
+  .setting-row .desc { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+  .setting-row .val { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+
+  .switch { width: 36px; height: 20px; background: var(--line-2); border-radius: 999px; position: relative; transition: background 0.15s; cursor: pointer; flex-shrink: 0; }
+  .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: all 0.15s; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+  .switch.on { background: var(--ink); }
+  .switch.on::after { left: 18px; }
+
+  .copy-row { display: flex; gap: 8px; align-items: center; padding: 8px 14px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; }
+  .copy-row .v { font-family: var(--mono); font-size: 12px; flex: 1; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .copy-btn { color: var(--text-3); padding: 4px; border-radius: 4px; }
+  .copy-btn:hover { color: var(--text); background: var(--hover); }
+
+  .err-banner { background: oklch(0.95 0.04 25); border: 1px solid oklch(0.58 0.22 25 / 0.25); color: oklch(0.40 0.20 25); padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px; }
+  .err-banner svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .hidden { display: none !important; }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 5px; border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">L</div>
+      <div>
+        <div class="brand-name">Logix</div>
+        <div class="brand-sub">v0.4.2</div>
+      </div>
+    </div>
+
+    <div class="client-card" id="clientCard">
+      <div class="label">Клиент</div>
+      <div class="name" id="clientName">—</div>
+      <div class="id" id="clientId">—</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-label">Кабинет</div>
+      <a class="nav-item active" data-tab="balance" href="#balance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h2"/></svg>
+        Баланс
+      </a>
+      <a class="nav-item" data-tab="history" href="#history">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        История цепочек
+      </a>
+      <a class="nav-item" data-tab="settings" href="#settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Настройки
+      </a>
+    </nav>
+
+    <div style="flex: 1;"></div>
+
+    <div class="sidebar-foot">
+      <span class="pulse"></span>
+      <span id="apiHealth">api online</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="crumbs" id="crumbs">
+        <span>Logix</span><span class="sep">/</span><span class="current" id="crumbCurrent">Баланс</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" id="refreshBtn" title="Обновить">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+          Обновить
+        </button>
+        <button class="btn btn-ghost" onclick="window.open('https://chat.logix.ai','_blank')">
+          Открыть AI чат
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div id="errBanner" class="err-banner hidden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 17h.01"/></svg>
+        <div>
+          <div style="font-weight: 500;">Ошибка загрузки</div>
+          <div id="errMsg" style="color: var(--text-2); font-size: 12px; margin-top: 2px; font-family: var(--mono);"></div>
+        </div>
+      </div>
+
+      <!-- BALANCE TAB -->
+      <section class="tab" id="tab-balance">
+        <div class="page-head">
+          <div>
+            <div class="page-title">Баланс и оплата</div>
+            <div class="page-sub">Средства списываются за выполненные AI-цепочки в реальном времени</div>
+          </div>
+        </div>
+
+        <div class="balance-card">
+          <div class="balance-info">
+            <div class="label"><span class="dot-live"></span>Текущий баланс</div>
+            <div class="balance-amount"><span id="balanceAmount">—</span><span class="currency">₽</span></div>
+            <div class="balance-meta">
+              <span>Списаний за месяц: <span class="num" id="monthSpent">—</span> ₽</span>
+              <span>Цепочек: <span class="num" id="monthChains">—</span></span>
+              <span>Обновлено: <span class="num" id="updatedAt">—</span></span>
+            </div>
+          </div>
+          <div class="balance-actions">
+            <button class="btn btn-dark" id="topupBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+              Пополнить баланс
+            </button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div class="section-title">Последние списания</div>
+            <div class="section-sub" id="txCount">—</div>
+          </div>
+          <div class="table" id="txTable">
+            <div class="row head tx">
+              <span>Дата</span>
+              <span>Описание</span>
+              <span style="text-align:right">Тип</span>
+              <span style="text-align:right">Сумма</span>
+            </div>
+            <div id="txBody">
+              <div class="row tx"><div class="skeleton" style="width:80px"></div><div class="skeleton" style="width:60%"></div><div class="skeleton" style="width:60px;justify-self:end"></div><div class="skeleton" style="width:80px;justify-self:end"></div></div>
+              <div class="row tx"><div class="skeleton" style="width:80px"></div><div class="skeleton" style="width:50%"></div><div class="skeleton" style="width:60px;justify-self:end"></div><div class="skeleton" style="width:80px;justify-self:end"></div></div>
+              <div class="row tx"><div class="skeleton" style="width:80px"></div><div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:60px;justify-self:end"></div><div class="skeleton" style="width:80px;justify-self:end"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HISTORY TAB -->
+      <section class="tab hidden" id="tab-history">
+        <div class="page-head">
+          <div>
+            <div class="page-title">История цепочек</div>
+            <div class="page-sub">Все AI-цепочки, запущенные через чат</div>
+          </div>
+          <div class="section-sub" id="chainCount">—</div>
+        </div>
+
+        <div class="table" id="chainTable">
+          <div class="row head chain">
+            <span>Дата</span>
+            <span>Промт</span>
+            <span>Статус</span>
+            <span style="text-align:right">Стоимость</span>
+            <span></span>
+          </div>
+          <div id="chainBody">
+            <div class="row chain"><div class="skeleton" style="width:80px"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:80px"></div><div class="skeleton" style="width:80px;justify-self:end"></div><span></span></div>
+            <div class="row chain"><div class="skeleton" style="width:80px"></div><div class="skeleton" style="width:60%"></div><div class="skeleton" style="width:80px"></div><div class="skeleton" style="width:80px;justify-self:end"></div><span></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS TAB -->
+      <section class="tab hidden" id="tab-settings">
+        <div class="page-head">
+          <div>
+            <div class="page-title">Настройки</div>
+            <div class="page-sub">Профиль клиента и интеграции</div>
+          </div>
+        </div>
+
+        <div class="settings-grid" id="settingsGrid">
+          <!-- populated by JS -->
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- TOPUP MODAL -->
+<div class="scrim" id="topupScrim">
+  <div class="modal" id="topupModal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Пополнение баланса</div>
+        <div class="modal-sub" id="invoiceNo">счёт №—</div>
+      </div>
+      <button class="modal-close" data-close>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="stack">
+        <div>
+          <div class="field-label">Сумма пополнения</div>
+          <div class="amount-input">
+            <input type="text" id="topupAmount" value="50000" inputmode="numeric" />
+            <span class="suffix">₽</span>
+          </div>
+          <div class="amount-presets">
+            <button class="preset" data-preset="10000">10 000</button>
+            <button class="preset" data-preset="50000">50 000</button>
+            <button class="preset" data-preset="100000">100 000</button>
+            <button class="preset" data-preset="500000">500 000</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="field-label">Реквизиты для оплаты</div>
+          <div class="invoice">
+            <div class="invoice-row"><span class="k">Получатель</span><span class="v">ООО «Логикс Сервис»</span></div>
+            <div class="invoice-row"><span class="k">ИНН / КПП</span><span class="v">9728145672 / 772801001</span></div>
+            <div class="invoice-row"><span class="k">Банк</span><span class="v">АО «Тинькофф Банк», г. Москва</span></div>
+            <div class="invoice-row"><span class="k">БИК</span><span class="v">044525974</span></div>
+            <div class="invoice-row"><span class="k">Р/счёт</span><span class="v">40702 810 1 1000 0429318</span></div>
+            <div class="invoice-row"><span class="k">К/счёт</span><span class="v">30101 810 1 4525 0000974</span></div>
+            <div class="invoice-row"><span class="k">Назначение</span><span class="v" id="invoicePurpose">Пополнение баланса по договору №—</span></div>
+            <div class="invoice-row total"><span class="k">К оплате</span><span class="v" id="invoiceTotal">— ₽</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close>Отмена</button>
+      <button class="btn btn-ghost" id="downloadPdfBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Скачать счёт PDF
+      </button>
+      <button class="btn btn-primary" id="confirmTopupBtn">Подтвердить оплату</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHAIN DETAIL MODAL -->
+<div class="scrim" id="chainScrim">
+  <div class="modal" id="chainModal" style="width: 600px;">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Детали цепочки</div>
+        <div class="modal-sub" id="chainDetailId">—</div>
+      </div>
+      <button class="modal-close" data-close>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="chainModalBody">
+      <!-- populated -->
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="tdot"></span><span id="toastMsg">—</span></div>
+
+<script>
+//============== CONFIG ==============
+const API_BASE = "https://web-production-93110.up.railway.app";
+
+// Parse client_id from URL: /client/{id} OR ?client={id}
+function getClientId() {
+  const m = location.pathname.match(/\/client\/([^/?#]+)/);
+  if (m) return m[1];
+  const params = new URLSearchParams(location.search);
+  return params.get("client") || params.get("client_id") || "demo-client";
+}
+const CLIENT_ID = getClientId();
+
+//============== UTIL ==============
+const fmt = {
+  rub: (n) => {
+    if (n == null || isNaN(n)) return "0";
+    return Number(n).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
+  },
+  date: (s) => {
+    if (!s) return "—";
+    const d = new Date(s);
+    if (isNaN(d)) return s;
+    return d.toLocaleDateString("ru-RU", { day: "2-digit", month: "short" }) + " " +
+           d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+  },
+  dateShort: (s) => {
+    if (!s) return "—";
+    const d = new Date(s);
+    if (isNaN(d)) return s;
+    return d.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }) + "·" +
+           d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+  }
+};
+
+function $(sel, root = document) { return root.querySelector(sel); }
+function $$(sel, root = document) { return [...root.querySelectorAll(sel)]; }
+
+function showToast(msg, type = "ok") {
+  const t = $("#toast");
+  $("#toastMsg").textContent = msg;
+  t.classList.toggle("error", type === "error");
+  t.classList.add("show");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+function showError(msg) {
+  const b = $("#errBanner");
+  $("#errMsg").textContent = msg;
+  b.classList.remove("hidden");
+}
+function hideError() { $("#errBanner").classList.add("hidden"); }
+
+//============== STATE ==============
+let state = {
+  client: null,
+  history: null,
+};
+
+//============== API ==============
+async function api(path, opts = {}) {
+  const url = API_BASE + path;
+  const res = await fetch(url, {
+    headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
+    ...opts,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`${res.status} ${res.statusText} — ${text || path}`);
+  }
+  const ct = res.headers.get("content-type") || "";
+  return ct.includes("application/json") ? res.json() : res.text();
+}
+
+async function loadClient() {
+  return api(`/clients/${encodeURIComponent(CLIENT_ID)}`);
+}
+async function loadHistory() {
+  return api(`/chain/history/${encodeURIComponent(CLIENT_ID)}`);
+}
+async function topup(amount) {
+  return api(`/clients/${encodeURIComponent(CLIENT_ID)}/topup`, {
+    method: "POST",
+    body: JSON.stringify({ amount: Number(amount) }),
+  });
+}
+
+//============== EXTRACT (defensive — schema may vary) ==============
+function pick(obj, keys, fallback = undefined) {
+  if (!obj) return fallback;
+  for (const k of keys) {
+    if (obj[k] !== undefined && obj[k] !== null) return obj[k];
+  }
+  return fallback;
+}
+
+function getBalance(c) {
+  return Number(pick(c, ["balance", "current_balance", "amount", "rub_balance"], 0));
+}
+function getClientName(c) {
+  return pick(c, ["name", "company", "company_name", "title"], "Клиент " + CLIENT_ID);
+}
+function getTransactions(c) {
+  const tx = pick(c, ["transactions", "tx", "history", "operations", "ledger", "last_transactions"], []);
+  return Array.isArray(tx) ? tx : [];
+}
+function getChains(h) {
+  if (Array.isArray(h)) return h;
+  return pick(h, ["chains", "history", "items", "results"], []) || [];
+}
+
+//============== RENDER: BALANCE TAB ==============
+function renderClient(c) {
+  state.client = c;
+  $("#clientName").textContent = getClientName(c);
+  $("#clientId").textContent = "id: " + CLIENT_ID;
+  $("#balanceAmount").textContent = fmt.rub(getBalance(c));
+  $("#updatedAt").textContent = new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+
+  // Transactions
+  const tx = getTransactions(c);
+  const monthSpent = tx
+    .filter(t => {
+      const a = Number(pick(t, ["amount", "value", "sum"], 0));
+      return a < 0 || pick(t, ["type", "kind", "direction"], "") === "debit";
+    })
+    .reduce((s, t) => s + Math.abs(Number(pick(t, ["amount", "value", "sum"], 0))), 0);
+
+  $("#monthSpent").textContent = fmt.rub(monthSpent);
+
+  renderTransactions(tx);
+}
+
+function renderTransactions(tx) {
+  const body = $("#txBody");
+  $("#txCount").textContent = tx.length + " записей";
+
+  if (!tx.length) {
+    body.innerHTML = `<div class="empty">Списаний пока не было</div>`;
+    return;
+  }
+
+  body.innerHTML = tx.slice(0, 12).map(t => {
+    const amount = Number(pick(t, ["amount", "value", "sum"], 0));
+    const type = pick(t, ["type", "kind", "direction"], amount < 0 ? "debit" : "credit");
+    const desc = pick(t, ["description", "desc", "title", "prompt", "chain_prompt", "memo"], "—");
+    const date = pick(t, ["created_at", "date", "timestamp", "ts"]);
+    const isDebit = amount < 0 || type === "debit" || type === "spend";
+    return `
+      <div class="row tx">
+        <span class="col-mono">${fmt.dateShort(date)}</span>
+        <span class="truncate" title="${escapeHtml(desc)}">${escapeHtml(desc)}</span>
+        <span style="text-align:right;"><span class="pill ${isDebit ? '' : 'success'}">${isDebit ? 'списание' : 'пополнение'}</span></span>
+        <span class="col-amount ${isDebit ? 'debit' : 'credit'}">${isDebit ? '−' : '+'} ${fmt.rub(Math.abs(amount))} ₽</span>
+      </div>`;
+  }).join("");
+}
+
+//============== RENDER: HISTORY TAB ==============
+function renderHistory(h) {
+  state.history = h;
+  const chains = getChains(h);
+  $("#chainCount").textContent = chains.length + " цепочек";
+
+  const body = $("#chainBody");
+  if (!chains.length) {
+    body.innerHTML = `<div class="empty">Цепочек пока нет — запустите первую через AI-чат</div>`;
+    return;
+  }
+
+  body.innerHTML = chains.map((c, i) => {
+    const status = (pick(c, ["status", "state"], "") + "").toLowerCase();
+    const prompt = pick(c, ["prompt", "query", "request", "description", "text", "input"], "—");
+    const cost = Number(pick(c, ["cost", "amount", "price", "total"], 0));
+    const date = pick(c, ["created_at", "date", "timestamp", "ts"]);
+    const id = pick(c, ["id", "chain_id", "uuid"], i);
+
+    let pillClass = "progress", pillText = "в процессе";
+    if (/done|complete|success|finished|выполн/.test(status)) { pillClass = "success"; pillText = "выполнена"; }
+    else if (/error|failed|fail|ошиб/.test(status)) { pillClass = "error"; pillText = "ошибка"; }
+
+    return `
+      <div class="row chain" data-chain-idx="${i}">
+        <span class="col-mono">${fmt.dateShort(date)}</span>
+        <span class="truncate" title="${escapeHtml(prompt)}">${escapeHtml(prompt)}</span>
+        <span><span class="pill ${pillClass}"><span class="pdot"></span>${pillText}</span></span>
+        <span class="col-amount">${fmt.rub(cost)} ₽</span>
+        <span class="chev">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </span>
+      </div>`;
+  }).join("");
+
+  // bind click
+  $$("#chainBody .row.chain").forEach(row => {
+    row.addEventListener("click", () => {
+      const idx = +row.getAttribute("data-chain-idx");
+      openChainDetail(chains[idx]);
+    });
+  });
+}
+
+function openChainDetail(c) {
+  const status = (pick(c, ["status", "state"], "") + "").toLowerCase();
+  const prompt = pick(c, ["prompt", "query", "request", "description", "text", "input"], "—");
+  const cost = Number(pick(c, ["cost", "amount", "price", "total"], 0));
+  const date = pick(c, ["created_at", "date", "timestamp", "ts"]);
+  const id = pick(c, ["id", "chain_id", "uuid"], "—");
+  const partners = pick(c, ["partners", "participants"], []) || [];
+  const steps = pick(c, ["steps", "trace", "events", "actions"], []) || [];
+
+  let pillClass = "progress", pillText = "в процессе";
+  if (/done|complete|success|finished|выполн/.test(status)) { pillClass = "success"; pillText = "выполнена"; }
+  else if (/error|failed|fail|ошиб/.test(status)) { pillClass = "error"; pillText = "ошибка"; }
+
+  $("#chainDetailId").textContent = "id: " + id;
+
+  const partnersStr = Array.isArray(partners) && partners.length
+    ? partners.map(p => typeof p === "string" ? p : (p.name || p.id || JSON.stringify(p))).join(" · ")
+    : "—";
+
+  const stepsHtml = (Array.isArray(steps) && steps.length) ? steps.map((s, i) => {
+    const sStatus = (pick(s, ["status", "state"], "done") + "").toLowerCase();
+    let dotClass = "done";
+    if (/error|fail|ошиб/.test(sStatus)) dotClass = "error";
+    else if (/progress|running|pending|active|wait/.test(sStatus)) dotClass = "active";
+    const label = pick(s, ["label", "name", "action", "title", "description"], "Шаг " + (i+1));
+    const partner = pick(s, ["partner", "service", "provider"], "");
+    const sCost = pick(s, ["cost", "amount", "price"], null);
+    return `
+      <div class="step">
+        <div class="step-dot ${dotClass}">${i+1}</div>
+        <div class="step-body">
+          <div class="label">${escapeHtml(label)}</div>
+          ${partner ? `<div class="partner">${escapeHtml(partner)}</div>` : ''}
+        </div>
+        <div class="step-cost">${sCost != null ? fmt.rub(sCost) + " ₽" : ""}</div>
+      </div>`;
+  }).join("") : `<div class="empty" style="padding:16px 0;">Шаги ещё не зафиксированы</div>`;
+
+  $("#chainModalBody").innerHTML = `
+    <div class="stack">
+      <div class="detail-grid">
+        <div class="k">Статус</div>
+        <div class="v"><span class="pill ${pillClass}"><span class="pdot"></span>${pillText}</span></div>
+        <div class="k">Дата</div>
+        <div class="v mono">${fmt.date(date)}</div>
+        <div class="k">Стоимость</div>
+        <div class="v mono">${fmt.rub(cost)} ₽</div>
+        <div class="k">Партнёры</div>
+        <div class="v mono" style="color: var(--text-2)">${escapeHtml(partnersStr)}</div>
+      </div>
+
+      <div>
+        <div class="field-label">Промт</div>
+        <div class="prompt-box">${escapeHtml(prompt)}</div>
+      </div>
+
+      <div>
+        <div class="field-label">Шаги выполнения</div>
+        <div class="steps">${stepsHtml}</div>
+      </div>
+    </div>
+  `;
+
+  $("#chainScrim").classList.add("open");
+}
+
+//============== RENDER: SETTINGS ==============
+function renderSettings(c) {
+  const grid = $("#settingsGrid");
+  const tg = pick(c, ["telegram", "telegram_chat", "tg_chat_id", "chat_id"], "—");
+  const created = pick(c, ["created_at", "registered_at", "joined_at"], null);
+  grid.innerHTML = `
+    <div class="setting-row">
+      <div>
+        <div class="name">Идентификатор клиента</div>
+        <div class="desc">Используется для связи с AI-чатом</div>
+      </div>
+      <div class="copy-row" style="min-width: 280px;">
+        <span class="v">${escapeHtml(CLIENT_ID)}</span>
+        <button class="copy-btn" data-copy="${escapeHtml(CLIENT_ID)}" title="Скопировать">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <div class="name">Telegram-чат для AI</div>
+        <div class="desc">Все цепочки запускаются командами оттуда</div>
+      </div>
+      <div class="val">${escapeHtml(tg)}</div>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <div class="name">Дата регистрации</div>
+        <div class="desc">Аккаунт зарегистрирован в платформе</div>
+      </div>
+      <div class="val">${created ? fmt.date(created) : "—"}</div>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <div class="name">Уведомления о низком балансе</div>
+        <div class="desc">Сообщение в Telegram при остатке &lt; 5 000 ₽</div>
+      </div>
+      <div class="switch on" data-toggle></div>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <div class="name">Авто-пополнение</div>
+        <div class="desc">Списание с привязанной карты при низком балансе</div>
+      </div>
+      <div class="switch" data-toggle></div>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <div class="name">API эндпоинт</div>
+        <div class="desc">Используется этим кабинетом</div>
+      </div>
+      <div class="copy-row" style="min-width: 320px;">
+        <span class="v">${API_BASE}</span>
+        <button class="copy-btn" data-copy="${API_BASE}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+      </div>
+    </div>
+  `;
+
+  // bind toggles + copy
+  $$("[data-toggle]", grid).forEach(t => t.addEventListener("click", () => t.classList.toggle("on")));
+  $$("[data-copy]", grid).forEach(b => b.addEventListener("click", () => {
+    navigator.clipboard?.writeText(b.getAttribute("data-copy"));
+    showToast("Скопировано");
+  }));
+}
+
+//============== UTIL: escape ==============
+function escapeHtml(s) {
+  if (s == null) return "";
+  return String(s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+//============== TABS ==============
+function setTab(name) {
+  $$(".tab").forEach(t => t.classList.add("hidden"));
+  const tab = $("#tab-" + name);
+  if (tab) tab.classList.remove("hidden");
+  $$(".nav-item").forEach(n => n.classList.toggle("active", n.getAttribute("data-tab") === name));
+  const labels = { balance: "Баланс", history: "История цепочек", settings: "Настройки" };
+  $("#crumbCurrent").textContent = labels[name] || "—";
+  if (location.hash !== "#" + name) history.replaceState(null, "", "#" + name);
+}
+
+$$(".nav-item").forEach(n => n.addEventListener("click", e => {
+  e.preventDefault();
+  setTab(n.getAttribute("data-tab"));
+}));
+
+//============== TOPUP MODAL ==============
+function openTopup() {
+  const balance = state.client ? getBalance(state.client) : 0;
+  refreshInvoice();
+  $("#topupScrim").classList.add("open");
+  setTimeout(() => $("#topupAmount").focus(), 50);
+}
+
+function refreshInvoice() {
+  const amount = Number($("#topupAmount").value.replace(/\D/g, "")) || 0;
+  $("#invoiceTotal").textContent = fmt.rub(amount) + " ₽";
+  const num = "INV-" + new Date().toISOString().slice(0,10).replace(/-/g, "") + "-" + CLIENT_ID.slice(0, 6).toUpperCase();
+  $("#invoiceNo").textContent = "счёт №" + num;
+  $("#invoicePurpose").textContent = `Пополнение баланса по договору №${CLIENT_ID.slice(0, 8).toUpperCase()}, без НДС`;
+}
+
+$("#topupBtn").addEventListener("click", openTopup);
+$("#topupAmount").addEventListener("input", refreshInvoice);
+$$("[data-preset]").forEach(b => b.addEventListener("click", () => {
+  $("#topupAmount").value = b.getAttribute("data-preset");
+  refreshInvoice();
+}));
+$$("[data-close]").forEach(el => el.addEventListener("click", () => {
+  $("#topupScrim").classList.remove("open");
+  $("#chainScrim").classList.remove("open");
+}));
+[$("#topupScrim"), $("#chainScrim")].forEach(s => s.addEventListener("click", e => {
+  if (e.target === s) s.classList.remove("open");
+}));
+
+$("#downloadPdfBtn").addEventListener("click", () => {
+  const amount = Number($("#topupAmount").value.replace(/\D/g, "")) || 0;
+  // Plain-text fake invoice download (real PDF is server-side; this gives the user something)
+  const num = $("#invoiceNo").textContent;
+  const txt = `СЧЁТ НА ОПЛАТУ ${num}
+Дата: ${new Date().toLocaleDateString("ru-RU")}
+
+Получатель:   ООО «Логикс Сервис»
+ИНН/КПП:      9728145672 / 772801001
+Банк:         АО «Тинькофф Банк», г. Москва
+БИК:          044525974
+Р/счёт:       40702 810 1 1000 0429318
+К/счёт:       30101 810 1 4525 0000974
+
+Назначение:   Пополнение баланса клиента ${CLIENT_ID}, без НДС
+К оплате:     ${fmt.rub(amount)} ₽
+`;
+  const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = num.replace(/[^A-Za-z0-9-]/g, "_") + ".txt";
+  a.click();
+  showToast("Счёт сохранён");
+});
+
+$("#confirmTopupBtn").addEventListener("click", async () => {
+  const amount = Number($("#topupAmount").value.replace(/\D/g, "")) || 0;
+  if (amount <= 0) { showToast("Укажите сумму", "error"); return; }
+  const btn = $("#confirmTopupBtn");
+  const orig = btn.textContent;
+  btn.textContent = "Обработка...";
+  btn.disabled = true;
+  try {
+    await topup(amount);
+    $("#topupScrim").classList.remove("open");
+    showToast("Баланс пополнен на " + fmt.rub(amount) + " ₽");
+    await refreshAll();
+  } catch (e) {
+    showToast("Ошибка: " + (e.message || e), "error");
+  } finally {
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
+});
+
+//============== INIT ==============
+async function refreshAll() {
+  hideError();
+  try {
+    const [c, h] = await Promise.all([loadClient(), loadHistory()]);
+    renderClient(c);
+    renderHistory(h);
+    renderSettings(c);
+  } catch (e) {
+    showError(e.message || String(e));
+    showToast("Не удалось загрузить данные", "error");
+    // Still try to populate what we can
+    try { renderClient(await loadClient()); } catch {}
+    try { renderHistory(await loadHistory()); } catch {}
+    try { renderSettings(state.client || {}); } catch {}
+  }
+}
+
+$("#refreshBtn").addEventListener("click", refreshAll);
+
+// Init tab from hash
+const initTab = (location.hash || "").replace(/^#/, "") || "balance";
+setTab(["balance", "history", "settings"].includes(initTab) ? initTab : "balance");
+
+// Esc closes modals
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    $("#topupScrim").classList.remove("open");
+    $("#chainScrim").classList.remove("open");
+  }
+});
+
+refreshAll();
+</script>
+</body>
+</html>

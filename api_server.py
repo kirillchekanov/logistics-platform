@@ -1558,6 +1558,27 @@ def get_wallet(partner_id: str):
 # ── Chain & Client API ────────────────────────────────────────────────────────
 from chain_api import register_chain_routes
 register_chain_routes(app, get_db, ADAPTERS)
+# Client portal routes
+@app.get("/client/{client_id}")
+def client_portal(client_id: str):
+    return FileResponse("client-portal.html")
+
+@app.get("/start")
+def client_start():
+    return FileResponse("client-portal.html")
+
+@app.get("/clients")
+def list_clients(limit: int = 100):
+    conn = get_db()
+    if not conn: return {"clients": [], "total": 0}
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, company_name, contact_email, balance_rub, status, created_at FROM clients ORDER BY created_at DESC LIMIT %s", (limit,))
+            rows = cur.fetchall()
+        return {"clients": [{"client_id": r[0], "company_name": r[1], "contact_email": r[2], "balance_rub": float(r[3] or 0), "status": r[4], "created_at": r[5].isoformat() if r[5] else None} for r in rows], "total": len(rows)}
+    except Exception as e: return {"clients": [], "total": 0}
+    finally: conn.close()
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8001))
     print(f"\n{'='*55}")
