@@ -345,7 +345,7 @@ body.dark .earn-card .mono{color:var(--ink)!important}
 
   <div style="display:flex;flex-direction:column;gap:1px">
     <div class="nav-label">Партнёрский портал</div>
-    <button class="nav-a active" data-screen="empty" id="nav-overview">
+    <button class="nav-a active" data-screen="overview" id="nav-overview" onclick="(function(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-overview').classList.add('active');if(typeof renderOverview==='function')renderOverview();})()">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
       Overview
     </button>
@@ -353,15 +353,15 @@ body.dark .earn-card .mono{color:var(--ink)!important}
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h16"/><circle cx="18" cy="12" r="2"/></svg>
       Onboarding
     </button>
-    <button class="nav-a" data-screen="actions" id="nav-actions" title="Сначала подключите партнёра">
+    <button class="nav-a" data-screen="actions" id="nav-actions" onclick="(function(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-actions').classList.add('active');if(typeof renderActions==='function')renderActions();})()">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
       Actions
     </button>
-    <button class="nav-a" data-screen="credentials" id="nav-credentials" title="Сначала подключите партнёра">
+    <button class="nav-a" data-screen="credentials" id="nav-credentials" onclick="(function(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-credentials').classList.add('active');if(typeof renderCredentials==='function')renderCredentials();})()">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg>
       Credentials
     </button>
-    <button class="nav-a" data-screen="logs" id="nav-logs" title="Сначала подключите партнёра">
+    <button class="nav-a" data-screen="logs" id="nav-logs" onclick="(function(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-logs').classList.add('active');if(typeof loadLogs==='function')loadLogs();})()">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6"/><rect x="4" y="14" width="16" height="6"/><circle cx="7" cy="7" r=".5" fill="currentColor"/><circle cx="7" cy="17" r=".5" fill="currentColor"/></svg>
       Logs
       <span class="badge soft-warn" id="log-badge" style="margin-left:auto;display:none;font-size:11px;padding:1px 7px">0</span>
@@ -989,6 +989,13 @@ function showSuccessScreen() {
 function showScreen(name, skipHistory) {
   // В режиме partner_lk не редиректим на empty — данные могут ещё грузиться
   if(!STATE.current && name!=='empty' && name!=='wizard' && APP_MODE !== 'partner_lk') name='empty';
+  // Если в partner_lk и данные ещё не загружены — показываем загрузку, не empty
+  if(!STATE.current && APP_MODE === 'partner_lk' && name !== 'empty' && name !== 'wizard') {
+    const screenEl = document.getElementById('screen-'+name);
+    if(screenEl && screenEl.innerHTML.trim() === '') {
+      screenEl.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);font-size:13px">Загрузка данных…</div>';
+    }
+  }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-a[data-screen]').forEach(n=>n.classList.remove('active'));
   const screenEl = document.getElementById('screen-'+name);
@@ -1068,8 +1075,8 @@ async function loadPartners() {
 }
 
 function renderPartnerList() {
-  // Блокируем nav если нет партнёров
-  const hasPartner = STATE.partners.length > 0;
+  // В partner_lk режиме nav всегда разблокирован — данные грузятся асинхронно
+  const hasPartner = APP_MODE === 'partner_lk' ? true : STATE.partners.length > 0;
   ['nav-actions','nav-credentials','nav-logs'].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.classList.toggle('locked', !hasPartner);
@@ -2458,6 +2465,16 @@ if (APP_MODE === 'partner_lk') {
   document.getElementById('co-list').style.display = 'none';
   document.querySelectorAll('.sb-add').forEach(el => el.style.display = 'none');
 
+  // Немедленно разблокируем nav — не ждём загрузки данных
+  ['nav-actions','nav-credentials','nav-logs'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.remove('locked');
+  });
+
+  // Fix nav-overview data-screen
+  const ovBtn = document.getElementById('nav-overview');
+  if(ovBtn) ovBtn.setAttribute('data-screen','overview');
+
   // Загружаем ТОЛЬКО данные этого партнёра
   (async function() {
     const raw = await apiFetch('/companies/' + PARTNER_LK_ID);
@@ -2493,10 +2510,7 @@ if (APP_MODE === 'partner_lk') {
 
     // Рендерим данные
     renderPartnerList();
-    // Fix sidebar nav-a data-screen for partner_lk mode
-    const overviewBtn = document.getElementById('nav-overview');
-    if(overviewBtn) overviewBtn.setAttribute('data-screen','overview');
-    // Fix company name in sidebar — clicking goes to overview
+    // Company name click → overview
     const wsBtn = document.querySelector('.ws-btn');
     if(wsBtn) wsBtn.onclick = () => showScreen('overview');
     showScreen('overview');
