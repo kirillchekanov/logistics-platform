@@ -550,6 +550,169 @@ def get_action_schema(company_id: str, action: str):
 
 # ── Register company ──────────────────────────────────────────────────────────
 
+
+# ── Auto-config generator ─────────────────────────────────────────────────────
+
+REGISTRY_DIR = Path(__file__).parent / "registry"
+REGISTRY_DIR.mkdir(exist_ok=True)
+
+MCP_TOOL_SCHEMAS = {
+    "create_shipment": {
+        "description": "Создать новое отправление у партнёра",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "sender":   {"type": "object", "description": "Адрес и контакты отправителя"},
+                "receiver": {"type": "object", "description": "Адрес и контакты получателя"},
+                "parcels":  {"type": "array",  "description": "Список посылок с весом и размерами"},
+                "service_code": {"type": "string", "description": "Тариф доставки: express, standard, economy"},
+                "reference": {"type": "string", "description": "Внешний ID заказа (опционально)"}
+            },
+            "required": ["sender", "receiver", "parcels"]
+        }
+    },
+    "book_pickup": {
+        "description": "Забронировать забор посылки курьером",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "date":    {"type": "string", "description": "Дата забора YYYY-MM-DD"},
+                "address": {"type": "object", "description": "Адрес забора"}
+            },
+            "required": ["date", "address"]
+        }
+    },
+    "track": {
+        "description": "Получить статус и местоположение отправления",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "tracking_number": {"type": "string", "description": "Номер отправления для трекинга"}
+            },
+            "required": ["tracking_number"]
+        }
+    },
+    "calculate_cost": {
+        "description": "Рассчитать стоимость доставки",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "origin":      {"type": "string", "description": "Почтовый индекс отправителя"},
+                "destination": {"type": "string", "description": "Почтовый индекс получателя"},
+                "weight":      {"type": "number", "description": "Вес посылки в граммах"},
+                "dimensions":  {"type": "object", "description": "Размеры (length, width, height) в мм"}
+            },
+            "required": ["origin", "destination", "weight"]
+        }
+    },
+    "cancel": {
+        "description": "Отменить созданное отправление",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "shipment_id": {"type": "string", "description": "ID отправления для отмены"}
+            },
+            "required": ["shipment_id"]
+        }
+    },
+    "get_slots": {
+        "description": "Получить доступные временные слоты для доставки или забора",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "date":    {"type": "string", "description": "Дата YYYY-MM-DD (по умолчанию сегодня)"},
+                "address": {"type": "object", "description": "Адрес для проверки слотов"}
+            }
+        }
+    },
+    "create_reception": {
+        "description": "Зафиксировать поступление товара на склад",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "items": {"type": "array", "description": "Список товаров с артикулами и количеством"},
+                "warehouse_id": {"type": "string", "description": "ID склада"}
+            },
+            "required": ["items"]
+        }
+    },
+    "store": {
+        "description": "Разместить товар на хранение в ячейке склада",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "item_id":  {"type": "string", "description": "Артикул товара"},
+                "quantity": {"type": "integer", "description": "Количество единиц"},
+                "location": {"type": "string", "description": "Ячейка хранения (опционально)"}
+            },
+            "required": ["item_id", "quantity"]
+        }
+    },
+    "ship_from_warehouse": {
+        "description": "Собрать и отправить заказ со склада",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "order_id": {"type": "string", "description": "ID заказа для отгрузки"},
+                "carrier":  {"type": "string", "description": "Перевозчик для доставки"}
+            },
+            "required": ["order_id"]
+        }
+    }
+}
+
+def generate_mcp_config(config: dict) -> dict:
+    """Генерирует MCP конфиг из данных онбординга партнёра."""
+    partner_id = config["id"]
+    partner_name = config.get("name", partner_id)
+    base_url = config.get("base_url", "")
+    actions = config.get("actions", {})
+
+    tools = []
+    for action_name, action_cfg in actions.items():
+        schema = MCP_TOOL_SCHEMAS.get(action_name, {
+            "description": f"Вызвать {action_name} у партнёра {partner_name}",
+            "inputSchema": {"type": "object", "properties": {}, "required": []}
+        })
+        tool = {
+            "name": f"{partner_id}__{action_name}",
+            "description": f"[{partner_name}] {schema['description']}",
+            "inputSchema": schema["inputSchema"],
+            "_meta": {
+                "partner_id": partner_id,
+                "action": action_name,
+                "method": action_cfg.get("method", "POST"),
+                "path": action_cfg.get("path", f"/{action_name}"),
+                "base_url": base_url,
+                "response_map": config.get("response_map", {})
+            }
+        }
+        tools.append(tool)
+
+    mcp_config = {
+        "partner_id": partner_id,
+        "partner_name": partner_name,
+        "base_url": base_url,
+        "capabilities": config.get("capabilities", []),
+        "status": config.get("status", "pending"),
+        "tools": tools,
+        "auth": {
+            "type": "oauth2_client_credentials",
+            "token_url": config.get("auth", {}).get("token_url", ""),
+            "client_id": config.get("auth", {}).get("client_id", ""),
+            "scope": config.get("auth", {}).get("scope", "")
+        },
+        "generated_at": datetime.utcnow().isoformat() + "Z"
+    }
+    return mcp_config
+
+def save_mcp_config(partner_id: str, mcp_config: dict) -> Path:
+    """Сохраняет MCP конфиг в registry/."""
+    path = REGISTRY_DIR / f"{partner_id}.json"
+    path.write_text(json.dumps(mcp_config, ensure_ascii=False, indent=2))
+    print(f"[MCP] Config saved: {path} ({len(mcp_config['tools'])} tools)")
+    return path
+
 @app.post("/register")
 def register_company(req: RegisterCompanyRequest):
     """Добавить новую компанию в реестр адаптеров."""
@@ -611,12 +774,33 @@ def register_company(req: RegisterCompanyRequest):
             pass
     ADAPTERS[company_id] = config
 
+    # Generate and save MCP config
+    mcp_config = generate_mcp_config(config)
+    mcp_path = save_mcp_config(company_id, mcp_config)
+    print(f"[AUTOCONFIG] {company_id}: {len(mcp_config['tools'])} MCP tools generated")
+
+    # Send welcome email (async, non-blocking)
+    partner_email = config.get("contact_email") or config.get("email") or ""
+    if partner_email:
+        import asyncio as _asyncio
+        try:
+            loop = _asyncio.get_event_loop()
+            loop.create_task(send_email(
+                partner_email,
+                f"Добро пожаловать на платформу — {config.get('name')}",
+                email_welcome(config.get('name',''), company_id, partner_email)
+            ))
+        except Exception:
+            pass
+
     return {
         "status": "registered",
         "company_id": company_id,
         "company_name": config.get("name"),
         "actions": list(config.get("actions", {}).keys()),
-        "message": f"Company {config.get('name')} registered. Available in portal immediately.",
+        "mcp_tools": [t["name"] for t in mcp_config["tools"]],
+        "mcp_config_path": str(mcp_path),
+        "message": f"Company {config.get('name')} registered. {len(mcp_config['tools'])} MCP tools generated.",
     }
 
 @app.put("/companies/{company_id}")
@@ -902,6 +1086,441 @@ def serve_root():
 </body></html>""")
 
 # ── Run ───────────────────────────────────────────────────────────────────────
+
+# ── HTTP Adapter ──────────────────────────────────────────────────────────────
+# Принимает вызовы от AI агента, получает токен, вызывает реальный API партнёра
+
+import asyncio
+from typing import Any
+
+_token_cache: dict = {}  # {partner_id: {token, expires_at}}
+
+async def get_oauth_token(partner_id: str, auth_cfg: dict) -> str:
+    """Получить OAuth2 client_credentials токен (с кэшированием)."""
+    cached = _token_cache.get(partner_id, {})
+    if cached.get("token") and cached.get("expires_at", 0) > time.time() + 60:
+        return cached["token"]
+
+    token_url = auth_cfg.get("token_url", "")
+    client_id = auth_cfg.get("client_id", "")
+    client_secret = auth_cfg.get("client_secret", "")
+    scope = auth_cfg.get("scope", "")
+
+    if not token_url or not client_id:
+        raise HTTPException(status_code=400, detail=f"OAuth not configured for {partner_id}")
+
+    if httpx is None:
+        raise HTTPException(status_code=500, detail="httpx not installed")
+
+    data = {"grant_type": "client_credentials", "client_id": client_id, "client_secret": client_secret}
+    if scope:
+        data["scope"] = scope
+
+    async with httpx.AsyncClient(timeout=15.0) as client:
+        resp = await client.post(token_url, data=data)
+
+    if resp.status_code != 200:
+        raise HTTPException(
+            status_code=502,
+            detail=f"OAuth token failed for {partner_id}: {resp.status_code} {resp.text[:200]}"
+        )
+
+    token_data = resp.json()
+    token = token_data.get("access_token", "")
+    expires_in = token_data.get("expires_in", 3600)
+    _token_cache[partner_id] = {"token": token, "expires_at": time.time() + expires_in}
+    print(f"[ADAPTER] Token obtained for {partner_id}, expires in {expires_in}s")
+    return token
+
+
+class AdapterCallRequest(BaseModel):
+    partner_id: str
+    action: str
+    params: dict = {}
+    dry_run: bool = False
+
+
+@app.post("/adapter/call")
+async def adapter_call(req: AdapterCallRequest):
+    """Выполнить action у партнёра через HTTP adapter."""
+    partner_id = req.partner_id
+    action = req.action
+
+    # Загружаем конфиг партнёра
+    config = REGISTRY.get(partner_id) or ADAPTERS.get(partner_id)
+    if not config:
+        # Пробуем загрузить из MCP registry
+        mcp_path = REGISTRY_DIR / f"{partner_id}.json"
+        if mcp_path.exists():
+            mcp_cfg = json.loads(mcp_path.read_text())
+            tool = next((t for t in mcp_cfg.get("tools", []) if t["name"].endswith(f"__{action}")), None)
+            if tool:
+                meta = tool.get("_meta", {})
+                base_url = meta.get("base_url", "")
+                method = meta.get("method", "POST")
+                path = meta.get("path", f"/{action}")
+                auth_cfg = mcp_cfg.get("auth", {})
+            else:
+                raise HTTPException(status_code=404, detail=f"Action {action} not found for {partner_id}")
+        else:
+            raise HTTPException(status_code=404, detail=f"Partner {partner_id} not found")
+    else:
+        actions = config.get("actions", {})
+        if action not in actions:
+            raise HTTPException(status_code=404, detail=f"Action {action} not configured for {partner_id}")
+        action_cfg = actions[action]
+        base_url = config.get("base_url", "")
+        method = action_cfg.get("method", "POST")
+        path = action_cfg.get("path", f"/{action}")
+        auth_cfg = config.get("auth", {})
+
+    # Подставляем path параметры из params
+    import re
+    for key, val in req.params.items():
+        path = re.sub(r"\{\{?\s*" + key + r"\s*\}?\}", str(val), path)
+
+    url = base_url.rstrip("/") + "/" + path.lstrip("/")
+
+    # Dry run — не делаем реальный запрос
+    if req.dry_run:
+        return {
+            "status": "dry_run",
+            "partner_id": partner_id,
+            "action": action,
+            "url": url,
+            "method": method,
+            "params": req.params,
+            "message": "Dry run — реальный запрос не отправлен"
+        }
+
+    # Получаем OAuth токен
+    start = time.time()
+    try:
+        token = await get_oauth_token(partner_id, auth_cfg)
+    except HTTPException as e:
+        return {"status": "error", "error": "oauth_failed", "detail": e.detail}
+
+    # Делаем запрос к API партнёра
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+        "X-Platform-Request-Id": f"plat_{int(time.time())}_{partner_id}"
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            if method.upper() in ("GET", "DELETE"):
+                resp = await client.request(method.upper(), url, params=req.params, headers=headers)
+            else:
+                resp = await client.request(method.upper(), url, json=req.params, headers=headers)
+    except httpx.TimeoutException:
+        return {"status": "error", "error": "timeout", "detail": f"Partner API timeout after 15s"}
+    except Exception as e:
+        return {"status": "error", "error": "connection_error", "detail": str(e)}
+
+    latency_ms = int((time.time() - start) * 1000)
+
+    # Логируем в БД
+    conn = get_db()
+    if conn:
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """INSERT INTO request_logs (company_id, action, method, path, status_code, latency_ms, env, created_at)
+                       VALUES (%s, %s, %s, %s, %s, %s, %s, NOW())""",
+                    (partner_id, action, method, path, resp.status_code, latency_ms, "live")
+                )
+            conn.commit()
+        except Exception as e:
+            print(f"[ADAPTER] Log error: {e}")
+        finally:
+            conn.close()
+
+    print(f"[ADAPTER] {partner_id}.{action} → {resp.status_code} ({latency_ms}ms)")
+
+    try:
+        resp_data = resp.json()
+    except Exception:
+        resp_data = {"raw": resp.text[:500]}
+
+    return {
+        "status": "ok" if resp.status_code < 400 else "error",
+        "partner_id": partner_id,
+        "action": action,
+        "http_status": resp.status_code,
+        "latency_ms": latency_ms,
+        "url": url,
+        "response": resp_data
+    }
+
+
+@app.get("/adapter/token/{partner_id}")
+async def get_partner_token(partner_id: str):
+    """Получить/обновить OAuth токен для партнёра."""
+    config = REGISTRY.get(partner_id) or ADAPTERS.get(partner_id)
+    if not config:
+        raise HTTPException(status_code=404, detail=f"Partner {partner_id} not found")
+
+    auth_cfg = config.get("auth", {})
+    start = time.time()
+    token = await get_oauth_token(partner_id, auth_cfg)
+    latency = int((time.time() - start) * 1000)
+
+    cached = _token_cache.get(partner_id, {})
+    ttl = max(0, int(cached.get("expires_at", 0) - time.time()))
+
+    return {
+        "partner_id": partner_id,
+        "token_preview": token[:20] + "..." if token else "",
+        "ttl_seconds": ttl,
+        "ttl_formatted": f"{ttl//60}m {ttl%60:02d}s",
+        "latency_ms": latency
+    }
+
+
+@app.get("/adapter/test/{partner_id}/{action}")
+async def test_adapter(partner_id: str, action: str, dry_run: bool = True):
+    """Тестовый вызов action партнёра (dry_run по умолчанию)."""
+    req = AdapterCallRequest(
+        partner_id=partner_id,
+        action=action,
+        params={"_test": True},
+        dry_run=dry_run
+    )
+    return await adapter_call(req)
+
+
+# ── Wallet transaction recording ──────────────────────────────────────────────
+
+class WalletTransactionRequest(BaseModel):
+    partner_id: str
+    amount: float
+    description: str
+    chain_id: str = ""
+    route: str = ""
+    payout_date: str = ""
+    status: str = "pending"   # pending | paid
+
+@app.post("/wallet/transaction")
+def record_transaction(req: WalletTransactionRequest):
+    """Записать транзакцию в кошелёк партнёра (вызывается оркестратором при завершении цепочки)."""
+    conn = get_db()
+    if not conn:
+        raise HTTPException(status_code=503, detail="DB unavailable")
+    try:
+        meta = json.dumps({
+            "chain": req.chain_id,
+            "route": req.route,
+            "payout_date": req.payout_date or _next_payout_date()
+        })
+        with conn.cursor() as cur:
+            cur.execute(
+                """INSERT INTO wallet_transactions
+                   (partner_id, type, amount, description, status, metadata, created_at)
+                   VALUES (%s, 'earning', %s, %s, %s, %s, NOW())
+                   RETURNING id""",
+                (req.partner_id, req.amount, req.description, req.status, meta)
+            )
+            tx_id = cur.fetchone()[0]
+        conn.commit()
+        print(f"[WALLET] +{req.amount}₽ → {req.partner_id} (tx={tx_id})")
+        return {"status": "ok", "transaction_id": tx_id, "amount": req.amount, "partner_id": req.partner_id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
+
+@app.post("/wallet/payout")
+def record_payout(partner_id: str, amount: float, method: str = "bank_transfer"):
+    """Зафиксировать выплату партнёру."""
+    conn = get_db()
+    if not conn:
+        raise HTTPException(status_code=503, detail="DB unavailable")
+    try:
+        meta = json.dumps({"method": method, "date": datetime.utcnow().strftime("%Y-%m-%d")})
+        with conn.cursor() as cur:
+            cur.execute(
+                """INSERT INTO wallet_transactions
+                   (partner_id, type, amount, description, status, metadata, created_at)
+                   VALUES (%s, 'payout', %s, %s, 'paid', %s, NOW())
+                   RETURNING id""",
+                (partner_id, amount, f"Выплата {datetime.utcnow().strftime('%d.%m.%Y')}", meta)
+            )
+            tx_id = cur.fetchone()[0]
+            # Mark pending earnings as paid
+            cur.execute(
+                "UPDATE wallet_transactions SET status='paid' WHERE partner_id=%s AND status='pending' AND type='earning'",
+                (partner_id,)
+            )
+        conn.commit()
+        print(f"[WALLET] Payout {amount}₽ → {partner_id}")
+        return {"status": "ok", "payout_id": tx_id, "amount": amount}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
+
+def _next_payout_date() -> str:
+    from datetime import date
+    today = date.today()
+    if today.day < 15:
+        return date(today.year, today.month, 15).isoformat()
+    if today.month == 12:
+        return date(today.year + 1, 1, 15).isoformat()
+    return date(today.year, today.month + 1, 15).isoformat()
+
+
+# ── Email notifications ───────────────────────────────────────────────────────
+
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", "")
+PLATFORM_EMAIL_FROM = os.getenv("PLATFORM_EMAIL_FROM", "noreply@15min.store")
+
+async def send_email(to: str, subject: str, body_html: str) -> bool:
+    """Отправить email через SendGrid API."""
+    if not SENDGRID_API_KEY:
+        print(f"[EMAIL] No SENDGRID_API_KEY — skipping email to {to}: {subject}")
+        return False
+    if httpx is None:
+        print(f"[EMAIL] httpx not available")
+        return False
+    payload = {
+        "personalizations": [{"to": [{"email": to}]}],
+        "from": {"email": PLATFORM_EMAIL_FROM, "name": "15min.store Platform"},
+        "subject": subject,
+        "content": [{"type": "text/html", "value": body_html}]
+    }
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                "https://api.sendgrid.com/v3/mail/send",
+                json=payload,
+                headers={"Authorization": f"Bearer {SENDGRID_API_KEY}"},
+                timeout=10.0
+            )
+        if resp.status_code in (200, 202):
+            print(f"[EMAIL] Sent to {to}: {subject}")
+            return True
+        print(f"[EMAIL] Failed {resp.status_code}: {resp.text[:200]}")
+        return False
+    except Exception as e:
+        print(f"[EMAIL] Error: {e}")
+        return False
+
+def email_welcome(partner_name: str, partner_id: str, email: str) -> str:
+    return f"""
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
+      <h2>Добро пожаловать на платформу 15min.store!</h2>
+      <p>Компания <strong>{partner_name}</strong> успешно подключена.</p>
+      <p>Команда проверит конфигурацию в течение 1-2 рабочих дней и активирует ваш аккаунт.</p>
+      <p><a href="https://web-production-93110.up.railway.app/partner/{partner_id}"
+            style="background:#5b21b6;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none">
+        Открыть личный кабинет →
+      </a></p>
+      <p style="color:#64748b;font-size:12px">Вопросы? Напишите на support@15min.store</p>
+    </div>
+    """
+
+def email_verified(partner_name: str, partner_id: str, email: str) -> str:
+    return f"""
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
+      <h2>Верификация пройдена!</h2>
+      <p>Компания <strong>{partner_name}</strong> активирована на платформе.</p>
+      <p>Теперь AI агент будет включать вас в логистические цепочки клиентов.</p>
+      <p><a href="https://web-production-93110.up.railway.app/partner/{partner_id}"
+            style="background:#16a34a;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none">
+        Открыть дашборд →
+      </a></p>
+    </div>
+    """
+
+def email_payout(partner_name: str, amount: float, payout_date: str, email: str) -> str:
+    return f"""
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
+      <h2>Выплата отправлена</h2>
+      <p>Компания <strong>{partner_name}</strong>, {amount:,.0f} ₽ переведено на ваши реквизиты {payout_date}.</p>
+      <p><a href="https://web-production-93110.up.railway.app/partner"
+            style="background:#0c4a6e;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none">
+        Кошелёк →
+      </a></p>
+    </div>
+    """
+
+@app.post("/email/send")
+async def send_notification(
+    to: str, type: str,
+    partner_id: str = "", partner_name: str = "",
+    amount: float = 0, payout_date: str = ""
+):
+    """Отправить email уведомление партнёру."""
+    templates = {
+        "welcome":  (f"Добро пожаловать на платформу — {partner_name}", lambda: email_welcome(partner_name, partner_id, to)),
+        "verified": (f"Верификация пройдена — {partner_name}", lambda: email_verified(partner_name, partner_id, to)),
+        "payout":   (f"Выплата {amount:,.0f} ₽ — {payout_date}", lambda: email_payout(partner_name, amount, payout_date, to)),
+    }
+    if type not in templates:
+        raise HTTPException(status_code=400, detail=f"Unknown email type: {type}")
+    subject, body_fn = templates[type]
+    ok = await send_email(to, subject, body_fn())
+    return {"status": "sent" if ok else "skipped", "to": to, "type": type}
+
+
+@app.get("/wallet/{partner_id}")
+def get_wallet(partner_id: str):
+    """Wallet данные партнёра — баланс, транзакции, выплаты."""
+    # Load transactions from DB
+    txs = []
+    payouts = []
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, type, amount, description, status, created_at, metadata
+            FROM wallet_transactions
+            WHERE partner_id = ?
+            ORDER BY created_at DESC
+            LIMIT 100
+        """, (partner_id,))
+        rows = cur.fetchall()
+        for row in rows:
+            meta = {}
+            try:
+                import json as _json
+                meta = _json.loads(row[6] or '{}')
+            except: pass
+            entry = {
+                "id": row[0],
+                "type": row[1],
+                "amount": float(row[2] or 0),
+                "description": row[3] or "Транзакция",
+                "status": row[4] or "pending",
+                "date": row[5][:10] if row[5] else "",
+                "chain": meta.get("chain", ""),
+                "route": meta.get("route", ""),
+                "payout_date": meta.get("payout_date", ""),
+            }
+            if row[1] == "payout":
+                payouts.append(entry)
+            else:
+                txs.append(entry)
+        conn.close()
+    except Exception as e:
+        print(f"[WALLET] DB error: {e}")
+
+    pending = sum(t["amount"] for t in txs if t["status"] == "pending")
+    month = sum(t["amount"] for t in txs if t["status"] in ("pending","paid"))
+    total_paid = sum(p["amount"] for p in payouts)
+
+    return {
+        "partner_id": partner_id,
+        "balance": pending,
+        "pending": pending,
+        "month": month,
+        "total_paid": total_paid,
+        "chains": len(set(t.get("chain","") for t in txs if t.get("chain"))),
+        "transactions": txs,
+        "payouts": payouts,
+    }
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8001))
