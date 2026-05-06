@@ -839,9 +839,9 @@ def serve_partner_lk(partner_id: str):
     p = Path(__file__).parent / "partner-lk.html"
     if p.exists():
         content = p.read_text(encoding="utf-8")
-        logger.info(f"[LK] Serving partner-lk.html: {len(content)} bytes for {partner_id}")
+        print(f"[LK] Serving partner-lk.html: {len(content)} bytes for {partner_id}", flush=True)
         return HTMLResponse(content=content)
-    logger.error(f"[LK] partner-lk.html NOT FOUND at {p}")
+    print(f"[LK] partner-lk.html NOT FOUND at {p}", flush=True)
     return HTMLResponse(content="<h1>partner-lk.html not found</h1>", status_code=404)
 
 @app.get("/portal", response_class=HTMLResponse)
